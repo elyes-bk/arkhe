@@ -31,20 +31,28 @@ export async function login(_prevState: FormState, formData: FormData): Promise<
     .eq('id', user?.id)
     .single()
 
-  if (userData?.role === 'salon') {
+  if (!userData) {
+    await supabase.auth.signOut()
+    return { error: 'Profil introuvable, contactez le support.' }
+  }
+
+  console.log("userData : ", userData);
+  
+
+  if (userData.role === 'salon') {
     const { data: salon } = await supabase
       .from('salons')
       .select('statut_validation')
       .eq('user_id', user?.id)
       .single()
 
-    if (salon?.statut_validation === 'waiting') {
+    if (!salon || salon.statut_validation === 'waiting') {
       await supabase.auth.signOut()
       return { error: 'Votre compte est en attente de validation par notre équipe.' }
     }
   }
 
-  if (userData?.role === 'admin') redirect('/admin')
+  if (userData.role === 'admin') redirect('/admin')
   redirect('/dashboard')
 }
 
