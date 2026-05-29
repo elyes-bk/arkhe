@@ -9,6 +9,7 @@ import { SiretInput } from '@/components/inputs/SiretInput'
 import { SalonNameInput } from '@/components/inputs/SalonNameInput'
 import { DocumentUpload } from '@/components/inputs/DocumentUpload'
 import { Button } from '@/components/ui/Button'
+import { register } from '@/actions/auth'
 import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
@@ -90,7 +91,6 @@ export default function RegisterPage() {
     }
 
     try {
-      const { register } = await import('@/actions/auth')
       const result = await register(null, formData)
       
       if (result?.error) {
