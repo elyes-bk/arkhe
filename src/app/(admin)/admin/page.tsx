@@ -22,7 +22,7 @@ export default async function DashboardAdmin() {
   }))
 
   return (
-    <div className="flex flex-col gap-8 p-8 max-w-5xl mx-auto">
+    <div className="flex flex-col gap-8 mx-auto">
       <AdminModerationClient initialSalons={formattedSalons} />
       <CollectionManager salons={formattedSalons} />
     </div>

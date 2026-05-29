@@ -120,6 +120,7 @@ export async function register(_prevState: FormState, formData: FormData): Promi
       siret,
       url_justificatif_local: publicUrl,
       emplacement: `SRID=4326;POINT(${coords.lng} ${coords.lat})`,
+      adresse,
       statut_validation: 'waiting',
     })
 
