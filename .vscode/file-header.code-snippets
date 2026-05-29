@@ -1,0 +1,15 @@
+{
+  "File Header Annotation": {
+    "prefix": "header",
+    "body": [
+      "/**",
+      " * @file ${TM_FILENAME}",
+      " * @project ARKHE Platform",
+      " * @description ${1:Insérer ici le rôle et l'utilité du fichier}",
+      " * @author ${2:Yann}",
+      " */",
+      ""
+    ],
+    "description": "Génère un en-tête de fichier automatique avec son nom"
+  }
+}

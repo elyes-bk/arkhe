@@ -1,35 +1,28 @@
-import type { Metadata } from "next";
-import { Kumbh_Sans, Montserrat } from "next/font/google";
-import "./globals.css";
+import { Kumbh_Sans, Montserrat } from 'next/font/google';
+import './globals.css';
 
+// Configuration de Kumbh Sans (Titres / UI active)
 const kumbhSans = Kumbh_Sans({
-  subsets: ["latin"],
-  variable: "--font-kumbh",
-  weight: ["400", "500", "600", "700"],
+  subsets: ['latin'],
+  variable: '--font-kumbh',
+  weight: ['300', '400', '500', '600', '700', '900'],
 });
 
+// Configuration de Montserrat (Texte / Formulaires)
 const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-  weight: ["400", "500", "600"],
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  weight: ['300', '400', '500', '600', '700'],
 });
-
-export const metadata: Metadata = {
-  title: "ARKHE — Carbone haute performance",
-  description:
-    "Transformez vos cheveux en carbone haute performance. Collecte, revalorisation et transformation pour les salons professionnels.",
-};
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="fr">
-      <body
-        className={`${kumbhSans.variable} ${montserrat.variable} font-montserrat antialiased`}
-      >
+    <html lang="fr" className={`${kumbhSans.variable} ${montserrat.variable}`}>
+      <body className="bg-white text-[#1B1B1D] antialiased">
         {children}
       </body>
     </html>

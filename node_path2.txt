@@ -1,0 +1,19 @@
+Path 1:
+Document [0:0]
+Maquettes [101:3]
+Admin coiffeur [503:3498]
+Inscription desktop [191:809]
+Frame 1707 [680:2264]
+Frame 1701 [656:10389]
+Frame 1416 [208:657]
+Frame 1455 [224:556]
+Frame 1413 [208:658]
+
+Path 2:
+Document [0:0]
+Maquettes [101:3]
+Admin coiffeur [503:3498]
+Inscription mobile [169:145]
+Frame 1412 [169:185]
+Frame 1416 [169:193]
+Frame 1413 [169:188]

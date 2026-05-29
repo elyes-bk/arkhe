@@ -1,92 +1,138 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useState } from "react";
-import { Logo } from "@/components/Logo";
+import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 
-const navLinks = [
-  { label: "Accueil", href: "#" },
-  { label: "Notre mission", href: "#mission" },
-  { label: "Comment ça marche", href: "#etapes" },
-  { label: "Salons partenaires", href: "#temoignages" },
-];
+/* ─────────────────────────────────────────────────────────────
+   SVG Icons
+   ───────────────────────────────────────────────────────────────*/
+const HamburgerIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+)
 
-export function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+const CloseIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+)
+
+export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const navLinks = [
+    { label: 'Accueil', href: '/' },
+    { label: 'Notre mission', href: '#' },
+    { label: 'Comment ça marche', href: '#' },
+    { label: 'Salons partenaires', href: '#' },
+  ]
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 bg-arkhe-navy">
-      <div className="mx-auto flex w-full max-w-content items-center justify-between gap-4 px-4 py-2 sm:px-6 lg:px-8">
-        <Link href="/" className="shrink-0" aria-label="ARKHE — Accueil">
-          <Logo className="h-9 w-auto" />
-        </Link>
-
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-3 sm:flex md:gap-5 lg:gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="whitespace-nowrap font-montserrat text-xs text-white transition-opacity hover:opacity-80 md:text-sm lg:text-base"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex shrink-0 items-center gap-3">
-          <Link
-            href="#rejoindre"
-            className="hidden rounded bg-arkhe-blue px-3 py-1.5 font-kumbh text-xs font-medium text-white transition-opacity hover:opacity-90 sm:inline-flex sm:text-sm"
+    <>
+      <header className="sticky top-0 z-50 bg-[#04082e] h-[72px] w-full flex items-center justify-between px-[25px] md:pl-[34px] md:pr-[69px]">
+          
+          {/* Mobile Left: Hamburger Icon */}
+          <button 
+            className="md:hidden text-white flex items-center justify-center w-[30px] h-[27px]"
+            onClick={() => setMobileMenuOpen(true)}
           >
-            Rejoindre
-          </Link>
-
-          <button
-            type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="flex flex-col justify-center gap-1.5 p-2 sm:hidden"
-            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-            aria-expanded={menuOpen}
-          >
-            <span
-              className={`block h-0.5 w-6 bg-white transition-transform ${menuOpen ? "translate-y-2 rotate-45" : ""}`}
-            />
-            <span
-              className={`block h-0.5 w-6 bg-white transition-opacity ${menuOpen ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`block h-0.5 w-6 bg-white transition-transform ${menuOpen ? "-translate-y-2 -rotate-45" : ""}`}
-            />
+            <svg width="30" height="27" viewBox="0 0 30 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="0" width="29.4" height="2" fill="white" rx="1"/>
+              <rect x="0" y="12.5" width="21" height="2" fill="white" rx="1"/>
+              <rect x="0" y="25" width="12.6" height="2" fill="white" rx="1"/>
+            </svg>
           </button>
-        </div>
-      </div>
 
-      {menuOpen && (
-        <nav className="border-t border-white/10 bg-arkhe-navy px-4 py-4 sm:hidden">
-          <ul className="flex flex-col gap-3">
-            {navLinks.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="block font-montserrat text-base text-white"
+          {/* Logo */}
+          <div className="md:static">
+            <Link href="/" className="block">
+              <Image 
+                src="/logo.svg" 
+                alt="ARKHE" 
+                width={62} 
+                height={42} 
+                priority 
+                className="w-[62px] h-[42px] object-contain" 
+              />
+            </Link>
+          </div>
+
+          {/* Desktop Right: Navigation & Button */}
+          <div className="hidden md:flex flex-row items-center gap-[87px]">
+            <nav className="flex items-center gap-[54px]">
+              {navLinks.map((link, idx) => (
+                <Link 
+                  key={idx} 
+                  href={link.href} 
+                  className="text-[18px] leading-[21.94px] font-sans font-normal text-white hover:text-gray-200 transition-colors duration-200"
                 >
                   {link.label}
                 </Link>
-              </li>
-            ))}
-            <li>
-              <Link
-                href="#rejoindre"
-                onClick={() => setMenuOpen(false)}
-                className="inline-flex rounded bg-arkhe-blue px-4 py-2 font-kumbh text-sm font-medium text-white"
+              ))}
+            </nav>
+
+            <Link 
+              href="#" 
+              className="
+                bg-[#0738dc] hover:bg-blue-700 
+                text-white px-[15px] py-[7px]
+                font-heading font-medium text-[16px] leading-[19.84px]
+                transition-colors duration-200
+              "
+            >
+              Rejoindre
+            </Link>
+          </div>
+
+      </header>
+
+      {/* ────────────────── MOBILE SLIDE-IN MENU ────────────────── */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div 
+            onClick={() => setMobileMenuOpen(false)}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          />
+          <div className="absolute top-0 left-0 bottom-0 w-[280px] bg-[#04082e] p-6 flex flex-col shadow-2xl">
+            <div className="flex items-center justify-between mb-10">
+              <Image src="/logo.svg" alt="ARKHE" width={68} height={42} />
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-white hover:text-gray-300 p-1 focus:outline-none"
+                aria-label="Close menu"
+              >
+                <CloseIcon />
+              </button>
+            </div>
+            <nav className="flex flex-col gap-6">
+              {navLinks.map((link, idx) => (
+                <Link 
+                  key={idx} 
+                  href={link.href} 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg font-sans text-white hover:text-gray-200"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="mt-auto pt-6">
+              <Link 
+                href="#"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-center bg-[#0738dc] text-white font-heading font-medium py-3 text-[16px]"
               >
                 Rejoindre
               </Link>
-            </li>
-          </ul>
-        </nav>
+            </div>
+          </div>
+        </div>
       )}
-    </header>
-  );
+    </>
+  )
 }
