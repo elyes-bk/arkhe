@@ -1,7 +1,74 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { assets } from "@/lib/assets";
+
+function QuoteIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <path
+        d="M8 18c0-4.4 2.2-8 6-10.4L12 4C5.6 7.2 2 12.8 2 19v5h10v-6H8zm16 0c0-4.4 2.2-8 6-10.4L28 4c-6.4 3.2-10 8.8-10 15v5h10v-6h-4z"
+        fill="#45DBE4"
+      />
+    </svg>
+  );
+}
+
+function AvatarIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <circle cx="10" cy="7" r="3.5" stroke="#0738DC" strokeWidth="1.5" />
+      <path
+        d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6"
+        stroke="#0738DC"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function CarouselArrow({ direction }: { direction: "left" | "right" }) {
+  const rotated = direction === "left";
+  return (
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={rotated ? "rotate-180" : ""}
+      aria-hidden
+    >
+      <circle
+        cx="16"
+        cy="16"
+        r="15"
+        stroke={direction === "right" ? "#04082E" : "#BDC5DF"}
+        strokeWidth="1.5"
+        fill={direction === "right" ? "#04082E" : "none"}
+      />
+      <path
+        d="M14 11l5 5-5 5"
+        stroke={direction === "right" ? "#FFFFFF" : "#04082E"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 const testimonials = [
   {
@@ -66,12 +133,7 @@ export function TestimonialsSection() {
             className="flex size-10 items-center justify-center disabled:opacity-40"
             aria-label="Témoignage précédent"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={assets.carouselPrev}
-              alt=""
-              className="size-8 rotate-90"
-            />
+            <CarouselArrow direction="left" />
           </button>
           <button
             type="button"
@@ -80,12 +142,7 @@ export function TestimonialsSection() {
             className="flex size-10 items-center justify-center disabled:opacity-40"
             aria-label="Témoignage suivant"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={assets.carouselNext}
-              alt=""
-              className="-rotate-90 -scale-y-100 size-8"
-            />
+            <CarouselArrow direction="right" />
           </button>
         </div>
       </div>
@@ -100,20 +157,14 @@ export function TestimonialsSection() {
             key={t.name}
             className="relative w-[min(100%,320px)] shrink-0 sm:w-[340px]"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={assets.quote}
-              alt=""
-              className="absolute left-0 top-0 z-10 size-8"
-            />
+            <QuoteIcon className="absolute left-0 top-0 z-10 size-8" />
             <div className="card-gradient ml-4 mt-4 rounded-[5px] border border-arkhe-border p-5">
               <p className="font-montserrat text-sm leading-relaxed text-white sm:text-base">
                 &ldquo;{t.quote}&rdquo;
               </p>
               <div className="mt-6 flex items-center gap-3">
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-arkhe-lavender">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={assets.avatar} alt="" className="size-5" />
+                  <AvatarIcon className="size-5" />
                 </div>
                 <div className="min-w-0">
                   <p className="font-kumbh text-lg font-semibold text-white">

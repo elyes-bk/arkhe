@@ -38,6 +38,7 @@
   html {
     font-size: 16px;
     scroll-behavior: smooth;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -78,5 +79,26 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Landing — hero & cartes témoignages */
+  .hero-gradient {
+    background: linear-gradient(
+      60.67deg,
+      rgb(4, 8, 46) 23.828%,
+      rgb(13, 26, 148) 144.7%
+    );
+  }
+
+  .card-gradient {
+    background: linear-gradient(
+      69.91deg,
+      rgb(4, 8, 46) 23.828%,
+      rgb(13, 26, 148) 144.7%
+    );
+  }
+
+  .section-container {
+    @apply mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8;
   }
 }

@@ -1,6 +1,6 @@
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import Header from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { IntroSection } from "@/components/IntroSection";
 import { MaterialSection } from "@/components/MaterialSection";

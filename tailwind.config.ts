@@ -7,42 +7,34 @@ export default {
   ],
   theme: {
     extend: {
-<<<<<<< HEAD
       colors: {
         arkhe: {
+          // Landing
           navy: "#04082e",
           blue: "#0738dc",
           lavender: "#e2e9ff",
           border: "#bdc5df",
+          // Main / auth
+          primary: "#0738DC",
+          dark: "#04082E",
+          cyan: "#45DBE4",
+          neutral: "#1B1B1D",
+          neutral2: "#FFFFFF",
         },
       },
       fontFamily: {
         kumbh: ["var(--font-kumbh)", "sans-serif"],
         montserrat: ["var(--font-montserrat)", "sans-serif"],
+        heading: ["var(--font-kumbh)", "sans-serif"],
+        sans: ["var(--font-montserrat)", "sans-serif"],
       },
       maxWidth: {
         content: "77.5rem",
-=======
-      fontFamily: {
-        // Kumbh Sans pour les structures d'interface et les titres
-        heading: ['var(--font-kumbh)', 'sans-serif'],
-        // Montserrat pour la lecture globale
-        sans: ['var(--font-montserrat)', 'sans-serif'],
->>>>>>> origin/main
-      },
-      colors: {
-        arkhe: {
-          primary: '#0738DC',   // Bleu Électrique
-          dark: '#04082E',      // Bleu Nuit
-          cyan: '#45DBE4',      // Turquoise/Cyan
-          neutral: '#1B1B1D',   // Anthracite
-          neutral2: '#FFFFFF', // Blanc
-        },
       },
       backgroundImage: {
-        // Recréation du gradient linéaire présent sur la maquette Figma
-        'arkhe-gradient': 'linear-gradient(135deg, #04082E 0%, #1B1B1D 50%, #0738DC 100%)',
-      }
+        "arkhe-gradient":
+          "linear-gradient(135deg, #04082E 0%, #1B1B1D 50%, #0738DC 100%)",
+      },
     },
   },
   plugins: [],
