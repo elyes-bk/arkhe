@@ -46,12 +46,17 @@ export async function login(_prevState: FormState, formData: FormData): Promise<
       .eq('user_id', user?.id)
       .single()
 
-    console.log('statut salon : ', salon?.statut_validation);
+    console.log('salon complet : ', salon);
 
     if (salon?.statut_validation === 'waiting') {
       await supabase.auth.signOut()
       return { error: 'Votre compte est en attente de validation par notre équipe.' }
+    }else if (salon?.statut_validation === 'refused') {
+      await supabase.auth.signOut()
+      return { error: `Votre compte a été refusé verifié vos mail pour plus d'information.` }
     }
+
+    
   }
   
 
