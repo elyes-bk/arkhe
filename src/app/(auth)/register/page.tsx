@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Header from '@/components/Header'
@@ -12,8 +12,29 @@ import { useRouter } from 'next/navigation'
 export default function SimpleRegisterPage() {
   const router = useRouter()
 
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
+
+    if (password !== confirmPassword) {
+      setError('Les mots de passe ne correspondent pas.')
+      return
+    }
+
+    if (password.length < 6) {
+      setError('Le mot de passe doit faire au moins 6 caractères.')
+      return
+    }
+
+    // Save to sessionStorage
+    sessionStorage.setItem('arkhe_register_email', email)
+    sessionStorage.setItem('arkhe_register_password', password)
+
     // Redirect to onboarding (the complex form)
     router.push('/register/onboarding')
   }
@@ -43,9 +64,29 @@ export default function SimpleRegisterPage() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-[32px] md:gap-[56px] w-full">
             
             <div className="flex flex-col gap-[20px] w-full">
-              <EmailInput required />
-              <PasswordInput label="Mot de passe" required />
-              <PasswordInput label="Confirmez votre mot de passe" placeholder="Confirmer votre mot de passe" required />
+              {error && (
+                <div className="bg-red-50 text-red-500 p-[12px] rounded-[4px] text-[14px]">
+                  {error}
+                </div>
+              )}
+              <EmailInput 
+                required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <PasswordInput 
+                label="Mot de passe" 
+                required 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <PasswordInput 
+                label="Confirmez votre mot de passe" 
+                placeholder="Confirmer votre mot de passe" 
+                required 
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
             </div>
 
             <Button type="submit" className="w-full justify-center py-[15px] text-[18px] md:text-[20px]">
