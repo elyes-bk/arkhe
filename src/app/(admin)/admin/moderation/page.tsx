@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import AdminModerationClient from "@/components/AdminModerationClient";
+import CollectionManager from "@/components/CollectionManager";
 
 export default async function AdminModerationPage() {
   const supabase = createSupabaseServerClient();
@@ -7,7 +8,7 @@ export default async function AdminModerationPage() {
   const { data: salons } = await supabase
     .from("salons")
     .select(
-      "id, nom_commerce, siret, statut_validation, url_justificatif_local, emplacement, adresse, users(created_at)"
+      "id, nom_commerce, siret, statut_validation, url_justificatif_local, emplacement, adresse, bag_waiting, users(created_at)"
     )
     .order("statut_validation", { ascending: true });
 
@@ -20,6 +21,7 @@ export default async function AdminModerationPage() {
       url_justificatif_local: string | null;
       emplacement: unknown;
       adresse: string | null;
+      bag_waiting: number | null;
       users: { created_at: string } | { created_at: string }[] | null;
     }) => ({
       id: salon.id,
@@ -29,6 +31,7 @@ export default async function AdminModerationPage() {
       url_justificatif_local: salon.url_justificatif_local,
       emplacement: salon.emplacement,
       adresse: salon.adresse,
+      bag_waiting: salon.bag_waiting ?? 0,
       users: Array.isArray(salon.users)
         ? salon.users[0]
           ? { created_at: salon.users[0].created_at }
@@ -39,5 +42,10 @@ export default async function AdminModerationPage() {
     })
   );
 
-  return <AdminModerationClient initialSalons={formattedSalons} />;
+  return (
+    <div className="flex flex-col gap-8">
+      <AdminModerationClient initialSalons={formattedSalons} />
+      <CollectionManager salons={formattedSalons} />
+    </div>
+  );
 }
