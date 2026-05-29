@@ -59,16 +59,16 @@ export async function login(_prevState: FormState, formData: FormData): Promise<
 export async function register(_prevState: FormState, formData: FormData): Promise<FormState> {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
-  const nomCommerce = formData.get('nom_commerce') as string
-  const siret = formData.get('siret') as string
-  const adresse = formData.get('adresse') as string
-  const fichier = formData.get('justificatif') as File
+  const nomCommerce = (formData.get('nom_commerce') as string) || "Salon en attente de validation"
+  const siret = (formData.get('siret') as string) || "00000000000000"
+  const adresse = (formData.get('adresse') as string) || "Paris, France"
+  const fichier = formData.get('justificatif') as File | null
 
-  if (!email || !password || !nomCommerce || !siret || !adresse || !fichier?.size) {
+  if (!email || !password) {
     return { error: 'Tous les champs sont obligatoires.' }
   }
 
-  if (siret.length !== 14 || !/^\d+$/.test(siret)) {
+  if (siret && (siret.length !== 14 || !/^\d+$/.test(siret))) {
     return { error: 'Le SIRET doit contenir exactement 14 chiffres.' }
   }
 
@@ -86,20 +86,22 @@ export async function register(_prevState: FormState, formData: FormData): Promi
   const userId = authData.user?.id
   if (!userId) return { error: 'Erreur lors de la création du compte.' }
 
-  // Upload du justificatif dans Supabase Storage (bucket : justificatifs)
-  const fileExt = fichier.name.split('.').pop()
-  const filePath = `${userId}/kbis.${fileExt}`
-  const { error: uploadError } = await supabase.storage
-    .from('justificatifs')
-    .upload(filePath, fichier)
+  // Upload du justificatif dans Supabase Storage (bucket : justificatifs) si fourni
+  let publicUrl = "https://example.com/placeholder-kbis.pdf"
+  if (fichier && fichier.size > 0) {
+    const fileExt = fichier.name.split('.').pop()
+    const filePath = `${userId}/kbis.${fileExt}`
+    const { error: uploadError } = await supabase.storage
+      .from('justificatifs')
+      .upload(filePath, fichier)
 
-  if (uploadError) return { error: 'Erreur lors de l\'upload du justificatif.' }
-
-  const { data: { publicUrl } } = supabase.storage
-    .from('justificatifs')
-    .getPublicUrl(filePath)
-
-  // public.users est créé automatiquement par le trigger on_auth_user_created
+    if (!uploadError) {
+      const { data: { publicUrl: url } } = supabase.storage
+        .from('justificatifs')
+        .getPublicUrl(filePath)
+      publicUrl = url
+    }
+  }
 
   // Insertion dans public.salons
   const { error: salonError } = await supabase

@@ -1,123 +1,74 @@
 'use client'
 
-import { useFormState, useFormStatus } from 'react-dom'
-import { register } from '@/actions/auth'
+import React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
+import Header from '@/components/Header'
+import { EmailInput } from '@/components/inputs/EmailInput'
+import { PasswordInput } from '@/components/inputs/PasswordInput'
+import { Button } from '@/components/ui/Button'
+import { useRouter } from 'next/navigation'
 
-function SubmitButton() {
-  const { pending } = useFormStatus()
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 disabled:opacity-50 transition"
-    >
-      {pending ? 'Création du compte...' : 'Créer mon compte'}
-    </button>
-  )
-}
+export default function SimpleRegisterPage() {
+  const router = useRouter()
 
-export default function RegisterPage() {
-  const [state, action] = useFormState(register, null)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Redirect to onboarding (the complex form)
+    router.push('/register/onboarding')
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-10">
-      <div className="bg-white p-8 rounded-2xl shadow-sm w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-2">Créer un compte salon</h1>
-        <p className="text-sm text-gray-500 mb-6">
-          Votre compte sera validé par notre équipe avant activation.
-        </p>
+    <div className="min-h-screen flex flex-col bg-white">
+      
+      <Header />
 
-        {state?.error && (
-          <p className="text-red-600 text-sm mb-4 bg-red-50 p-3 rounded-lg">{state.error}</p>
-        )}
-
-        <form action={action} className="flex flex-col gap-4" encType="multipart/form-data">
-          <div>
-            <label className="block text-sm font-medium mb-1" htmlFor="nom_commerce">Nom du salon</label>
-            <input
-              id="nom_commerce"
-              name="nom_commerce"
-              type="text"
-              required
-              placeholder="Salon de coiffure Dupont"
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-            />
+      {/* 
+        ========================================================================
+        MAIN CONTENT
+        ========================================================================
+      */}
+      <div className="flex-1 flex flex-col items-center justify-center px-[20px] py-[40px] md:py-[80px]">
+        <div className="w-full max-w-[698px] flex flex-col gap-[40px]">
+          
+          <div className="flex flex-col items-center text-center gap-[8px] md:gap-[16px]">
+            <h1 className="font-heading font-semibold text-[30px] md:text-[60px] leading-tight text-[#04082E]">
+              Inscrivez-vous
+            </h1>
+            <p className="font-sans font-normal text-[15px] md:text-[16px] text-[#6E6E6E] md:text-[#000000]">
+              Créez votre espace
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1" htmlFor="siret">SIRET (14 chiffres)</label>
-            <input
-              id="siret"
-              name="siret"
-              type="text"
-              required
-              maxLength={14}
-              pattern="\d{14}"
-              placeholder="12345678901234"
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-            />
+          <form onSubmit={handleSubmit} className="flex flex-col gap-[32px] md:gap-[56px] w-full">
+            
+            <div className="flex flex-col gap-[20px] w-full">
+              <EmailInput required />
+              <PasswordInput label="Mot de passe" required />
+              <PasswordInput label="Confirmez votre mot de passe" placeholder="Confirmer votre mot de passe" required />
+            </div>
+
+            <Button type="submit" className="w-full justify-center py-[15px] text-[18px] md:text-[20px]">
+              Créer mon compte
+            </Button>
+
+          </form>
+
+          <div className="flex flex-col gap-[32px] items-center w-full mt-[-16px]">
+            <div className="flex flex-row items-center gap-[31px] w-full justify-center">
+              <div className="h-px bg-[#E5E5E5] flex-1 max-w-[100px]" />
+              <span className="font-heading font-medium text-[15px] md:text-[16px] text-[#000000]">Ou</span>
+              <div className="h-px bg-[#E5E5E5] flex-1 max-w-[100px]" />
+            </div>
+
+            <p className="font-sans font-normal text-[15px] md:text-[16px] text-[#000000] text-center">
+              Vous avez un compte ? <Link href="/login" className="text-[#0738DC] hover:underline font-medium">Connectez vous</Link>
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1" htmlFor="adresse">Adresse du salon</label>
-            <input
-              id="adresse"
-              name="adresse"
-              type="text"
-              required
-              placeholder="12 rue de la Paix, 75001 Paris"
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1" htmlFor="justificatif">
-              Justificatif (Kbis ou équivalent)
-            </label>
-            <input
-              id="justificatif"
-              name="justificatif"
-              type="file"
-              required
-              accept=".pdf,.jpg,.jpeg,.png"
-              className="w-full border rounded-lg px-3 py-2 text-sm file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-100"
-            />
-          </div>
-
-          <hr className="my-1" />
-
-          <div>
-            <label className="block text-sm font-medium mb-1" htmlFor="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1" htmlFor="password">Mot de passe</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              minLength={6}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-            />
-          </div>
-
-          <SubmitButton />
-        </form>
-
-        <p className="text-sm text-center mt-4 text-gray-600">
-          Déjà un compte ?{' '}
-          <Link href="/login" className="font-medium underline">Se connecter</Link>
-        </p>
+        </div>
       </div>
+
     </div>
   )
 }
