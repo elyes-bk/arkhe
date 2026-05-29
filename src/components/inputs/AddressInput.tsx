@@ -14,9 +14,9 @@ const LocationIcon = () => (
 export const AddressInput = forwardRef<HTMLInputElement, AddressInputProps>(
   ({ results = [], className = '', ...props }, ref) => {
     return (
-      <div className={`flex flex-col gap-[10px] bg-white border-[0.75px] border-[#BDC5DF] rounded-[5px] px-[13px] py-[24px] ${className}`}>
+      <div className={`flex flex-col gap-[10px] bg-white border-[0.75px] border-[#BDC5DF] rounded-[5px] px-[13px] py-[24px] h-full ${className}`}>
         
-        <div className="flex flex-col gap-[16px]">
+        <div className="flex flex-col gap-[16px] h-full">
           {/* Header row */}
           <div className="flex flex-row items-center gap-[8px]">
             <LocationIcon />

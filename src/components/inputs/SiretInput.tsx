@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react'
 
 interface SiretInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isValid?: boolean
+  isLoading?: boolean
 }
 
 const BusinessIcon = () => (
@@ -24,27 +25,36 @@ const CheckBadgeIcon = () => (
 )
 
 export const SiretInput = forwardRef<HTMLInputElement, SiretInputProps>(
-  ({ isValid = false, className = '', ...props }, ref) => {
+  ({ isValid = false, isLoading = false, className = '', ...props }, ref) => {
     return (
-      <div className={`flex flex-col gap-[16px] bg-white border-[0.75px] border-[#BDC5DF] rounded-[5px] px-[13px] py-[24px] ${className}`}>
+      <div className={`flex flex-col gap-[16px] bg-white border border-[#E2E8F0] rounded-[5px] px-[13px] py-[24px] ${className}`}>
         
         {/* Header row */}
-        <div className="flex flex-row items-center gap-[11px] flex-wrap">
+        <div className="flex flex-col items-start md:flex-row md:items-center justify-between gap-[8px] md:gap-[11px] w-full">
           <div className="flex flex-row items-center gap-[8px]">
             <BusinessIcon />
-            <span className="font-sans font-normal text-[15px] md:text-[16px] leading-[18.28px] md:leading-[19.5px] text-[#000000]">
-              Numéro SIRET *
+            <span className="font-heading font-medium text-[15px] md:text-[16px] leading-[18.6px] md:leading-[19.84px] text-[#000000]">
+              Numéro SIRET <span className="text-[#FF0000]">*</span>
             </span>
           </div>
           
-          {isValid && (
-            <div className="flex flex-row items-center gap-[5px] bg-[#EAF7ED] rounded-[3px] px-[6px] py-[3px]">
-              <CheckBadgeIcon />
-              <span className="font-sans font-normal text-[11px] md:text-[12px] leading-[13.41px] md:leading-[14.63px] text-[#59A769]">
-                Vérification automatique
-              </span>
-            </div>
-          )}
+          <div className="flex flex-row items-center min-h-[22px]">
+            {isLoading ? (
+              <div className="flex flex-row items-center gap-[5px] bg-[#FFF8E6] rounded-[3px] px-[6px] py-[3px]">
+                <div className="w-[12px] h-[12px] border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                <span className="font-sans font-normal text-[11px] md:text-[12px] leading-[13.41px] md:leading-[14.63px] text-[#F59E0B]">
+                  Recherche en cours...
+                </span>
+              </div>
+            ) : isValid ? (
+              <div className="flex flex-row items-center gap-[5px] bg-[#EAF7ED] rounded-[3px] px-[6px] py-[3px]">
+                <CheckBadgeIcon />
+                <span className="font-sans font-normal text-[11px] md:text-[12px] leading-[13.41px] md:leading-[14.63px] text-[#59A769]">
+                  Vérification automatique
+                </span>
+              </div>
+            ) : null}
+          </div>
         </div>
 
         {/* Input box */}

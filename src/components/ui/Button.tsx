@@ -5,13 +5,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
 }
 
-export function Button({ variant = 'primary', className = '', children, ...props }: ButtonProps) {
+export function Button({ variant = 'primary', className = '', children, disabled, ...props }: ButtonProps) {
   
   const baseClasses = "flex flex-row items-center justify-center gap-[10px] px-[50px] py-[10px] rounded-[4px] font-heading font-medium text-[16px] leading-[19.84px] transition-colors"
   
   const variants = {
-    primary: "bg-[#0738dc] text-white hover:bg-[#8AB4F8] shadow-sm",
-    outline: "bg-transparent border border-[#0738DC] text-[#0738DC] hover:bg-blue-50"
+    primary: disabled ? "bg-[#8AB4F8] text-white cursor-not-allowed shadow-sm" : "bg-[#0738dc] text-white hover:bg-[#8AB4F8] shadow-sm",
+    outline: disabled ? "bg-transparent border border-[#8AB4F8] text-[#8AB4F8] cursor-not-allowed" : "bg-transparent border border-[#0738DC] text-[#0738DC] hover:bg-blue-50"
   }
 
   // Adjust padding if it's the smaller "Envoyer" or "Rejoindre" button which might have different padding,
@@ -20,6 +20,7 @@ export function Button({ variant = 'primary', className = '', children, ...props
   return (
     <button 
       className={`${baseClasses} ${variants[variant]} ${className}`}
+      disabled={disabled}
       {...props}
     >
       {children}

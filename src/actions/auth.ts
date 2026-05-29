@@ -117,7 +117,7 @@ export async function register(_prevState: FormState, formData: FormData): Promi
 
   if (salonError) return { error: 'Erreur lors de la création du salon.' }
 
-  redirect('/dashboard')
+  redirect('/register/success')
 }
 
 export async function logout() {

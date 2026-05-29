@@ -1,0 +1,574 @@
+=== DESKTOP ===
+Inscription desktop (FRAME)
+  W:1440 H:1115.9447021484375
+  Flex: VERTICAL Gap: 0px Padding: 0 0 38 0
+  BgColor: rgba(255,255,255,1)
+  Header (INSTANCE)
+    W:1440 H:71.94469451904297
+    Flex: VERTICAL Gap: 10px Padding: 15 69 15 34
+    BgColor: rgba(4,8,46,1)
+    Frame 1589 (FRAME)
+      W:1337 H:41.94469451904297
+      Flex: HORIZONTAL Gap: 469px Padding: 0 0 0 0
+      Group 1 (GROUP)
+        W:72.201171875 H:41.94469451904297
+        RKHE (TEXT)
+          W:17.349864959716797 H:41.944693947953056
+          Text: 'RKHE'
+          Font: Montserrat 600 14px
+          Color: rgba(255,255,255,1)
+        Vector (VECTOR)
+          W:54.85133361816406 H:41.944664001464844
+          BgColor: rgba(255,255,255,1)
+      Frame 1588 (FRAME)
+        W:941 H:36
+        Flex: HORIZONTAL Gap: 87px Padding: 0 0 0 0
+        Frame 1410 (FRAME)
+          W:713 H:22
+          Flex: HORIZONTAL Gap: 54px Padding: 0 0 0 0
+          nav-1 (TEXT)
+            W:66 H:22
+            Text: 'Accueil'
+            Font: Montserrat 400 18px
+            Color: rgba(255,255,255,1)
+          nav-1 (TEXT)
+            W:126 H:22
+            Text: 'Notre mission'
+            Font: Montserrat 400 18px
+            Color: rgba(255,255,255,1)
+          nav-2 (TEXT)
+            W:193 H:22
+            Text: 'Comment ça marche'
+            Font: Montserrat 400 18px
+            Color: rgba(255,255,255,1)
+          nav-3 (TEXT)
+            W:166 H:22
+            Text: 'Salons partenaires'
+            Font: Montserrat 400 18px
+            Color: rgba(255,255,255,1)
+        Rejoindre (INSTANCE)
+          W:141 H:36
+          Flex: VERTICAL Gap: 10px Padding: 7 15 7 15
+          BgColor: rgba(7,56,220,1)
+          Frame 1587 (FRAME)
+            W:73 H:20
+            Flex: HORIZONTAL Gap: 16px Padding: 0 0 0 0
+            cta-lbl (TEXT)
+              W:73 H:20
+              Text: 'Rejoindre '
+              Font: Kumbh Sans 500 16px
+              Color: rgba(255,255,255,1)
+  Frame 1707 (FRAME)
+    W:1440 H:1006
+    Flex: VERTICAL Gap: -37px Padding: 0 0 0 0
+    Frame 1701 (FRAME)
+      W:1440 H:188
+      Flex: VERTICAL Gap: 10px Padding: 17 125 86 101
+      BgColor: rgba(255,255,255,1)
+      Frame 1416 (FRAME)
+        W:1231 H:85
+        Flex: VERTICAL Gap: 24px Padding: 0 0 0 0
+        Frame 1455 (FRAME)
+          W:1231 H:56
+          Flex: HORIZONTAL Gap: 24px Padding: 0 0 0 0
+          Frame 1413 (FRAME)
+            W:319 H:56
+            Flex: VERTICAL Gap: 8px Padding: 0 0 0 0
+            title (TEXT)
+              W:319 H:30
+              Text: 'Commencer mon inscription'
+              Font: Kumbh Sans 700 24px
+              Color: rgba(255,255,255,1)
+            sub (TEXT)
+              W:319 H:18
+              Text: 'Etape 1/1 - Documents obligatoires'
+              Font: Montserrat 400 15px
+              Color: rgba(255,255,255,1)
+          sub (TEXT)
+            W:93 H:16
+            Text: '50% complété'
+            Font: Montserrat 400 13px
+            Color: rgba(255,255,255,1)
+        Frame 1415 (FRAME)
+          W:1231 H:5
+          Flex: VERTICAL Gap: 8px Padding: 0 0 0 0
+          Frame 1414 (FRAME)
+            W:1231 H:5
+            BgColor: rgba(255,255,255,1)
+            Rectangle 2 (RECTANGLE)
+              W:611 H:5
+              BgColor: rgba(7,56,220,1)
+    Frame 1456 (FRAME)
+      W:1238 H:855
+      Flex: VERTICAL Gap: 24px Padding: 0 0 0 0
+      Frame 1454 (FRAME)
+        W:1238 H:855
+        Flex: VERTICAL Gap: 48px Padding: 0 0 0 0
+        Frame 1417 (FRAME)
+          W:1238 H:101
+          Flex: VERTICAL Gap: 10px Padding: 16 32 16 32
+          BgColor: rgba(226,233,255,1)
+          Frame 1420 (FRAME)
+            W:1174 H:69
+            Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+            Frame 1419 (FRAME)
+              W:302 H:33
+              Flex: HORIZONTAL Gap: 10px Padding: 0 0 0 0
+              Frame 1418 (FRAME)
+                W:33 H:33
+                BgColor: rgba(255,255,255,1)
+                Group 8742 (GROUP)
+                  W:19.799999237060547 H:19.799999237060547
+                  Vector (VECTOR)
+                    W:2.4749999046325684 H:8.662500381469727
+                  Ellipse 47 (ELLIPSE)
+                    W:19.799999237060547 H:19.799999237060547
+              title (TEXT)
+                W:259 H:25
+                Text: 'Pourquoi ces informations ?'
+                Font: Kumbh Sans 700 20px
+                Color: rgba(0,0,0,1)
+            sub (TEXT)
+              W:1174 H:20
+              Text: 'Le SIRET et vos informations professionnelles nous permettent de vérifier votre activité et de garantir une plateforme fiable et sécurisée.'
+              Font: Montserrat 400 16px
+              Color: rgba(0,0,0,1)
+        Frame 1453 (FRAME)
+          W:1238 H:618
+          Flex: VERTICAL Gap: 32px Padding: 0 0 0 0
+          Frame 1452 (FRAME)
+            W:1238 H:566
+            Flex: VERTICAL Gap: 24px Padding: 0 0 0 0
+            Frame 1451 (FRAME)
+              W:1238 H:281
+              Flex: HORIZONTAL Gap: 20px Padding: 0 0 0 0
+              Adresse desktop (INSTANCE)
+                W:609 H:281
+                Flex: VERTICAL Gap: 10px Padding: 24 13 24 13
+                BgColor: rgba(255,255,255,1)
+                Frame 1426 (FRAME)
+                  W:583 H:86
+                  Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+                  Frame 1424 (FRAME)
+                    W:583 H:28
+                    Flex: HORIZONTAL Gap: 8px Padding: 0 0 0 0
+                    weui:location-outlined (FRAME)
+                      W:28 H:28
+                      BgColor: rgba(255,255,255,1)
+                      Vector (VECTOR)
+                        W:18.66666603088379 H:23.813419342041016
+                        BgColor: rgba(7,56,220,1)
+                    Adresse du salon de coiffure (TEXT)
+                      W:212 H:20
+                      Text: 'Adresse du salon de coiffure'
+                      Font: Kumbh Sans 500 16px
+                      Color: rgba(0,0,0,1)
+                  Frame 1425 (FRAME)
+                    W:583 H:42
+                    Adresse du salon de coiffure (TEXT)
+                      W:226 H:20
+                      Text: 'Adresse du salon de coiffure'
+                      Font: Montserrat 400 16px
+                      Color: rgba(110,110,110,1)
+              Frame 1449 (FRAME)
+                W:609 H:281
+                Flex: VERTICAL Gap: 24px Padding: 0 0 0 0
+                Siret desktop (INSTANCE)
+                  W:609 H:127
+                  Flex: VERTICAL Gap: 10px Padding: 24 13 24 13
+                  BgColor: rgba(255,255,255,1)
+                  Frame 1426 (FRAME)
+                    W:583 H:79
+                    Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+                    Frame 1424 (FRAME)
+                      W:583 H:21
+                      Flex: HORIZONTAL Gap: 11px Padding: 0 0 0 0
+                      Frame 1429 (FRAME)
+                        W:149 H:20
+                        Flex: HORIZONTAL Gap: 8px Padding: 0 0 0 0
+                        ion:business-outline (FRAME)
+                          W:20 H:20
+                          BgColor: rgba(255,255,255,1)
+                          Vector (VECTOR)
+                            W:16.25 H:17.5
+                          Vector (VECTOR)
+                            W:7.500000953674316 H:13.750000953674316
+                            BgColor: rgba(7,56,220,1)
+                          Vector (VECTOR)
+                            W:1.7666623381254567 H:1.7666623381264799
+                            BgColor: rgba(7,56,220,1)
+                          Vector (VECTOR)
+                            W:6.874800682067871 H:13.749800682067871
+                            BgColor: rgba(7,56,220,1)
+                        Numéro SIRET * (TEXT)
+                          W:121 H:20
+                          Text: 'Numéro SIRET *'
+                          Font: Montserrat 400 16px
+                          Color: rgba(0,0,0,1)
+                      Frame 1423 (FRAME)
+                        W:179 H:21
+                        Flex: HORIZONTAL Gap: 5px Padding: 3 6 3 6
+                        BgColor: rgba(234,247,237,1)
+                        qlementine-icons:certified-16 (FRAME)
+                          W:12 H:12
+                          BgColor: rgba(255,255,255,1)
+                          Vector (VECTOR)
+                            W:5.620927810668945 H:4.4956488609313965
+                            BgColor: rgba(89,167,105,1)
+                          Vector (VECTOR)
+                            W:11.988964080810547 H:11.989713668823242
+                            BgColor: rgba(89,167,105,1)
+                        Vérification automatique (TEXT)
+                          W:150 H:15
+                          Text: 'Vérification automatique'
+                          Font: Montserrat 400 12px
+                          Color: rgba(89,167,105,1)
+                    Frame 1425 (FRAME)
+                      W:583 H:42
+                      000 000 000 0000 (TEXT)
+                        W:151 H:20
+                        Text: '000 000 000 0000'
+                        Font: Montserrat 400 16px
+                        Color: rgba(110,110,110,1)
+                Nom salon desktop (INSTANCE)
+                  W:609 H:130
+                  Flex: VERTICAL Gap: 10px Padding: 24 13 24 13
+                  BgColor: rgba(255,255,255,1)
+                  Frame 1426 (FRAME)
+                    W:583 H:82
+                    Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+                    Frame 1424 (FRAME)
+                      W:583 H:24
+                      Flex: HORIZONTAL Gap: 8px Padding: 0 0 0 0
+                      stash:shop-light (FRAME)
+                        W:24 H:24
+                        BgColor: rgba(255,255,255,1)
+                        Vector (VECTOR)
+                          W:19.23341941833496 H:15.5
+                          BgColor: rgba(7,56,220,1)
+                      Nom du salon (auto rempli via SIRET ) (TEXT)
+                        W:268 H:20
+                        Text: 'Nom du salon (auto rempli via SIRET ) '
+                        Font: Kumbh Sans 500 15px
+                        Color: rgba(0,0,0,1)
+                    Frame 1425 (FRAME)
+                      W:583 H:42
+                      Salon de coiffure exemple (TEXT)
+                        W:195 H:18
+                        Text: 'Salon de coiffure exemple'
+                        Font: Montserrat 400 15px
+                        Color: rgba(110,110,110,1)
+            Component 21 (INSTANCE)
+              W:1440 H:261
+              Flex: VERTICAL Gap: 10px Padding: 24 13 24 13
+              BgColor: rgba(255,255,255,1)
+              Frame 1433 (FRAME)
+                W:1212 H:177
+                Flex: VERTICAL Gap: 24px Padding: 0 0 0 0
+                Frame 1418 (FRAME)
+                  W:48 H:48
+                  BgColor: rgba(226,233,255,1)
+                  fluent:document-arrow-up-20-regular (FRAME)
+                    W:38 H:38
+                    BgColor: rgba(255,255,255,1)
+                    Vector (VECTOR)
+                      W:28.5 H:32.29999923706055
+                      BgColor: rgba(7,56,220,1)
+                Frame 1432 (FRAME)
+                  W:1212 H:44
+                  Flex: VERTICAL Gap: 8px Padding: 0 0 0 0
+                  Déposer le justificatif de locaux (TEXT)
+                    W:1212 H:19
+                    Text: 'Déposer le justificatif de locaux'
+                    Font: Kumbh Sans 500 15px
+                    Color: rgba(0,0,0,1)
+                  sub (TEXT)
+                    W:1212 H:17
+                    Text: 'PDF, JPG, PNG · Max 5 Mo · Bail ou titre de propriété'
+                    Font: Montserrat 400 14px
+                    Color: rgba(0,0,0,1)
+                Frame 1431 (FRAME)
+                  W:207 H:37
+                  Flex: HORIZONTAL Gap: 10px Padding: 10 27 10 27
+                  Parcourir mes fichiers (TEXT)
+                    W:153 H:17
+                    Text: 'Parcourir mes fichiers'
+                    Font: Montserrat 400 14px
+                    Color: rgba(7,56,220,1)
+          Frame 1442 (FRAME)
+            W:1238 H:20
+            Flex: HORIZONTAL Gap: 16px Padding: 0 0 0 0
+            Component 23 (INSTANCE)
+              W:19 H:19
+            J’accepte les conditions générales et autorise ARKHE à procéder à la collecte des cheveux. * (TEXT)
+              W:1207 H:20
+              Text: 'J’accepte les conditions générales et autorise ARKHE à procéder à la collecte des cheveux. *'
+              Font: Montserrat 400 16px
+              Color: rgba(0,0,0,1)
+        CTA (INSTANCE)
+          W:445 H:40
+          Flex: HORIZONTAL Gap: 10px Padding: 10 50 10 50
+          BgColor: rgba(7,56,220,1)
+          Générer itinéraire optimal (TEXT)
+            W:174 H:20
+            Text: 'Soumettre mon dossier'
+            Font: Kumbh Sans 500 16px
+            Color: rgba(255,255,255,1)
+
+
+=== MOBILE ===
+Inscription mobile (FRAME)
+  W:390 H:1297
+  Flex: VERTICAL Gap: 0px Padding: 240 0 40 0
+  BgColor: rgba(255,255,255,1)
+  Frame 1412 (FRAME)
+    W:390 H:185
+    Frame 1416 (FRAME)
+      W:340 H:109
+      Flex: VERTICAL Gap: 24px Padding: 0 0 0 0
+      Frame 1413 (FRAME)
+        W:319 H:56
+        Flex: VERTICAL Gap: 8px Padding: 0 0 0 0
+        title (TEXT)
+          W:319 H:30
+          Text: 'Commencer mon inscription'
+          Font: Kumbh Sans 700 24px
+          Color: rgba(255,255,255,1)
+        sub (TEXT)
+          W:319 H:18
+          Text: 'Etape 1/1 - Documents obligatoires'
+          Font: Montserrat 400 15px
+          Color: rgba(255,255,255,1)
+      Frame 1415 (FRAME)
+        W:340 H:29
+        Flex: VERTICAL Gap: 8px Padding: 0 0 0 0
+        Frame 1414 (FRAME)
+          W:340 H:5
+          BgColor: rgba(255,255,255,1)
+          Rectangle 2 (RECTANGLE)
+            W:169 H:5
+            BgColor: rgba(7,56,220,1)
+        sub (TEXT)
+          W:340 H:16
+          Text: '50% complété'
+          Font: Montserrat 400 13px
+          Color: rgba(255,255,255,1)
+  Frame 1438 (FRAME)
+    W:340 H:1017
+    Flex: VERTICAL Gap: 34px Padding: 0 0 0 0
+    Frame 1417 (FRAME)
+      W:340 H:149
+      Flex: VERTICAL Gap: 10px Padding: 16 13 16 13
+      BgColor: rgba(226,233,255,1)
+      Frame 1420 (FRAME)
+        W:314 H:117
+        Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+        Frame 1419 (FRAME)
+          W:302 H:33
+          Flex: HORIZONTAL Gap: 10px Padding: 0 0 0 0
+          Frame 1418 (FRAME)
+            W:33 H:33
+            BgColor: rgba(255,255,255,1)
+            Group 8742 (GROUP)
+              W:19.799999237060547 H:19.799999237060547
+              Vector (VECTOR)
+                W:2.4749999046325684 H:8.662500381469727
+              Ellipse 47 (ELLIPSE)
+                W:19.799999237060547 H:19.799999237060547
+          title (TEXT)
+            W:259 H:25
+            Text: 'Pourquoi ces informations ?'
+            Font: Kumbh Sans 700 20px
+            Color: rgba(0,0,0,1)
+        sub (TEXT)
+          W:314 H:68
+          Text: 'Le SIRET et vos informations professionnelles nous permettent de vérifier votre activité et de garantir une plateforme fiable et sécurisée.'
+          Font: Montserrat 400 14px
+          Color: rgba(0,0,0,1)
+    Frame 1437 (FRAME)
+      W:340 H:675
+      Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+      Siret (INSTANCE)
+        W:340 H:125
+        Flex: VERTICAL Gap: 10px Padding: 24 13 24 13
+        BgColor: rgba(255,255,255,1)
+        Frame 1426 (FRAME)
+          W:314 H:77
+          Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+          Frame 1424 (FRAME)
+            W:314 H:19
+            Flex: HORIZONTAL Gap: 11px Padding: 0 0 0 0
+            Frame 1429 (FRAME)
+              W:140 H:19
+              Flex: HORIZONTAL Gap: 8px Padding: 0 0 0 0
+              ion:business-outline (FRAME)
+                W:18 H:18
+                BgColor: rgba(255,255,255,1)
+                Vector (VECTOR)
+                  W:14.625 H:15.75
+                Vector (VECTOR)
+                  W:6.750000953674316 H:12.375000953674316
+                  BgColor: rgba(7,56,220,1)
+                Vector (VECTOR)
+                  W:1.5899960705953617 H:1.5899960705937701
+                  BgColor: rgba(7,56,220,1)
+                Vector (VECTOR)
+                  W:6.187320709228516 H:12.374820709228516
+                  BgColor: rgba(7,56,220,1)
+              Numéro SIRET * (TEXT)
+                W:114 H:19
+                Text: 'Numéro SIRET *'
+                Font: Montserrat 400 15px
+                Color: rgba(0,0,0,1)
+            Frame 1423 (FRAME)
+              W:167 H:19
+              Flex: HORIZONTAL Gap: 5px Padding: 3 6 3 6
+              BgColor: rgba(234,247,237,1)
+              qlementine-icons:certified-16 (FRAME)
+                W:12 H:12
+                BgColor: rgba(255,255,255,1)
+                Vector (VECTOR)
+                  W:5.620927810668945 H:4.4956488609313965
+                  BgColor: rgba(89,167,105,1)
+                Vector (VECTOR)
+                  W:11.988964080810547 H:11.989713668823242
+                  BgColor: rgba(89,167,105,1)
+              Vérification automatique (TEXT)
+                W:138 H:13
+                Text: 'Vérification automatique'
+                Font: Montserrat 400 11px
+                Color: rgba(89,167,105,1)
+          Frame 1425 (FRAME)
+            W:314 H:42
+            000 000 000 0000 (TEXT)
+              W:151 H:20
+              Text: '000 000 000 0000'
+              Font: Montserrat 400 16px
+              Color: rgba(110,110,110,1)
+      Nom salon (INSTANCE)
+        W:340 H:130
+        Flex: VERTICAL Gap: 10px Padding: 24 13 24 13
+        BgColor: rgba(255,255,255,1)
+        Frame 1426 (FRAME)
+          W:314 H:82
+          Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+          Frame 1424 (FRAME)
+            W:314 H:24
+            Flex: HORIZONTAL Gap: 8px Padding: 0 0 0 0
+            stash:shop-light (FRAME)
+              W:24 H:24
+              BgColor: rgba(255,255,255,1)
+              Vector (VECTOR)
+                W:19.23341941833496 H:15.5
+                BgColor: rgba(7,56,220,1)
+            Nom du salon (auto rempli via SIRET ) (TEXT)
+              W:250 H:19
+              Text: 'Nom du salon (auto rempli via SIRET ) '
+              Font: Kumbh Sans 500 15px
+              Color: rgba(0,0,0,1)
+          Frame 1425 (FRAME)
+            W:314 H:42
+            Salon de coiffure exemple (TEXT)
+              W:195 H:18
+              Text: 'Salon de coiffure exemple'
+              Font: Montserrat 400 15px
+              Color: rgba(110,110,110,1)
+      Adresse (INSTANCE)
+        W:340 H:130
+        Flex: VERTICAL Gap: 10px Padding: 24 13 24 13
+        BgColor: rgba(255,255,255,1)
+        Frame 1426 (FRAME)
+          W:314 H:82
+          Flex: VERTICAL Gap: 16px Padding: 0 0 0 0
+          Frame 1424 (FRAME)
+            W:314 H:24
+            Flex: HORIZONTAL Gap: 8px Padding: 0 0 0 0
+            weui:location-outlined (FRAME)
+              W:24 H:24
+              BgColor: rgba(255,255,255,1)
+              Vector (VECTOR)
+                W:16 H:20.411502838134766
+                BgColor: rgba(7,56,220,1)
+            Adresse du salon de coiffure (TEXT)
+              W:199 H:19
+              Text: 'Adresse du salon de coiffure'
+              Font: Kumbh Sans 500 15px
+              Color: rgba(0,0,0,1)
+          Frame 1425 (FRAME)
+            W:314 H:42
+            Adresse du salon de coiffure (TEXT)
+              W:212 H:18
+              Text: 'Adresse du salon de coiffure'
+              Font: Montserrat 400 15px
+              Color: rgba(110,110,110,1)
+      Put document (INSTANCE)
+        W:340 H:242
+        Flex: VERTICAL Gap: 10px Padding: 24 13 24 13
+        BgColor: rgba(255,255,255,1)
+        Frame 1433 (FRAME)
+          W:314 H:194
+          Flex: VERTICAL Gap: 24px Padding: 0 0 0 0
+          Frame 1418 (FRAME)
+            W:48 H:48
+            BgColor: rgba(226,233,255,1)
+            fluent:document-arrow-up-20-regular (FRAME)
+              W:38 H:38
+              BgColor: rgba(255,255,255,1)
+              Vector (VECTOR)
+                W:28.5 H:32.29999923706055
+                BgColor: rgba(7,56,220,1)
+          Frame 1432 (FRAME)
+            W:314 H:61
+            Flex: VERTICAL Gap: 8px Padding: 0 0 0 0
+            Déposer le justificatif de locaux (TEXT)
+              W:314 H:19
+              Text: 'Déposer le justificatif de locaux'
+              Font: Kumbh Sans 500 15px
+              Color: rgba(0,0,0,1)
+            sub (TEXT)
+              W:314 H:34
+              Text: 'PDF, JPG, PNG · Max 5 Mo · Bail ou titre de propriété'
+              Font: Montserrat 400 14px
+              Color: rgba(0,0,0,1)
+          Frame 1431 (FRAME)
+            W:207 H:37
+            Flex: HORIZONTAL Gap: 10px Padding: 10 27 10 27
+            BgColor: rgba(255,255,255,1)
+            Parcourir mes fichiers (TEXT)
+              W:153 H:17
+              Text: 'Parcourir mes fichiers'
+              Font: Montserrat 400 14px
+              Color: rgba(7,56,220,1)
+    Frame 1442 (FRAME)
+      W:340 H:51
+      Flex: HORIZONTAL Gap: 16px Padding: 0 0 0 0
+      Component 8 (INSTANCE)
+        W:15 H:15
+      J’accepte les conditions générales et autorise ARKHE à procéder à la collecte des cheveux. * (TEXT)
+        W:309 H:51
+        Text: 'J’accepte les conditions générales et autorise ARKHE à procéder à la collecte des cheveux. *'
+        Font: Montserrat 400 14px
+        Color: rgba(0,0,0,1)
+    CTA (INSTANCE)
+      W:340 H:40
+      Flex: HORIZONTAL Gap: 10px Padding: 10 50 10 50
+      BgColor: rgba(7,56,220,1)
+      Générer itinéraire optimal (TEXT)
+        W:174 H:20
+        Text: 'Soumettre mon dossier'
+        Font: Kumbh Sans 500 16px
+        Color: rgba(255,255,255,1)
+  [COMP] Sidebar - Navigation Admin/Header mobile (INSTANCE)
+    W:390 H:76
+    Flex: HORIZONTAL Gap: 263px Padding: 17 25 17 25
+    BgColor: rgba(4,8,46,1)
+    Group 8743 (GROUP)
+      W:29.399999618530273 H:21
+      Vector 7 (VECTOR)
+        W:29.399999618530273 H:0
+      Vector 8 (VECTOR)
+        W:21 H:0
+      Vector 9 (VECTOR)
+        W:12.600000381469727 H:0
+    Plan de travail 3_1 3 1 (RECTANGLE)
+      W:62 H:42

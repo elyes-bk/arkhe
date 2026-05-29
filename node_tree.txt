@@ -1,0 +1,21 @@
+MDP desktop (INSTANCE) 507:4478
+  Label (FRAME) I507:4478;426:3183
+    Mot de passe (TEXT) I507:4478;426:3184
+  Input text (FRAME) I507:4478;426:3185
+    Frame 463 (FRAME) I507:4478;426:3186
+      search (INSTANCE) I507:4478;426:3187
+        Vector (VECTOR) I507:4478;426:3187;58:826
+        Vector (VECTOR) I507:4478;426:3187;58:827
+    Placeholer (FRAME) I507:4478;426:3214
+      Entrez votre mot de passe (TEXT) I507:4478;426:3215
+    Right Icon container (FRAME) I507:4478;426:3189
+      visibility_off (INSTANCE) I507:4478;426:3190
+        Bounding box (RECTANGLE) I507:4478;426:3190;6:5414
+        Vector (VECTOR) I507:4478;426:3190;6:5418
+  Frame 454 (FRAME) I507:4478;426:3191
+    Frame 455 (FRAME) I507:4478;426:3192
+      Component 22/info (INSTANCE) I507:4478;426:3193
+        Vector (VECTOR) I507:4478;426:3193;221:5404
+        Vector (VECTOR) I507:4478;426:3193;221:5405
+        Vector (VECTOR) I507:4478;426:3193;221:5406
+    Gorem ipsum dolor sit amet, consectetur adipiscing elit. (TEXT) I507:4478;426:3194

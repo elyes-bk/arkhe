@@ -2,6 +2,7 @@ import React, { forwardRef, useState } from 'react'
 
 interface DocumentUploadProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onFileSelect?: (file: File) => void
+  onRemoveFile?: () => void
   uploadedFile?: { name: string, size: string } | null
 }
 
@@ -26,7 +27,7 @@ const CloseIcon = () => (
 )
 
 export const DocumentUpload = forwardRef<HTMLInputElement, DocumentUploadProps>(
-  ({ onFileSelect, uploadedFile = null, className = '', ...props }, ref) => {
+  ({ onFileSelect, onRemoveFile, uploadedFile = null, className = '', ...props }, ref) => {
     const hiddenFileInput = React.useRef<HTMLInputElement | null>(null)
     
     const handleClick = () => {
@@ -46,46 +47,48 @@ export const DocumentUpload = forwardRef<HTMLInputElement, DocumentUploadProps>(
       <div className={`flex flex-col gap-[10px] ${className}`}>
         
         {/* Upload box */}
-        <div className="flex flex-col gap-[24px] bg-white border-[0.75px] border-[#BDC5DF] rounded-[5px] px-[13px] py-[24px]">
-          
-          <div className="flex justify-center items-center w-max bg-[#E2E9FF] p-[8px] rounded-[2px]">
-            <DocumentIcon />
-          </div>
-          
-          <div className="flex flex-col gap-[8px]">
-            <span className="font-heading font-medium text-[15px] leading-[18.6px] text-[#000000]">
-              Déposer le justificatif de locaux
-            </span>
-            <span className="font-sans font-normal text-[14px] leading-[17.07px] text-[#000000]">
-              PDF, JPG, PNG · Max 5 Mo · Bail ou titre de propriété
-            </span>
-          </div>
-          
-          <button
-            type="button"
-            onClick={handleClick}
-            className="w-max bg-[#0738DC] border-[0.5px] border-[#0738DC] rounded-[3px] px-[27px] py-[10px] font-sans font-normal text-[14px] leading-[17.07px] text-white transition-colors hover:bg-blue-700"
-          >
-            Parcourir mes fichiers
-          </button>
-          
-          <input 
-            type="file"
-            ref={(node) => {
-              hiddenFileInput.current = node
-              if (typeof ref === 'function') ref(node)
-              else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node
-            }}
-            className="hidden"
-            onChange={handleChange}
-            {...props}
-          />
+        {!uploadedFile && (
+          <div className="flex flex-col gap-[24px] bg-white border-[0.75px] border-[#BDC5DF] rounded-[5px] px-[13px] py-[24px]">
+            
+            <div className="flex justify-center items-center w-max bg-[#E2E9FF] p-[8px] rounded-[2px]">
+              <DocumentIcon />
+            </div>
+            
+            <div className="flex flex-col gap-[8px]">
+              <span className="font-heading font-medium text-[15px] leading-[18.6px] text-[#000000]">
+                Déposer le justificatif de locaux
+              </span>
+              <span className="font-sans font-normal text-[14px] leading-[17.07px] text-[#000000]">
+                PDF, JPG, PNG · Max 5 Mo · Bail ou titre de propriété
+              </span>
+            </div>
+            
+            <button
+              type="button"
+              onClick={handleClick}
+              className="w-max bg-transparent border border-[#0738DC] rounded-[3px] px-[27px] py-[10px] font-sans font-normal text-[14px] leading-[17.07px] text-[#0738DC] transition-colors hover:bg-blue-50"
+            >
+              Parcourir mes fichiers
+            </button>
+            
+            <input 
+              type="file"
+              ref={(node) => {
+                hiddenFileInput.current = node
+                if (typeof ref === 'function') ref(node)
+                else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node
+              }}
+              className="hidden"
+              onChange={handleChange}
+              {...props}
+            />
 
-        </div>
+          </div>
+        )}
 
         {/* Success badge */}
         {uploadedFile && (
-          <div className="flex flex-row items-center justify-between bg-[#EAF7ED] rounded-[6px] px-[10px] py-[11px] mt-[46px]">
+          <div className="flex flex-row items-center justify-between bg-[#EAF7ED] rounded-[6px] px-[10px] py-[11px]">
             <div className="flex flex-row items-center gap-[24px]">
               <div className="flex items-center justify-center bg-[#59A769] rounded-[3px] p-[2px]">
                 <CheckIcon />
@@ -100,7 +103,7 @@ export const DocumentUpload = forwardRef<HTMLInputElement, DocumentUploadProps>(
               </div>
             </div>
             
-            <button type="button" className="p-[4px]">
+            <button type="button" onClick={onRemoveFile} className="p-[4px]">
               <CloseIcon />
             </button>
           </div>
