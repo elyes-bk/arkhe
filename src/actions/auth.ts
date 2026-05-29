@@ -1,19 +1,10 @@
 'use server'
 
 import { createSupabaseServerClient } from '@/lib/supabase-server'
+import { geocodeAdresse, emplacementFromCoords } from '@/lib/geocode'
 import { redirect } from 'next/navigation'
 
 type FormState = { error: string } | null
-
-async function geocodeAdresse(adresse: string): Promise<{ lat: number; lng: number } | null> {
-  const res = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(adresse)}&format=json&limit=1`,
-    { headers: { 'User-Agent': 'ARKHE/1.0' } }
-  )
-  const results = await res.json()
-  if (!results.length) return null
-  return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) }
-}
 
 export async function login(_prevState: FormState, formData: FormData): Promise<FormState> {
   const email = formData.get('email') as string
@@ -60,7 +51,7 @@ export async function login(_prevState: FormState, formData: FormData): Promise<
   }
   
 
-  if (userData.role === 'admin') redirect('/admin')
+  if (userData.role === 'admin') redirect('/admin/moderation')
   redirect('/dashboard')
 }
 
@@ -119,8 +110,8 @@ export async function register(_prevState: FormState, formData: FormData): Promi
       nom_commerce: nomCommerce,
       siret,
       url_justificatif_local: publicUrl,
-      emplacement: `SRID=4326;POINT(${coords.lng} ${coords.lat})`,
       adresse,
+      emplacement: emplacementFromCoords(coords.lng, coords.lat),
       statut_validation: 'waiting',
     })
 

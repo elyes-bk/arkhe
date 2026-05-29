@@ -1,17 +1,20 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { approveSalon, rejectSalon } from '@/actions/admin'
+import { approveSalon, rejectSalon, regeocodeSalon } from '@/actions/admin'
 import { logout } from '@/actions/auth'
+import { formatSalonLocation } from '@/lib/geo'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface Salon {
   id: string
   nom_commerce: string
   siret: string
-  statut_validation: 'waiting' | 'approved' | 'rejected'
+  statut_validation: 'waiting' | 'approved' | 'rejected' | string
   url_justificatif_local: string | null
-  emplacement: string
+  emplacement: unknown
+  adresse?: string | null
   users?: {
     created_at: string
   } | null
@@ -120,14 +123,8 @@ export default function AdminModerationClient({ initialSalons = [], adminName = 
     return 'Justificatif.pdf'
   }
 
-  // Parse les coordonnées géographiques pour obtenir la ville si présente ou formaté
-  function getVilleFromEmplacement(emplacement: string) {
-    if (!emplacement) return "Paris 15e"
-    const match = emplacement.match(/POINT\(([^ ]+) ([^ ]+)\)/)
-    if (match) {
-      return `Paris 15e` // Par défaut pour la maquette ou dynamique
-    }
-    return "Paris 15e"
+  function getSalonLocation(salon: Salon) {
+    return formatSalonLocation(salon.adresse, salon.emplacement)
   }
 
   return (
@@ -160,20 +157,28 @@ export default function AdminModerationClient({ initialSalons = [], adminName = 
 
           {/* Navigation Icons (Icon only as per Figma maquette) */}
           <nav className="flex flex-col items-center gap-4 w-full">
-            {/* Icon 1: Dashboard / Carte */}
-            <button className="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800/20 rounded-lg transition duration-150">
+            {/* Carte logistique */}
+            <Link
+              href="/admin/map"
+              title="Carte logistique"
+              className="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800/20 rounded-lg transition duration-150"
+            >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498a8.25 8.25 0 100-16.5 8.25 8.25 0 000 16.5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
-            </button>
+            </Link>
 
-            {/* Icon 2: Active Moderation (Diamond with Cross/Plus inside) */}
-            <button className="w-12 h-12 flex items-center justify-center text-white bg-[#0738dc] rounded-lg shadow-md transition duration-150">
+            {/* Modération (page active) */}
+            <Link
+              href="/admin/moderation"
+              title="Modération salons"
+              className="w-12 h-12 flex items-center justify-center text-white bg-[#0738dc] rounded-lg shadow-md transition duration-150"
+            >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 2L2 12l10 10 10-10L12 2z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8M8 12h8" />
               </svg>
-            </button>
+            </Link>
           </nav>
         </div>
 
@@ -304,7 +309,7 @@ export default function AdminModerationClient({ initialSalons = [], adminName = 
                         {/* Column: SALON (NOM / VILLE) */}
                         <td className="px-6 py-4">
                           <span className="font-semibold text-slate-800">
-                            {salon.nom_commerce} - {getVilleFromEmplacement(salon.emplacement)}
+                            {salon.nom_commerce} - {getSalonLocation(salon)}
                           </span>
                         </td>
 
@@ -454,8 +459,32 @@ export default function AdminModerationClient({ initialSalons = [], adminName = 
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                   </svg>
-                  <span>{getVilleFromEmplacement(selectedSalon.emplacement)}</span>
+                  <span>{getSalonLocation(selectedSalon)}</span>
                 </div>
+                {selectedSalon.adresse && (
+                  <p className="mt-2 font-sans text-sm text-[#6E6E6E]">
+                    {selectedSalon.adresse}
+                  </p>
+                )}
+                {selectedSalon.adresse && (
+                  <button
+                    type="button"
+                    disabled={isPending}
+                    onClick={() => {
+                      startTransition(async () => {
+                        const result = await regeocodeSalon(selectedSalon.id)
+                        if (result.ok) {
+                          alert('Position GPS recalculée depuis l\'adresse.')
+                        } else {
+                          alert(result.error ?? 'Échec du géocodage.')
+                        }
+                      })
+                    }}
+                    className="mt-2 font-sans text-xs text-[#0738DC] underline hover:no-underline disabled:opacity-50"
+                  >
+                    Recalculer la position sur la carte
+                  </button>
+                )}
               </div>
 
               {/* Technical fields */}
