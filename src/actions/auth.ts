@@ -46,11 +46,14 @@ export async function login(_prevState: FormState, formData: FormData): Promise<
       .eq('user_id', user?.id)
       .single()
 
-    if (!salon || salon.statut_validation === 'waiting') {
+    console.log('statut salon : ', salon?.statut_validation);
+
+    if (salon?.statut_validation === 'waiting') {
       await supabase.auth.signOut()
       return { error: 'Votre compte est en attente de validation par notre équipe.' }
     }
   }
+  
 
   if (userData.role === 'admin') redirect('/admin')
   redirect('/dashboard')
