@@ -35,7 +35,7 @@ export default function Header() {
 
         <div className="flex shrink-0 items-center gap-3">
           <Link
-            href="#rejoindre"
+            href="/register"
             className="hidden rounded bg-arkhe-blue px-3 py-1.5 font-kumbh text-xs font-medium text-white transition-opacity hover:opacity-90 sm:inline-flex sm:text-sm"
           >
             Rejoindre
