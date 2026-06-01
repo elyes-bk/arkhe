@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import maplibregl from "maplibre-gl";
+// @ts-ignore — maplibre CSS import requis pour l'affichage de la carte
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   type SalonMapPoint,
@@ -11,6 +12,7 @@ import {
   distanceKm,
   estimateRouteMinutes,
 } from "@/lib/geo";
+import { collecterSacs } from "@/actions/admin";
 
 const FILTERS: { id: MapFilterId; label: string }[] = [
   { id: "all", label: "Tous" },
@@ -33,6 +35,7 @@ function createMarkerElement(salon: SalonMapPoint): HTMLDivElement {
 
   const root = document.createElement("div");
   root.className = "arkhe-map-marker";
+  if (sacs > 0) root.style.cursor = "pointer";
   root.innerHTML = `
     <div class="arkhe-marker-label">${escapeHtml(label)}</div>
     <div class="arkhe-marker-dot" style="background-color:${color}">
@@ -67,8 +70,121 @@ function fitMapToSalons(
   map.fitBounds(bounds, { padding: { top: 100, bottom: 200, left: 60, right: 60 }, maxZoom: 14 });
 }
 
+// Popup de validation des sacs
+function CollectPopup({
+  salon,
+  onClose,
+  onValidated,
+}: {
+  salon: SalonMapPoint;
+  onClose: () => void;
+  onValidated: (count: number) => void;
+}) {
+  const max = salon.bag_waiting ?? 0;
+  const [count, setCount] = useState(max);
+  const [isPending, startTransition] = useTransition();
+  const [done, setDone] = useState(false);
+
+  function handleValider() {
+    if (count === 0) return;
+    startTransition(async () => {
+      await collecterSacs(salon.id, count);
+      setDone(true);
+      setTimeout(() => {
+        onValidated(count);
+        onClose();
+      }, 1200);
+    });
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 overflow-hidden">
+        {/* Header */}
+        <div className="bg-[#04082E] px-6 py-4 flex items-center justify-between">
+          <div>
+            <p className="text-white font-bold text-base">{salon.nom_commerce}</p>
+            {salon.adresse && (
+              <p className="text-white/50 text-xs mt-0.5">{salon.adresse}</p>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white/50 hover:text-white transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-6">
+          {done ? (
+            <div className="flex flex-col items-center gap-3 py-4">
+              <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+              <p className="text-[#04082E] font-semibold">Collecte validée !</p>
+            </div>
+          ) : (
+            <>
+              <p className="text-slate-500 text-sm mb-5">
+                <span className="font-semibold text-amber-500">{max} sac{max > 1 ? "s" : ""}</span> en attente de collecte.
+                Indiquez le nombre récupéré.
+              </p>
+
+              {/* Compteur */}
+              <div className="flex items-center justify-center gap-6 bg-[#E2E9FF] rounded-xl py-5 mb-5">
+                <button
+                  onClick={() => setCount((c) => Math.max(1, c - 1))}
+                  disabled={count <= 1 || isPending}
+                  className="w-10 h-10 rounded-xl bg-white border border-[#0738DC]/20 text-[#04082E] font-bold text-xl flex items-center justify-center hover:bg-[#0738DC]/5 active:scale-95 transition-all disabled:opacity-30 select-none"
+                >
+                  −
+                </button>
+                <span className="text-[#04082E] text-4xl font-black tabular-nums min-w-[3ch] text-center">
+                  {String(count).padStart(2, "0")}
+                </span>
+                <button
+                  onClick={() => setCount((c) => Math.min(max, c + 1))}
+                  disabled={count >= max || isPending}
+                  className="w-10 h-10 rounded-xl bg-white border border-[#0738DC]/20 text-[#04082E] font-bold text-xl flex items-center justify-center hover:bg-[#0738DC]/5 active:scale-95 transition-all disabled:opacity-30 select-none"
+                >
+                  +
+                </button>
+              </div>
+
+              {/* Bouton valider */}
+              <button
+                onClick={handleValider}
+                disabled={isPending}
+                className="w-full bg-[#0738DC] hover:bg-[#0530C0] text-white font-bold py-3 rounded-xl transition-all text-sm disabled:opacity-60"
+              >
+                {isPending ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Validation...
+                  </span>
+                ) : (
+                  "Valider la collecte"
+                )}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminMapClient({
-  salons,
+  salons: initialSalons,
   loadError,
 }: {
   salons: SalonMapPoint[];
@@ -79,6 +195,8 @@ export default function AdminMapClient({
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const [filter, setFilter] = useState<MapFilterId>("collect");
   const [mounted, setMounted] = useState(false);
+  const [salons, setSalons] = useState<SalonMapPoint[]>(initialSalons);
+  const [selectedSalon, setSelectedSalon] = useState<SalonMapPoint | null>(null);
 
   const visibleSalons = useMemo(
     () => salonsWithCoords(salons, filter),
@@ -96,9 +214,7 @@ export default function AdminMapClient({
   const routeStops = useMemo(() => collectPoints.slice(0, 4), [collectPoints]);
 
   const routeStats = useMemo(() => {
-    if (routeStops.length < 2) {
-      return { km: 0, min: 0 };
-    }
+    if (routeStops.length < 2) return { km: 0, min: 0 };
     let totalKm = 0;
     for (let i = 0; i < routeStops.length - 1; i++) {
       totalKm += distanceKm(routeStops[i], routeStops[i + 1]);
@@ -131,10 +247,7 @@ export default function AdminMapClient({
       attributionControl: false,
     });
 
-    map.addControl(
-      new maplibregl.AttributionControl({ compact: true }),
-      "bottom-right"
-    );
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-left");
 
     mapRef.current = map;
@@ -164,6 +277,15 @@ export default function AdminMapClient({
     clearMarkers();
     points.forEach((salon) => {
       const el = createMarkerElement(salon);
+
+      // Clic sur un marqueur avec des sacs → ouvre le popup
+      if ((salon.bag_waiting ?? 0) > 0) {
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          setSelectedSalon(salon);
+        });
+      }
+
       const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
         .setLngLat([salon.lng, salon.lat])
         .addTo(map);
@@ -177,8 +299,29 @@ export default function AdminMapClient({
     markersRef.current = [];
   }
 
+  // Après validation, mettre à jour localement le salon sans recharger la page
+  function handleValidated(count: number) {
+    if (!selectedSalon) return;
+    setSalons((prev) =>
+      prev.map((s) =>
+        s.id === selectedSalon.id
+          ? { ...s, bag_waiting: Math.max(0, (s.bag_waiting ?? 0) - count) }
+          : s
+      )
+    );
+  }
+
   return (
     <div className="flex flex-1 flex-col min-h-screen">
+      {/* Popup validation */}
+      {selectedSalon && (
+        <CollectPopup
+          salon={selectedSalon}
+          onClose={() => setSelectedSalon(null)}
+          onValidated={handleValidated}
+        />
+      )}
+
       <header className="border-b border-slate-200 bg-white px-6 py-5 md:pl-[61px]">
         <h1 className="font-heading text-[32px] font-bold leading-tight text-[#04082E]">
           Carte logistique
@@ -219,7 +362,7 @@ export default function AdminMapClient({
 
         <div ref={mapContainer} className="absolute inset-0 h-full w-full" />
 
-        {/* Panneau itinéraire (maquette Figma) */}
+        {/* Panneau itinéraire */}
         <div className="absolute bottom-6 left-4 right-4 z-10 mx-auto flex max-w-4xl flex-col gap-3 sm:left-6 sm:right-6">
           <div className="flex flex-col items-stretch gap-4 rounded-xl bg-white p-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-col gap-0.5">
@@ -268,10 +411,7 @@ export default function AdminMapClient({
                 const coords = routeStops
                   .map((s) => `${s.lat},${s.lng}`)
                   .join("/");
-                window.open(
-                  `https://www.google.com/maps/dir/${coords}`,
-                  "_blank"
-                );
+                window.open(`https://www.google.com/maps/dir/${coords}`, "_blank");
               }}
               className="shrink-0 rounded bg-[#0738DC] px-5 py-3 font-heading text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
