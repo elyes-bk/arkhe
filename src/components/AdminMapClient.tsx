@@ -78,7 +78,7 @@ function CollectPopup({
 }: {
   salon: SalonMapPoint;
   onClose: () => void;
-  onValidated: () => void;
+  onValidated: (count: number) => void;
 }) {
   const max = salon.bag_waiting ?? 0;
   const [count, setCount] = useState(max);
@@ -91,7 +91,7 @@ function CollectPopup({
       await collecterSacs(salon.id, count);
       setDone(true);
       setTimeout(() => {
-        onValidated();
+        onValidated(count);
         onClose();
       }, 1200);
     });
@@ -300,11 +300,13 @@ export default function AdminMapClient({
   }
 
   // Après validation, mettre à jour localement le salon sans recharger la page
-  function handleValidated() {
+  function handleValidated(count: number) {
     if (!selectedSalon) return;
     setSalons((prev) =>
       prev.map((s) =>
-        s.id === selectedSalon.id ? { ...s, bag_waiting: 0 } : s
+        s.id === selectedSalon.id
+          ? { ...s, bag_waiting: Math.max(0, (s.bag_waiting ?? 0) - count) }
+          : s
       )
     );
   }
