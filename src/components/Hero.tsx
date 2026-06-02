@@ -16,7 +16,7 @@ export function Hero() {
           </p>
           <Link
             id="rejoindre"
-            href="#rejoindre"
+            href="/register"
             className="mt-6 inline-flex rounded bg-white px-6 py-2 font-kumbh text-base font-medium text-arkhe-blue transition-opacity hover:opacity-90 sm:mt-8 sm:px-8 sm:py-2.5 sm:text-lg"
           >
             Rejoindre ARKHE

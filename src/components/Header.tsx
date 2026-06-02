@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -35,7 +35,7 @@ export default function Header() {
 
         <div className="flex shrink-0 items-center gap-3">
           <Link
-            href="#rejoindre"
+            href="/register"
             className="hidden rounded bg-arkhe-blue px-3 py-1.5 font-kumbh text-xs font-medium text-white transition-opacity hover:opacity-90 sm:inline-flex sm:text-sm"
           >
             Rejoindre
@@ -77,7 +77,7 @@ export default function Header() {
             ))}
             <li>
               <Link
-                href="#rejoindre"
+                href="/register"
                 onClick={() => setMenuOpen(false)}
                 className="inline-flex rounded bg-arkhe-blue px-4 py-2 font-kumbh text-sm font-medium text-white"
               >
