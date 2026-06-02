@@ -1,8 +1,7 @@
-"use client";
+﻿﻿"use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import maplibregl from "maplibre-gl";
-// @ts-ignore — maplibre CSS import requis pour l'affichage de la carte
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   type SalonMapPoint,

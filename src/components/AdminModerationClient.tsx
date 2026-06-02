@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useTransition } from 'react'
 import { approveSalon, rejectSalon, regeocodeSalon } from '@/actions/admin'
@@ -22,10 +22,9 @@ interface Salon {
 
 interface AdminModerationClientProps {
   initialSalons: Salon[] | null
-  adminName?: string
-}
+  }
 
-export default function AdminModerationClient({ initialSalons = [], adminName = 'Quentin' }: AdminModerationClientProps) {
+export default function AdminModerationClient({ initialSalons = [], }: AdminModerationClientProps) {
   const [salons, setSalons] = useState<Salon[]>(initialSalons || [])
   const [activeTab, setActiveTab] = useState<'waiting' | 'approved' | 'rejected' | 'all'>('waiting')
   const [selectedSalon, setSelectedSalon] = useState<Salon | null>(null)
@@ -239,7 +238,7 @@ export default function AdminModerationClient({ initialSalons = [], adminName = 
                   <button
                     key={tab.id}
                     onClick={() => {
-                      setActiveTab(tab.id as any)
+                      setActiveTab(tab.id as 'waiting' | 'approved' | 'rejected' | 'all')
                       setCurrentPage(1)
                     }}
                     className={`pb-3 font-heading font-medium text-[16px] leading-[19.84px] transition-all relative flex items-center select-none
@@ -601,3 +600,4 @@ export default function AdminModerationClient({ initialSalons = [], adminName = 
     </div>
   )
 }
+

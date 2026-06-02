@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import Image from 'next/image'
+﻿import React, { useState } from 'react'
 
 interface Testimonial {
   id: string
@@ -95,7 +94,7 @@ export function CarouselAvis() {
             <div className="flex flex-col justify-between h-full gap-[10px] bg-[#0738DC] p-[22px] rounded-[5px] border border-[#BDC5DF] relative z-20">
               <div className="flex flex-col gap-[32px] h-full">
                 <p className="font-sans font-normal text-[16px] leading-[24px] text-white">
-                  "{item.quote}"
+                  &ldquo;{item.quote}&rdquo;
                 </p>
                 
                 <div className="flex flex-row items-center gap-[16px] mt-auto">
@@ -119,3 +118,4 @@ export function CarouselAvis() {
     </div>
   )
 }
+
