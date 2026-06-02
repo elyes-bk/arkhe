@@ -83,17 +83,16 @@ export async function collecterSacs(salonId: string, count: number) {
     .limit(count)
 
   if (selectError) throw new Error(selectError.message)
-  if (!sacsToCollect?.length) throw new Error('Aucun sac en attente.')
 
-  const sacIds = sacsToCollect.map((s: { id: string }) => s.id)
-
-  // Marque ces sacs comme collectés
-  const { error: updateSacsError } = await supabase
-    .from('sacs')
-    .update({ statut_collecte: 'collected' })
-    .in('id', sacIds)
-
-  if (updateSacsError) throw new Error(updateSacsError.message)
+  // Marque les sacs existants comme collectés (si des entrées existent dans la table)
+  if (sacsToCollect?.length) {
+    const sacIds = sacsToCollect.map((s: { id: string }) => s.id)
+    const { error: updateSacsError } = await supabase
+      .from('sacs')
+      .update({ statut_collecte: 'collected' })
+      .in('id', sacIds)
+    if (updateSacsError) throw new Error(updateSacsError.message)
+  }
 
   // Met à jour les compteurs du salon
   const { data: salon, error: salonError } = await supabase
@@ -113,4 +112,5 @@ export async function collecterSacs(salonId: string, count: number) {
     .eq('id', salonId)
 
   revalidatePath('/admin')
+  revalidatePath('/admin/map')
 }
