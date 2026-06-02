@@ -1,7 +1,6 @@
-import React, { forwardRef, useId } from 'react'
+﻿import React, { forwardRef, useId } from 'react'
 
-interface SalonNameInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-}
+type SalonNameInputProps = React.InputHTMLAttributes<HTMLInputElement>
 
 export const SalonNameInput = forwardRef<HTMLInputElement, SalonNameInputProps>(
   ({ className = '', ...props }, ref) => {
@@ -38,3 +37,4 @@ export const SalonNameInput = forwardRef<HTMLInputElement, SalonNameInputProps>(
 )
 
 SalonNameInput.displayName = 'SalonNameInput'
+

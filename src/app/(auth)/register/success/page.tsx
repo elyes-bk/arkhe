@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿﻿import Link from 'next/link'
 import Header from '@/components/Header'
 
 /* ─────────────────────────────────────────────────────────────
@@ -46,7 +46,7 @@ export default function DemandeEnregistrePage() {
             href="/"
             className="bg-[#0738dc] hover:bg-blue-700 text-white font-heading font-medium text-[16px] leading-[19.84px] px-[50px] py-[10px] transition-colors"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
 
         </div>
@@ -56,3 +56,4 @@ export default function DemandeEnregistrePage() {
     </div>
   )
 }
+

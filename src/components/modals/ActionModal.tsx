@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { MotifModal } from './MotifModal'
 import { Button } from '../ui/Button'
 
@@ -127,7 +127,7 @@ export function ActionModal({ variant, onClose, onConfirm, onCancel, onSubmit }:
                   Modifier le statut de ce salon ?
                 </h2>
                 <p className="font-sans font-normal text-[13px] md:text-[16px] leading-[15.85px] md:leading-[19.5px] text-[#303336]">
-                  Vous êtes sur le point de changer l'état de cette candidature.
+                  Vous êtes sur le point de changer l&apos;état de cette candidature.
                 </p>
               </div>
             </div>
@@ -148,3 +148,4 @@ export function ActionModal({ variant, onClose, onConfirm, onCancel, onSubmit }:
 
   return null
 }
+

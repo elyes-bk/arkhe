@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from '@/lib/supabase-server'
+﻿import { createSupabaseServerClient } from '@/lib/supabase-server'
 import SacCounter from '@/components/SacCounter'
 import { logout } from '@/actions/auth'
 import Image from 'next/image'
@@ -43,7 +43,7 @@ export default async function DashboardSalon() {
     .order('declared_at', { ascending: false })
     .limit(5)
 
-  const lieu = (salon as any)?.adresse || (salon?.emplacement ? parseEmplacement(salon.emplacement as string) : null)
+  const lieu = (salon as typeof salon & { adresse?: string })?.adresse || (salon?.emplacement ? parseEmplacement(salon.emplacement as string) : null)
 
   const totalCollectes = salon?.total_bag_collected ?? 0
   const enAttente = salon?.bag_waiting ?? 0

@@ -1,7 +1,6 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import { EmailInput } from '@/components/inputs/EmailInput'
@@ -113,3 +112,4 @@ export default function SimpleRegisterPage() {
     </div>
   )
 }
+

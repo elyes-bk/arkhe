@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef } from 'react'
 
 interface DocumentUploadProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onFileSelect?: (file: File) => void

@@ -1,8 +1,6 @@
-'use client'
+﻿'use client'
 
 import React, { useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
 import Header from '@/components/Header'
 import { AddressInput } from '@/components/inputs/AddressInput'
 import { SiretInput } from '@/components/inputs/SiretInput'
@@ -10,11 +8,8 @@ import { SalonNameInput } from '@/components/inputs/SalonNameInput'
 import { DocumentUpload } from '@/components/inputs/DocumentUpload'
 import { Button } from '@/components/ui/Button'
 import { register } from '@/actions/auth'
-import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
-  const router = useRouter()
-
   const [siret, setSiret] = useState('')
   const [salonName, setSalonName] = useState('')
   const [address, setAddress] = useState('')
@@ -97,7 +92,7 @@ export default function RegisterPage() {
         setSubmitError(result.error)
       }
       // If successful, the server action calls redirect() which halts execution here
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
       setSubmitError("Une erreur inattendue est survenue.")
     } finally {
@@ -235,3 +230,4 @@ export default function RegisterPage() {
     </div>
   )
 }
+
