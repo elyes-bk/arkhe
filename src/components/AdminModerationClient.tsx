@@ -5,6 +5,7 @@ import { approveSalon, rejectSalon, regeocodeSalon, reconsiderSalon } from '@/ac
 import { logout } from '@/actions/auth'
 import { formatSalonLocation } from '@/lib/geo'
 import Image from 'next/image'
+import { ActionModal } from './modals/ActionModal'
 import Link from 'next/link'
 
 interface Salon {
@@ -32,9 +33,12 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
   const [currentPage, setCurrentPage] = useState(1)
   const [isPending, startTransition] = useTransition()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [pendingAction, setPendingAction] = useState<{ type: 'approve' | 'reject' | 'reconsider'; salonId: string } | null>(null)
+  const [pendingAction, setPendingAction] = useState<{ type: 'approve' | 'reconsider'; salonId: string } | null>(null)
+  const [isRefuseModalOpen, setIsRefuseModalOpen] = useState(false)
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
+  const [rejectedSalonId, setRejectedSalonId] = useState<string | null>(null)
 
-  // Actions réelles déclenchées après confirmation
+  // Actions réelles déclenchées après confirmation (pour approve et reconsider)
   function executePendingAction() {
     if (!pendingAction) return
     const { type, salonId } = pendingAction
@@ -49,14 +53,6 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
           )
           if (selectedSalon?.id === salonId) {
             setSelectedSalon((prev) => prev ? { ...prev, statut_validation: 'approved' } : null)
-          }
-        } else if (type === 'reject') {
-          await rejectSalon(salonId)
-          setSalons((prev) =>
-            prev.map((s) => (s.id === salonId ? { ...s, statut_validation: 'rejected' } : s))
-          )
-          if (selectedSalon?.id === salonId) {
-            setSelectedSalon((prev) => prev ? { ...prev, statut_validation: 'rejected' } : null)
           }
         } else if (type === 'reconsider') {
           await reconsiderSalon(salonId)
@@ -80,11 +76,35 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
   }
 
   function handleReject(salonId: string) {
-    setPendingAction({ type: 'reject', salonId })
+    setRejectedSalonId(salonId)
+    setIsRefuseModalOpen(true)
   }
 
   function handleReconsider(salonId: string) {
     setPendingAction({ type: 'reconsider', salonId })
+  }
+
+  // Action réelle de refus déclenchée depuis le modal de motif
+  function handleRefuseSubmit({ motif, comment }: { motif: string; comment: string }) {
+    if (!rejectedSalonId) return
+    const salonId = rejectedSalonId
+    setIsRefuseModalOpen(false)
+
+    startTransition(async () => {
+      try {
+        await rejectSalon(salonId, motif, comment)
+        setSalons((prev) =>
+          prev.map((s) => (s.id === salonId ? { ...s, statut_validation: 'rejected' } : s))
+        )
+        if (selectedSalon?.id === salonId) {
+          setSelectedSalon((prev) => prev ? { ...prev, statut_validation: 'rejected' } : null)
+        }
+        setIsSuccessModalOpen(true)
+      } catch (err) {
+        console.error(err)
+        alert('Erreur lors du rejet du salon.')
+      }
+    })
   }
 
   // Filtrage des salons selon l'onglet actif, la recherche et le statut de validation
@@ -877,6 +897,26 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
             </div>
           </div>
         </div>
+      )}
+
+      {/* ────────────────── Refusal Modal (Motif & Comment) ────────────────── */}
+      {isRefuseModalOpen && (
+        <ActionModal
+          variant="refuse"
+          onClose={() => {
+            setIsRefuseModalOpen(false)
+            setRejectedSalonId(null)
+          }}
+          onSubmit={handleRefuseSubmit}
+        />
+      )}
+
+      {/* ────────────────── Success Refusal Modal ────────────────── */}
+      {isSuccessModalOpen && (
+        <ActionModal
+          variant="success"
+          onClose={() => setIsSuccessModalOpen(false)}
+        />
       )}
 
       {/* Slide-in custom drawer animation styling */}

@@ -44,7 +44,11 @@ export async function approveSalon(salonId: string) {
 
   const { error } = await supabase
     .from('salons')
-    .update({ statut_validation: 'approved' })
+    .update({ 
+      statut_validation: 'approved',
+      motif_refus: null,
+      commentaire_refus: null
+    })
     .eq('id', salonId)
 
   if (error) {
@@ -55,12 +59,16 @@ export async function approveSalon(salonId: string) {
   revalidatePath('/admin/map')
 }
 
-export async function rejectSalon(salonId: string) {
+export async function rejectSalon(salonId: string, motif?: string, commentaire?: string) {
   const supabase = createSupabaseServerClient()
 
   const { error } = await supabase
     .from('salons')
-    .update({ statut_validation: 'rejected' })
+    .update({ 
+      statut_validation: 'rejected',
+      motif_refus: motif || null,
+      commentaire_refus: commentaire || null
+    })
     .eq('id', salonId)
 
   if (error) {
@@ -76,7 +84,11 @@ export async function reconsiderSalon(salonId: string) {
 
   const { error } = await supabase
     .from('salons')
-    .update({ statut_validation: 'waiting' })
+    .update({ 
+      statut_validation: 'waiting',
+      motif_refus: null,
+      commentaire_refus: null
+    })
     .eq('id', salonId)
 
   if (error) {

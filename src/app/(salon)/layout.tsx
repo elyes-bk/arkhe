@@ -20,6 +20,7 @@ export default async function SalonLayout({ children }: { children: React.ReactN
     .single()
 
   if (salon?.statut_validation === 'waiting') redirect('/waiting')
+  if (salon?.statut_validation === 'rejected') redirect('/rejected')
 
   return <>{children}</>
 }
