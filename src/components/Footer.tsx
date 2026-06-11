@@ -10,25 +10,34 @@ const footerLinks = [
 
 export function Footer() {
   return (
-    <footer className="w-full overflow-hidden bg-arkhe-blue py-8">
-      <div className="section-container flex flex-col items-center justify-between gap-6 sm:flex-row">
-        <div className="flex items-center gap-3">
-          <Logo className="h-8 w-auto" />
-          <p className="text-xs text-white">
-            2026 ARKHE - Economie Circulaire B2B.
-          </p>
-        </div>
-        <nav className="flex flex-wrap justify-center gap-4 sm:gap-8">
+    <footer className="relative w-full min-h-[140px] bg-[#0738DC] overflow-hidden flex flex-col justify-center">
+
+      {/* Logo pleine hauteur, collé à gauche, semi-transparent */}
+      <div className="absolute left-0 top-0 h-full flex items-center pointer-events-none select-none">
+        <Logo className="h-full w-auto opacity-20 object-contain object-left" />
+      </div>
+
+      {/* Contenu */}
+      <div className="relative mx-auto max-w-[1440px] px-6 lg:px-24 py-5 lg:py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-0">
+
+        {/* Baseline */}
+        <p className="text-white/80 text-xs">
+          2026 ARKHE – Économie Circulaire B2B.
+        </p>
+
+        {/* Liens */}
+        <nav className="flex flex-wrap gap-x-6 gap-y-2">
           {footerLinks.map((link) => (
             <Link
               key={link.label}
               href={link.href}
-              className="text-xs text-white transition-opacity hover:opacity-80"
+              className="text-white/70 text-xs hover:text-white transition-colors"
             >
               {link.label}
             </Link>
           ))}
         </nav>
+
       </div>
     </footer>
   );
