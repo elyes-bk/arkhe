@@ -776,10 +776,12 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-white p-4 relative min-h-[200px]">
-                        <img 
-                          src={selectedSalon.url_justificatif_local} 
+                        <Image
+                          src={selectedSalon.url_justificatif_local}
                           alt="Justificatif de locaux"
-                          className="max-w-full max-h-full object-contain rounded-lg"
+                          fill
+                          unoptimized
+                          className="object-contain rounded-lg"
                         />
                       </div>
                     )}
@@ -877,7 +879,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
               Modifier le statut de ce salon ?
             </h3>
             <p className="font-sans text-sm text-[#6E6E6E] text-center leading-relaxed max-w-[320px] mb-8">
-              Vous êtes sur le point de changer l'état de cette candidature.
+              Vous êtes sur le point de changer l&apos;état de cette candidature.
             </p>
 
             {/* Actions: side by side on desktop, stacked on mobile */}
