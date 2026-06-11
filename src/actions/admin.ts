@@ -71,6 +71,22 @@ export async function rejectSalon(salonId: string) {
   revalidatePath('/admin/map')
 }
 
+export async function reconsiderSalon(salonId: string) {
+  const supabase = createSupabaseServerClient()
+
+  const { error } = await supabase
+    .from('salons')
+    .update({ statut_validation: 'waiting' })
+    .eq('id', salonId)
+
+  if (error) {
+    throw new Error(`Erreur lors de la remise en attente : ${error.message}`)
+  }
+
+  revalidatePath('/admin/moderation')
+  revalidatePath('/admin/map')
+}
+
 export async function collecterSacs(salonId: string, count: number) {
   const supabase = createSupabaseServerClient()
 
