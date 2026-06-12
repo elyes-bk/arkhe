@@ -1,4 +1,4 @@
-﻿import { createSupabaseServerClient } from '@/lib/supabase-server'
+import { createSupabaseServerClient } from '@/lib/supabase-server'
 import SacCounter from '@/components/SacCounter'
 import Header from '@/components/Header'
 import RecentActivity from '@/components/RecentActivity'
@@ -51,7 +51,7 @@ export default async function DashboardSalon() {
 
   return (
     <div className="min-h-screen bg-white font-sans">
-      <Header />
+      <Header isLoggedIn={true} />
 
       <div className="pt-[40px] flex flex-col mb-[40px]">
 
