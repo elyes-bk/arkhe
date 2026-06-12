@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { assets } from "@/lib/assets";
 
 type ValueStat = {
@@ -78,6 +81,94 @@ const variantStyles = {
   },
 } as const;
 
+const STACK_GAP = 16;
+const STACK_SCALE_STEP = 0.04;
+const STICKY_TOP_MOBILE = 64;
+const STICKY_TOP_TABLET = 76;
+const STICKY_TOP_DESKTOP = 88;
+const DESKTOP_BREAKPOINT = 1280;
+const TABLET_BREAKPOINT = 768;
+
+type ViewportMode = "mobile" | "tablet" | "desktop";
+
+function getViewportMode(width: number): ViewportMode {
+  if (width >= DESKTOP_BREAKPOINT) return "desktop";
+  if (width >= TABLET_BREAKPOINT) return "tablet";
+  return "mobile";
+}
+
+function getStickyTop(mode: ViewportMode): number {
+  if (mode === "desktop") return STICKY_TOP_DESKTOP;
+  if (mode === "tablet") return STICKY_TOP_TABLET;
+  return STICKY_TOP_MOBILE;
+}
+
+const tallestCardIndex = values.reduce(
+  (max, value, index, arr) =>
+    value.description.length > arr[max].description.length ? index : max,
+  0
+);
+
+function getCardStackStyle(
+  index: number,
+  progress: number,
+  total: number,
+  collapseAtEnd = false
+): React.CSSProperties {
+  if (collapseAtEnd && progress >= 0.99) {
+    if (index === total - 1) {
+      return { transform: "translateY(0) scale(1)", zIndex: 3 };
+    }
+    return {
+      opacity: 0,
+      visibility: "hidden",
+      pointerEvents: "none",
+      zIndex: 0,
+    };
+  }
+
+  const phase = progress * (total - 1);
+  const activeIndex = Math.floor(phase);
+  const transition = phase - activeIndex;
+
+  if (index > activeIndex + 1) {
+    return {
+      transform: "translateY(100%)",
+      zIndex: index + 1,
+    };
+  }
+
+  if (index === activeIndex + 1 && activeIndex < total - 1) {
+    return {
+      transform: `translateY(${(1 - transition) * 100}%)`,
+      zIndex: total + 2,
+    };
+  }
+
+  if (index <= activeIndex) {
+    const depth = activeIndex - index;
+    const pushBack =
+      index === activeIndex && activeIndex < total - 1
+        ? -STACK_GAP * transition
+        : 0;
+    const scalePenalty =
+      depth * STACK_SCALE_STEP +
+      (index === activeIndex && activeIndex < total - 1
+        ? transition * STACK_SCALE_STEP
+        : 0);
+
+    return {
+      transform: `translateY(${-STACK_GAP * depth + pushBack}px) scale(${1 - scalePenalty})`,
+      zIndex: index + 1,
+    };
+  }
+
+  return {
+    transform: "translateY(100%)",
+    zIndex: index + 1,
+  };
+}
+
 function ValueCardBlock({
   image,
   imageAlt,
@@ -85,12 +176,18 @@ function ValueCardBlock({
   description,
   stats,
   variant,
-}: ValueCard) {
+  stackStyle,
+  isStacked = false,
+}: ValueCard & {
+  stackStyle?: React.CSSProperties;
+  isStacked?: boolean;
+}) {
   const styles = variantStyles[variant];
 
   return (
     <article
-      className={`mx-auto flex w-full max-w-[1240px] flex-col items-stretch gap-6 rounded-[5px] px-5 py-6 sm:px-8 sm:py-8 lg:min-h-[413px] lg:flex-row lg:items-center lg:gap-12 lg:px-[46px] lg:py-[40px] ${styles.card}`}
+      className={`mx-auto flex w-full max-w-[1240px] flex-col items-stretch gap-6 rounded-[5px] px-5 py-6 shadow-[0_12px_40px_rgba(4,8,46,0.2)] sm:px-8 sm:py-8 lg:min-h-[413px] lg:flex-row lg:items-center lg:gap-12 lg:px-[46px] lg:py-[40px] ${styles.card} ${isStacked ? "absolute inset-x-0 top-0 will-change-transform" : ""}`}
+      style={stackStyle}
     >
       <div className="order-1 flex min-w-0 flex-1 flex-col gap-6 lg:order-2 lg:justify-between lg:self-stretch">
         <div className="flex flex-col gap-4">
@@ -99,7 +196,9 @@ function ValueCardBlock({
           >
             {title}
           </h3>
-          <p className={`font-montserrat text-sm leading-relaxed sm:text-base ${styles.body}`}>
+          <p
+            className={`font-montserrat text-sm leading-relaxed sm:text-base ${styles.body}`}
+          >
             {description}
           </p>
         </div>
@@ -107,10 +206,14 @@ function ValueCardBlock({
         <div className="flex flex-row gap-6 sm:gap-10">
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col gap-1">
-              <p className={`font-kumbh text-3xl font-semibold sm:text-4xl ${styles.statValue}`}>
+              <p
+                className={`font-kumbh text-3xl font-semibold sm:text-4xl ${styles.statValue}`}
+              >
                 {stat.value}
               </p>
-              <p className={`max-w-[200px] font-montserrat text-sm sm:text-base ${styles.statLabel}`}>
+              <p
+                className={`max-w-[200px] font-montserrat text-sm sm:text-base ${styles.statLabel}`}
+              >
                 {stat.label}
               </p>
             </div>
@@ -132,19 +235,122 @@ function ValueCardBlock({
 }
 
 export function ValuesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [stickyTop, setStickyTop] = useState(STICKY_TOP_MOBILE);
+  const [collapseAtEnd, setCollapseAtEnd] = useState(true);
+  const [exitOpacity, setExitOpacity] = useState(1);
+
+  useEffect(() => {
+    const update = () => {
+      const section = sectionRef.current;
+      const mode = getViewportMode(window.innerWidth);
+      const top = getStickyTop(mode);
+      const isCompact = mode !== "desktop";
+
+      setStickyTop(top);
+      setCollapseAtEnd(isCompact);
+
+      if (!section) {
+        setProgress(0);
+        setExitOpacity(1);
+        return;
+      }
+
+      const rect = section.getBoundingClientRect();
+      const sectionTop = window.scrollY + rect.top;
+      const scrollable = section.offsetHeight - window.innerHeight;
+
+      if (scrollable <= 0) {
+        setProgress(0);
+        setExitOpacity(1);
+        return;
+      }
+
+      const nextProgress = Math.max(
+        0,
+        Math.min(1, (window.scrollY - sectionTop) / scrollable)
+      );
+      setProgress(nextProgress);
+
+      if (isCompact) {
+        setExitOpacity(1);
+        return;
+      }
+
+      const fadeStart = window.innerHeight * 0.92;
+      const nextExitOpacity =
+        rect.bottom >= fadeStart
+          ? 1
+          : Math.max(0, (rect.bottom - top) / (fadeStart - top));
+      setExitOpacity(nextExitOpacity);
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  const scrollHeightVh = collapseAtEnd
+    ? (values.length - 1) * 110 + 90
+    : (values.length - 1) * 100 + 60;
+
   return (
-    <section className="w-full bg-white py-12 md:py-16">
-      <div className="section-container">
+    <section
+      ref={sectionRef}
+      id="valeurs"
+      className="relative z-10 isolate w-full bg-white"
+      style={{ height: `${scrollHeightVh}vh` }}
+    >
+      <div className="section-container pt-12 md:pt-16">
         <h2 className="font-kumbh text-2xl font-semibold text-black md:text-[32px]">
           Nos valeurs
         </h2>
+      </div>
 
-        <div className="mt-8 flex flex-col gap-6 md:gap-8">
-          {values.map((value) => (
-            <ValueCardBlock key={value.title} {...value} />
-          ))}
+      <div
+        className="sticky flex items-start"
+        style={{
+          top: stickyTop,
+          ...(collapseAtEnd
+            ? {}
+            : {
+                height: `calc(100vh - ${stickyTop}px)`,
+                minHeight: `calc(100vh - ${stickyTop}px)`,
+              }),
+          opacity: exitOpacity,
+          pointerEvents: exitOpacity < 0.05 ? "none" : "auto",
+        }}
+      >
+        <div className="section-container relative isolate mt-8 w-full pb-8 sm:pb-12">
+          <div className="relative mx-auto w-full max-w-[1240px]">
+            <div className="invisible pointer-events-none" aria-hidden>
+              <ValueCardBlock {...values[tallestCardIndex]} />
+            </div>
+
+            {values.map((value, index) => (
+              <ValueCardBlock
+                key={value.title}
+                {...value}
+                isStacked
+                stackStyle={getCardStackStyle(
+                  index,
+                  progress,
+                  values.length,
+                  collapseAtEnd
+                )}
+              />
+            ))}
+          </div>
         </div>
       </div>
+
+      {collapseAtEnd && <div className="h-[15vh]" aria-hidden />}
     </section>
   );
 }

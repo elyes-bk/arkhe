@@ -120,7 +120,7 @@ export function TestimonialsSection() {
   };
 
   return (
-    <section id="temoignages" className="section-container overflow-hidden py-12 md:py-16">
+    <section id="temoignages" className="relative z-20 section-container overflow-hidden bg-white py-12 md:py-16">
       <div className="flex items-center justify-between gap-4">
         <h2 className="font-kumbh text-2xl font-semibold text-black md:text-3xl">
           Ils nous font confiance
