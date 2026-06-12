@@ -107,7 +107,7 @@ export default async function AdminMapPage() {
   const { salons, loadError } = await loadSalonsForMap(supabase);
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex flex-col md:flex-row min-h-screen bg-white">
       <SidebarAdmin activeTab="map" />
       <div className="flex flex-1 flex-col min-w-0">
         <AdminMapClient salons={salons} loadError={loadError} />

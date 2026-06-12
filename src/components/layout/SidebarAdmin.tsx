@@ -17,11 +17,7 @@ const HamburgerIcon = () => (
   </svg>
 )
 
-const CloseIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-)
+
 
 const DashboardIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -62,52 +58,77 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
         <Image src="/logo.svg" alt="ARKHE" width={68} height={42} priority />
       </div>
 
-      {/* Mobile Slide-in Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex">
-          <div className="bg-[#04082E] w-[280px] h-full p-[24px] flex flex-col justify-between overflow-y-auto">
-            <div className="flex flex-col gap-[64px]">
-              <div className="flex flex-row justify-between items-center">
-                <Image src="/logo.svg" alt="ARKHE" width={100} height={60} priority />
-                <button onClick={() => setMobileMenuOpen(false)}>
-                  <CloseIcon />
-                </button>
-              </div>
 
-              <div className="flex flex-col gap-[24px]">
-                {navItems.map((item) => {
-                  const isActive = activeTab === item.id
-                  return (
-                    <Link 
-                      key={item.id} 
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="md:hidden fixed inset-0 bg-black/60 z-40"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Menu container */}
+          <div className="md:hidden fixed inset-x-0 top-0 bg-[#04082E] z-50 px-[24px] pt-[24px] pb-[32px] flex flex-col gap-[28px] shadow-lg">
+            {/* Close button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-white hover:opacity-80 transition-opacity p-1"
+                aria-label="Fermer le menu"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            {/* Navigation links */}
+            <div className="flex flex-col">
+              {navItems.map((item, index) => {
+                const isActive = activeTab === item.id
+                return (
+                  <div key={item.id} className="flex flex-col">
+                    <Link
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex flex-row items-center gap-[16px] relative"
+                      className="flex flex-row items-center gap-[16px] py-[16px] relative"
                     >
                       {isActive && (
                         <div className="absolute -left-[24px] top-1/2 -translate-y-1/2 w-[4px] h-[32px] bg-white rounded-r-full" />
                       )}
-                      <div>{item.icon}</div>
-                      <span className={`font-sans text-[16px] leading-[19.5px] text-white ${isActive ? 'font-bold' : 'font-normal opacity-80'}`}>
+                      <div className="shrink-0">{item.icon}</div>
+                      <span className={`font-sans text-[16px] leading-[19.5px] text-white ${isActive ? 'font-bold' : 'font-normal opacity-85'}`}>
                         {item.label}
                       </span>
                     </Link>
-                  )
-                })}
-              </div>
+                    {index < navItems.length - 1 && (
+                      <div className="w-full h-px bg-white/20" />
+                    )}
+                  </div>
+                )
+              })}
             </div>
 
             {/* User Profile */}
-            <div className="flex flex-row items-center gap-[14px] mt-[64px]">
-              <div className="w-[40px] h-[40px] bg-[#D9D9D9] rounded-full shrink-0" />
+            <div className="flex flex-row items-center gap-[14px] pt-[20px] border-t border-white/20">
+              <div className="relative w-[40px] h-[40px] rounded-full overflow-hidden shrink-0">
+                <Image
+                  src="/quentin.png"
+                  alt="Quentin DANEL"
+                  fill
+                  sizes="40px"
+                  className="object-cover"
+                  priority
+                />
+              </div>
               <div className="flex flex-col">
                 <span className="font-sans font-normal text-[14px] text-white/80">Admin</span>
                 <span className="font-sans font-semibold text-[16px] text-white">Quentin DANEL</span>
               </div>
             </div>
           </div>
-          <div className="flex-1 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
-        </div>
+        </>
       )}
 
       {/* Desktop Sidebar */}
