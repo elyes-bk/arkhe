@@ -56,16 +56,17 @@ function fitMapToSalons(
   map: maplibregl.Map,
   points: { lng: number; lat: number }[]
 ) {
-  if (points.length === 0) {
+  const valid = points.filter((p) => isFinite(p.lng) && isFinite(p.lat));
+  if (valid.length === 0) {
     map.flyTo({ center: PARIS_CENTER, zoom: 12, duration: 800 });
     return;
   }
-  if (points.length === 1) {
-    map.flyTo({ center: [points[0].lng, points[0].lat], zoom: 14, duration: 800 });
+  if (valid.length === 1) {
+    map.flyTo({ center: [valid[0].lng, valid[0].lat], zoom: 14, duration: 800 });
     return;
   }
   const bounds = new maplibregl.LngLatBounds();
-  points.forEach((p) => bounds.extend([p.lng, p.lat]));
+  valid.forEach((p) => bounds.extend([p.lng, p.lat]));
   map.fitBounds(bounds, { padding: { top: 100, bottom: 200, left: 60, right: 60 }, maxZoom: 14 });
 }
 
@@ -186,6 +187,7 @@ export default function AdminMapClient({
   const [mounted, setMounted] = useState(false);
   const [salons, setSalons] = useState<SalonMapPoint[]>(initialSalons);
   const [selectedSalon, setSelectedSalon] = useState<SalonMapPoint | null>(null);
+  const [isSheetExpanded, setIsSheetExpanded] = useState(false);
 
   const visibleSalons = useMemo(
     () => salonsWithCoords(salons, filter),
@@ -215,28 +217,49 @@ export default function AdminMapClient({
     return city || "France";
   }, [salons]);
 
+  const totalBagsAvailable = useMemo(() => {
+    return collectPoints.reduce((sum, stop) => sum + (stop.bag_waiting ?? 0), 0);
+  }, [collectPoints]);
+
   useEffect(() => { setMounted(true); }, []);
+
+  const [mapError, setMapError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!mounted || !mapContainer.current) return;
 
-    const map = new maplibregl.Map({
-      container: mapContainer.current,
-      style: MAP_STYLE,
-      center: PARIS_CENTER,
-      zoom: 12,
-      attributionControl: false,
-    });
+    let map: maplibregl.Map | null = null;
+    try {
+      map = new maplibregl.Map({
+        container: mapContainer.current,
+        style: MAP_STYLE,
+        center: PARIS_CENTER,
+        zoom: 12,
+        attributionControl: false,
+      });
 
-    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-left");
-    mapRef.current = map;
+      map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-left");
+      mapRef.current = map;
 
-    map.on("load", () => { syncMarkers(map, visibleSalons); });
+      map.on("load", () => {
+        if (map) syncMarkers(map, visibleSalons);
+      });
+
+      map.on("error", (e) => {
+        console.error("Maplibre error event:", e);
+        setMapError(`Erreur Maplibre: ${e.error?.message || "Erreur de style ou de chargement"}`);
+      });
+    } catch (err: any) {
+      console.error("Failed to initialize map:", err);
+      setMapError(`Exception initialisation carte: ${err?.message || err}`);
+    }
 
     return () => {
       clearMarkers();
-      map.remove();
+      if (map) {
+        map.remove();
+      }
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -251,6 +274,7 @@ export default function AdminMapClient({
   function syncMarkers(map: maplibregl.Map, points: ReturnType<typeof salonsWithCoords>) {
     clearMarkers();
     points.forEach((salon) => {
+      if (!isFinite(salon.lng) || !isFinite(salon.lat)) return;
       const el = createMarkerElement(salon);
       if ((salon.bag_waiting ?? 0) > 0) {
         el.addEventListener("click", (e) => {
@@ -282,8 +306,15 @@ export default function AdminMapClient({
     );
   }
 
+  function flyToSalon(salon: { lng: number; lat: number }) {
+    const map = mapRef.current;
+    if (!map) return;
+    map.flyTo({ center: [salon.lng, salon.lat], zoom: 15, duration: 800 });
+    setIsSheetExpanded(false);
+  }
+
   return (
-    <div className="flex flex-1 flex-col min-h-screen">
+    <div className="flex flex-col h-[100dvh] md:h-auto md:min-h-screen">
       {selectedSalon && (
         <CollectPopup
           salon={selectedSalon}
@@ -292,7 +323,7 @@ export default function AdminMapClient({
         />
       )}
 
-      <header className="border-b border-slate-200 bg-white px-6 py-5 md:pl-[61px]">
+      <header className="hidden md:block border-b border-slate-200 bg-white px-6 py-5 md:pl-[61px]">
         <h1 className="font-heading text-[32px] font-bold leading-tight text-[#04082E]">
           Carte logistique
         </h1>
@@ -319,14 +350,20 @@ export default function AdminMapClient({
         </div>
       </header>
 
-      <div className="admin-map-wrap relative flex-1 min-h-[calc(100vh-180px)]">
+      <div className="admin-map-wrap relative flex-1 md:h-auto md:min-h-[calc(100vh-180px)]">
+        {mapError && (
+          <div className="absolute top-16 left-4 right-4 z-30 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-xs">
+            <strong>Erreur de carte :</strong> {mapError}
+          </div>
+        )}
         <div className="absolute left-4 top-4 z-10 rounded-md bg-white px-3 py-1.5 font-sans text-sm font-medium text-[#04082E] shadow-md">
           Zone : {zoneLabel}
         </div>
 
         <div ref={mapContainer} className="absolute inset-0 h-full w-full" />
 
-        <div className="absolute bottom-6 left-4 right-4 z-10 mx-auto flex max-w-4xl flex-col gap-3 sm:left-6 sm:right-6">
+        {/* Desktop Route Suggested panel */}
+        <div className="absolute bottom-6 left-4 right-4 z-10 mx-auto hidden md:flex max-w-4xl flex-col gap-3 sm:left-6 sm:right-6">
           <div className="flex flex-col items-stretch gap-4 rounded-xl bg-white p-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-col gap-0.5">
               <span className="font-heading text-base font-semibold text-[#04082E]">Itinéraire suggéré</span>
@@ -371,6 +408,142 @@ export default function AdminMapClient({
             >
               Générer itinéraire optimal
             </button>
+          </div>
+        </div>
+
+        {/* Mobile Bottom Sheet — slide-up */}
+        {/* Backdrop */}
+        {isSheetExpanded && (
+          <div
+            className="md:hidden fixed inset-0 z-10 bg-black/20"
+            onClick={() => setIsSheetExpanded(false)}
+          />
+        )}
+
+        <div
+          className="md:hidden fixed bottom-0 left-0 right-0 z-20 bg-white rounded-t-[20px] shadow-[0_-4px_24px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden"
+          style={{
+            maxHeight: isSheetExpanded ? "75dvh" : "100px",
+            transition: "max-height 0.35s cubic-bezier(0.4,0,0.2,1)",
+          }}
+        >
+          <button
+            type="button"
+            aria-label={isSheetExpanded ? "Réduire" : "Voir les salons"}
+            onClick={() => setIsSheetExpanded((v) => !v)}
+            className="w-full pt-3 pb-1.5 flex flex-col items-center gap-1.5 focus:outline-none"
+          >
+            <div className="w-10 h-1 bg-slate-300 rounded-full" />
+            <svg
+              className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${isSheetExpanded ? "rotate-180" : "rotate-0"}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+            </svg>
+          </button>
+
+          {/* Header row — always visible */}
+          <button
+            type="button"
+            onClick={() => setIsSheetExpanded((v) => !v)}
+            className="w-full px-6 pb-4 flex items-center justify-between focus:outline-none"
+          >
+            <div className="flex flex-col gap-0.5 text-left">
+              <span className="font-heading text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                Disponible
+              </span>
+              <span className="font-heading text-3xl font-black text-[#04082E] leading-none">
+                {totalBagsAvailable}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              disabled={routeStops.length < 2}
+              onClick={(e) => {
+                e.stopPropagation();
+                const coords = routeStops.map((s) => `${s.lat},${s.lng}`).join("/");
+                window.open(`https://www.google.com/maps/dir/${coords}`, "_blank");
+              }}
+              className="bg-[#0738DC] hover:bg-blue-700 text-white font-heading text-sm font-bold px-6 py-3.5 rounded-[4px] transition-all disabled:opacity-50"
+            >
+              Générer itinéraire
+            </button>
+          </button>
+
+          {/* Expandable salon list */}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-out ${
+              isSheetExpanded ? "flex-1 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="overflow-y-auto" style={{ maxHeight: "calc(75dvh - 120px)" }}>
+              {/* Section header */}
+              <div className="px-6 pt-1 pb-3 border-t border-slate-100">
+                <p className="font-heading text-base font-bold text-[#04082E]">
+                  Salons prioritaires
+                </p>
+                <p className="font-sans text-xs text-slate-400 mt-0.5">
+                  Triés par urgence · Cliquer pour localiser
+                </p>
+              </div>
+
+              {/* Salon items */}
+              <ul className="divide-y divide-slate-100 pb-6">
+                {collectPoints.length === 0 ? (
+                  <li className="px-6 py-8 text-center">
+                    <p className="font-sans text-sm text-slate-400">Aucun sac en attente</p>
+                  </li>
+                ) : (
+                  collectPoints.map((salon) => {
+                    const sacs = salon.bag_waiting ?? 0;
+                    const urgency =
+                      sacs >= 3
+                        ? { label: "Urgent", color: "text-red-600 border-red-200 bg-red-50" }
+                        : sacs === 2
+                        ? { label: "Urgent", color: "text-orange-500 border-orange-200 bg-orange-50" }
+                        : { label: "Moyen", color: "text-emerald-600 border-emerald-200 bg-emerald-50" };
+
+                    const city = salon.adresse
+                      ? salon.adresse.split(",").slice(-2).join(",").trim()
+                      : "";
+
+                    return (
+                      <li key={salon.id}>
+                        <button
+                          type="button"
+                          onClick={() => flyToSalon(salon)}
+                          className="w-full px-6 py-4 flex items-center justify-between text-left active:bg-slate-50 transition-colors"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <p className="font-heading text-sm font-semibold text-[#04082E] truncate">
+                              {salon.nom_commerce}
+                            </p>
+                            {city && (
+                              <p className="font-sans text-xs text-slate-500 mt-0.5 truncate">{city}</p>
+                            )}
+                            <div className="flex items-center gap-1.5 mt-1.5">
+                              <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+                              </svg>
+                              <span className="font-sans text-xs text-slate-500">
+                                {sacs} sac{sacs > 1 ? "s" : ""}
+                              </span>
+                            </div>
+                          </div>
+                          <span
+                            className={`ml-3 shrink-0 text-[11px] font-bold font-heading px-2.5 py-1 rounded-full border ${urgency.color}`}
+                          >
+                            {urgency.label}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })
+                )}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

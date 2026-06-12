@@ -15,10 +15,16 @@ export function parseEmplacement(
       coordinates?: number[] | [number, number];
     };
 
-    if (typeof row.longitude === "number" && typeof row.latitude === "number") {
+    if (
+      typeof row.longitude === "number" && isFinite(row.longitude) &&
+      typeof row.latitude === "number" && isFinite(row.latitude)
+    ) {
       return { lng: row.longitude, lat: row.latitude };
     }
-    if (typeof row.lng === "number" && typeof row.lat === "number") {
+    if (
+      typeof row.lng === "number" && isFinite(row.lng) &&
+      typeof row.lat === "number" && isFinite(row.lat)
+    ) {
       return { lng: row.lng, lat: row.lat };
     }
 
@@ -85,7 +91,10 @@ export type SalonMapPoint = {
 };
 
 function getCoords(s: SalonMapPoint): { lng: number; lat: number } | null {
-  if (typeof s.longitude === "number" && typeof s.latitude === "number") {
+  if (
+    typeof s.longitude === "number" && isFinite(s.longitude) &&
+    typeof s.latitude === "number" && isFinite(s.latitude)
+  ) {
     return { lng: s.longitude, lat: s.latitude };
   }
   return parseEmplacement(s.emplacement);

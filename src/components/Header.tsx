@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useState } from "react";
 import { Logo } from "@/components/Logo";
+import HeaderAuthButton from "@/components/HeaderAuthButton";
 
 const navLinks = [
   { label: "Accueil", href: "/" },
@@ -11,7 +12,11 @@ const navLinks = [
   { label: "Salons partenaires", href: "#temoignages" },
 ];
 
-export default function Header() {
+interface HeaderProps {
+  isLoggedIn?: boolean;
+}
+
+export default function Header({ isLoggedIn = false }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -34,13 +39,12 @@ export default function Header() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-3">
-          <Link
-            href="/register"
-            className="hidden rounded bg-arkhe-blue px-3 py-1.5 font-kumbh text-xs font-medium text-white transition-opacity hover:opacity-90 sm:inline-flex sm:text-sm"
-          >
-            Rejoindre
-          </Link>
+          {/* Desktop: Rejoindre ou Se déconnecter */}
+          <div className="hidden sm:block">
+            <HeaderAuthButton isLoggedIn={isLoggedIn} />
+          </div>
 
+          {/* Mobile hamburger */}
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -76,13 +80,7 @@ export default function Header() {
               </li>
             ))}
             <li>
-              <Link
-                href="/register"
-                onClick={() => setMenuOpen(false)}
-                className="inline-flex rounded bg-arkhe-blue px-4 py-2 font-kumbh text-sm font-medium text-white"
-              >
-                Rejoindre
-              </Link>
+              <HeaderAuthButton isLoggedIn={isLoggedIn} className="inline-flex px-4 py-2 text-sm" />
             </li>
           </ul>
         </nav>
