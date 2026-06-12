@@ -21,6 +21,11 @@ export const assets = {
   stat95: "/images/photo-hair.png",
   stat85: "/images/photo-diversity.png",
 
+  // Section 6 — Valeurs
+  valuesInnovation: "/images/photo-graphite.png",
+  valuesCollecte: "/images/photo-bike.png",
+  valuesScience: "/images/photo-hair-values.png",
+
   // Icônes valeurs & UI (Figma MCP — à remplacer si besoin)
   iconInnovation:
     "https://www.figma.com/api/mcp/asset/92e8e120-ce1d-4800-8a0b-a3907b90be4a",

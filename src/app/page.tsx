@@ -11,7 +11,7 @@ import { ValuesSection } from "@/components/ValuesSection";
 
 export default function Home() {
   return (
-    <div className="w-full overflow-x-hidden">
+    <div className="w-full">
       <Header />
       <main className="flex w-full flex-col gap-12 md:gap-16">
         <Hero />

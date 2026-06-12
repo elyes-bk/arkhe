@@ -11,16 +11,24 @@ export function Hero() {
             carbone haute performance
           </h1>
           <p className="mt-4 font-montserrat text-base text-white sm:mt-6 sm:text-lg lg:text-xl">
-            Chaque sac collecté devient un matériau carbone activé (&gt;2000
+            Chaque sac de cheveux collectés devient un matériau carbone activé (&gt;2000
             m²/g) vendu aux industriels de demain.
           </p>
-          <Link
-            id="rejoindre"
-            href="/register"
-            className="mt-6 inline-flex rounded bg-white px-6 py-2 font-kumbh text-base font-medium text-arkhe-blue transition-opacity hover:opacity-90 sm:mt-8 sm:px-8 sm:py-2.5 sm:text-lg"
-          >
-            Rejoindre ARKHE
-          </Link>
+          <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8 sm:gap-4">
+            <Link
+              id="rejoindre"
+              href="/register"
+              className="inline-flex rounded bg-white px-6 py-2 font-kumbh text-base font-medium text-arkhe-blue transition-opacity hover:opacity-90 sm:px-8 sm:py-2.5 sm:text-lg"
+            >
+              Rejoindre ARKHE
+            </Link>
+            <Link
+              href="mailto:contact@arkhe.fr"
+              className="inline-flex rounded border border-white bg-transparent px-6 py-2 font-kumbh text-base font-medium text-white transition-opacity hover:opacity-90 sm:px-8 sm:py-2.5 sm:text-lg"
+            >
+              Contactez-nous
+            </Link>
+          </div>
         </div>
 
         {/* eslint-disable-next-line @next/next/no-img-element */}
