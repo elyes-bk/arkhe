@@ -53,7 +53,7 @@ export default async function DashboardSalon() {
     <div className="min-h-screen bg-white font-sans">
       <Header isLoggedIn={true} />
 
-      <div className="pt-[40px] flex flex-col mb-[40px]">
+      <div className="pt-[40px] flex flex-col lg:mb-[40px]">
 
         {/* Bannière salon — gradient */}
         <div className="bg-gradient-to-tr from-[#04082E] to-[#0D1A94] px-6 py-8 lg:px-24 lg:py-12">
@@ -78,7 +78,7 @@ export default async function DashboardSalon() {
           <div className="flex flex-col gap-4 mx-6 mt-5 lg:mx-0 lg:mt-0">
 
             {/* Carte : Nombre de sacs remplis */}
-            <div className="flex-1 flex bg-white rounded-md p-6 border border-[#BDC5DF]">
+            <div className="flex-1 flex bg-white max-h-[300px] rounded-md p-6 border border-[#BDC5DF]">
               <SacCounter salonId={salon?.id ?? ''} />
             </div>
 
