@@ -18,9 +18,32 @@ export default function SacCounter({ salonId }: { salonId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <>
+      {/* Toast de confirmation */}
+      <div
+        className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+          sent ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+        }`}
+      >
+        <div className="bg-[#187819] text-white rounded-2xl px-5 py-4 shadow-xl max-w-xs lg:max-w-xl w-[calc(100vw-3rem)]">
+          <div className="flex items-center gap-2 mb-1">
+            <svg className="w-4 h-4 text-[#E2E9FF] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+            <p className="font-bold text-sm">Sac pris en compte !</p>
+          </div>
+          <p className="text-white/60 text-xs leading-relaxed pl-6">
+            Votre signalement a bien été enregistré. Une collecte sera organisée prochainement.
+          </p>
+        </div>
+      </div>
+
+    <div className="w-full flex flex-col gap-4 justify-between">
+      <p className="text-[#04082E] text-sm font-semibold text-center">
+        Nombre de sacs remplis
+      </p>
       {/* Counter row */}
-      <div className="flex items-center gap-4">
+      <div className="flex justify-between items-center gap-4">
         <button
           type="button"
           onClick={() => setCount((c) => Math.max(1, c - 1))}
@@ -46,7 +69,7 @@ export default function SacCounter({ salonId }: { salonId: string }) {
       <button
         onClick={handleSignaler}
         disabled={isPending}
-        className="w-full bg-[#0738DC] hover:bg-[#0530C0] active:scale-[0.98] text-white font-bold py-3 rounded-xl transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+        className="w-full bg-[#0738DC] hover:bg-[#0530C0] active:scale-[0.98] text-white font-bold py-3 rounded-md transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
       >
         {isPending ? (
           <span className="flex items-center justify-center gap-2">
@@ -68,5 +91,6 @@ export default function SacCounter({ salonId }: { salonId: string }) {
         )}
       </button>
     </div>
+    </>
   )
 }
