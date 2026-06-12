@@ -58,9 +58,9 @@ export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="section-container py-12 md:py-16">
-      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-12 xl:gap-16">
-        <div className="min-w-0 flex-1 lg:max-w-[631px]">
+    <section id="faq" className="w-full bg-white py-12 md:py-16">
+      <div className="section-container flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12 xl:gap-16">
+        <div className="min-w-0 flex-1 lg:basis-[55%]">
           <h2 className="font-kumbh text-2xl font-semibold text-black md:text-[32px]">
             FAQ
           </h2>
@@ -105,14 +105,13 @@ export function FAQSection() {
           </div>
         </div>
 
-        <div className="relative mx-auto shrink-0 overflow-hidden rounded-[5px] lg:mx-0">
+        <div className="relative aspect-[538/509] w-full shrink-0 overflow-hidden rounded-[5px] lg:basis-[45%]">
           <Image
             src={assets.faqSalon}
             alt="Salon partenaire ARKHE avec bac de collecte de cheveux"
-            width={538}
-            height={509}
-            className="h-auto w-full max-w-[538px] object-cover lg:h-[509px] lg:w-[538px]"
-            sizes="538px"
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 45vw"
           />
         </div>
       </div>

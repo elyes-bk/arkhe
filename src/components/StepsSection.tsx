@@ -42,13 +42,13 @@ export function StepsSection() {
               key={step.title}
               className="flex flex-col items-center text-center"
             >
-              <div className="relative aspect-[4/3] w-full max-w-[320px] overflow-hidden rounded-[5px]">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[5px]">
                 <Image
                   src={step.image}
                   alt={step.alt}
                   fill
                   className="object-cover"
-                  sizes="320px"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
                 />
               </div>
               <h3 className="mt-4 font-kumbh text-lg font-bold text-[#0d0d0d] sm:text-xl">

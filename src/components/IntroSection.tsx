@@ -30,7 +30,7 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <article className="flex w-full max-w-[296px] flex-col gap-4 rounded-[5px] border border-solid border-[#bdc5df] px-[13px] py-[14px] min-[630px]:w-[296px] min-[630px]:shrink-0">
+    <article className="flex w-full min-w-0 flex-1 flex-col gap-4 rounded-[5px] border border-solid border-[#bdc5df] px-[13px] py-[14px] md:max-w-none">
       <div className="relative size-[33px] shrink-0 overflow-hidden rounded-[2px] bg-white">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -55,17 +55,14 @@ export function IntroSection() {
   return (
     <section id="mission" className="w-full overflow-hidden bg-white py-16 lg:py-20">
       <div className="section-container">
-        {/* Figma 228:774 — flex row, justify-between, items-start */}
-        <div className="intro-mission-row mx-auto flex w-full max-w-[1238px] flex-col gap-10 min-[1100px]:flex-row min-[1100px]:items-start min-[1100px]:justify-between min-[1100px]:gap-[71px]">
-          {/* Colonne gauche 631px */}
-          <div className="flex w-full min-w-0 flex-col gap-6 min-[1100px]:w-[631px] min-[1100px]:shrink-0">
-            {/* Bloc texte — gap 24px entre titre-groupe et paragraphe */}
+        <div className="flex w-full flex-col gap-10 lg:flex-row lg:items-start lg:gap-12 xl:gap-16">
+          <div className="flex w-full min-w-0 flex-1 flex-col gap-6 lg:basis-[55%]">
             <div className="flex w-full flex-col gap-6">
               <div className="flex w-full flex-col gap-4">
-                <h2 className="font-kumbh text-[32px] font-semibold leading-normal text-black">
+                <h2 className="font-kumbh text-2xl font-semibold leading-normal text-black sm:text-3xl lg:text-[32px]">
                   Réinventer la valeur du cheveu
                 </h2>
-                <p className="font-kumbh text-2xl font-normal leading-normal text-black">
+                <p className="font-kumbh text-xl font-normal leading-normal text-black sm:text-2xl">
                   Collecter, revaloriser, transformer.
                 </p>
               </div>
@@ -78,22 +75,20 @@ export function IntroSection() {
               </p>
             </div>
 
-            {/* Cartes côte à côte — gap 38px */}
-            <div className="flex w-full flex-col gap-[38px] min-[630px]:flex-row min-[630px]:items-stretch">
+            <div className="flex w-full flex-col gap-6 md:flex-row md:items-stretch md:gap-8 lg:gap-10">
               {features.map((feature) => (
                 <FeatureCard key={feature.title} {...feature} />
               ))}
             </div>
           </div>
 
-          {/* Image 538×415 — alignée en haut à droite */}
-          <div className="relative mx-auto h-[240px] w-full max-w-[538px] shrink-0 overflow-hidden rounded-[5px] min-[1100px]:mx-0 min-[1100px]:h-[415px] min-[1100px]:w-[538px]">
+          <div className="relative aspect-[538/415] w-full shrink-0 overflow-hidden rounded-[5px] lg:basis-[45%]">
             <Image
               src={assets.bike}
               alt="Vélo de collecte ARKHE devant un salon partenaire"
               fill
               className="object-cover"
-              sizes="538px"
+              sizes="(max-width: 1024px) 100vw, 45vw"
               priority
             />
           </div>

@@ -13,15 +13,19 @@ export default function Home() {
   return (
     <div className="w-full">
       <Header />
-      <main className="flex w-full flex-col gap-12 md:gap-16">
-        <Hero />
-        <IntroSection />
-        <StepsSection />
-        <SovereigntySection />
-        <MaterialSection />
+      <main className="flex w-full flex-col">
+        <div className="flex flex-col gap-12 md:gap-16">
+          <Hero />
+          <IntroSection />
+          <StepsSection />
+          <SovereigntySection />
+          <MaterialSection />
+        </div>
         <ValuesSection />
         <TestimonialsSection />
-        <FAQSection />
+        <div className="flex flex-col gap-12 md:gap-16">
+          <FAQSection />
+        </div>
       </main>
       <Footer />
     </div>

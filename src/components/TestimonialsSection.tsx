@@ -120,7 +120,8 @@ export function TestimonialsSection() {
   };
 
   return (
-    <section id="temoignages" className="relative z-20 section-container overflow-hidden bg-white py-12 md:py-16">
+    <section id="temoignages" className="relative z-20 w-full overflow-hidden bg-white pb-12 pt-6 md:pb-16 md:pt-8">
+      <div className="section-container">
       <div className="flex items-center justify-between gap-4">
         <h2 className="font-kumbh text-2xl font-semibold text-black md:text-3xl">
           Ils nous font confiance
@@ -150,7 +151,7 @@ export function TestimonialsSection() {
       <div
         ref={scrollRef}
         onScroll={updateScrollState}
-        className="-mx-4 mt-8 flex gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="mt-8 flex w-full gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {testimonials.map((t) => (
           <article
@@ -178,6 +179,7 @@ export function TestimonialsSection() {
             </div>
           </article>
         ))}
+      </div>
       </div>
     </section>
   );
