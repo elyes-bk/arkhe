@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from '@/lib/supabase-server'
+﻿import { createSupabaseServerClient } from '@/lib/supabase-server'
 import SacCounter from '@/components/SacCounter'
 import Header from '@/components/Header'
 import RecentActivity from '@/components/RecentActivity'
@@ -101,7 +101,7 @@ export default async function DashboardSalon() {
 
           </div>
 
-          {/* Colonne droite : activité récente (desktop uniquement) */}
+          {/* Colonne droite : activité récente historique(desktop uniquement) */}
           <div className="hidden lg:flex lg:flex-col">
             <RecentActivity sacs={recentSacs ?? []} />
           </div>

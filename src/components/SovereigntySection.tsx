@@ -26,7 +26,10 @@ export function SovereigntySection() {
   return (
     <section className="w-full bg-white py-12 lg:py-16">
       <div className="section-container flex flex-col items-stretch gap-10 lg:flex-row lg:items-center lg:gap-12">
-        <div className="relative aspect-[538/450] w-full shrink-0 overflow-hidden rounded-[5px] lg:w-[45%] lg:aspect-auto lg:min-h-[360px] lg:h-[min(450px,42vw)]">
+        <div
+          id="aPropos"
+          className="relative aspect-[538/450] w-full shrink-0 overflow-hidden rounded-[5px] lg:w-[45%] lg:aspect-auto lg:min-h-[360px] lg:h-[min(450px,42vw)]"
+        >
           <Image
             src={assets.carbon}
             alt="Laboratoire ARKHE — carbone français et sac industriel"
