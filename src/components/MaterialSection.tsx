@@ -41,11 +41,12 @@ function StatCard({
 
 export function MaterialSection() {
   return (
-    <section className="section-container py-12 md:py-16">
+    <section className="w-full bg-white py-12 md:py-16">
+      <div className="section-container">
       <h2 className="font-kumbh text-2xl font-semibold text-black md:text-[32px]">
         Le secret de notre matériau
       </h2>
-      <p className="mt-4 max-w-3xl font-montserrat text-base text-black">
+      <p className="mt-4 w-full font-montserrat text-base text-black lg:max-w-[85%]">
         Grâce à un procédé unique, nous libérons l&apos;énergie cachée au cœur
         des cheveux pour créer une technologie propre et inusable.
       </p>
@@ -86,6 +87,7 @@ export function MaterialSection() {
             </p>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

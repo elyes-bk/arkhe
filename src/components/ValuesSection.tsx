@@ -103,6 +103,29 @@ function getStickyTop(mode: ViewportMode): number {
   return STICKY_TOP_MOBILE;
 }
 
+function computeSectionHeight(
+  cardHeight: number,
+  viewportHeight: number,
+  stickyTop: number,
+  isCompact: boolean,
+  cardCount: number
+): number {
+  const titleZone = isCompact ? 96 : 112;
+  const transitions = cardCount - 1;
+  const scrollPerTransition = isCompact
+    ? Math.min(viewportHeight * 0.38, cardHeight * 0.55)
+    : viewportHeight * 0.68;
+  const tail = isCompact ? 16 : viewportHeight * 0.06;
+
+  return (
+    titleZone +
+    stickyTop +
+    cardHeight +
+    transitions * scrollPerTransition +
+    tail
+  );
+}
+
 const tallestCardIndex = values.reduce(
   (max, value, index, arr) =>
     value.description.length > arr[max].description.length ? index : max,
@@ -186,7 +209,7 @@ function ValueCardBlock({
 
   return (
     <article
-      className={`mx-auto flex w-full max-w-[1240px] flex-col items-stretch gap-6 rounded-[5px] px-5 py-6 shadow-[0_12px_40px_rgba(4,8,46,0.2)] sm:px-8 sm:py-8 lg:min-h-[413px] lg:flex-row lg:items-center lg:gap-12 lg:px-[46px] lg:py-[40px] ${styles.card} ${isStacked ? "absolute inset-x-0 top-0 will-change-transform" : ""}`}
+      className={`flex w-full flex-col items-stretch gap-6 rounded-[5px] px-5 py-6 shadow-[0_12px_40px_rgba(4,8,46,0.2)] sm:px-8 sm:py-8 lg:min-h-[413px] lg:flex-row lg:items-center lg:gap-12 lg:px-10 lg:py-10 xl:px-12 ${styles.card} ${isStacked ? "absolute inset-x-0 top-0 will-change-transform" : ""}`}
       style={stackStyle}
     >
       <div className="order-1 flex min-w-0 flex-1 flex-col gap-6 lg:order-2 lg:justify-between lg:self-stretch">
@@ -221,13 +244,13 @@ function ValueCardBlock({
         </div>
       </div>
 
-      <div className="relative order-2 aspect-[491/351] w-full shrink-0 overflow-hidden rounded-[5px] lg:order-1 lg:h-[351px] lg:w-[491px] lg:max-w-[491px]">
+      <div className="relative order-2 aspect-[491/351] w-full shrink-0 overflow-hidden rounded-[5px] lg:order-1 lg:w-[40%] lg:shrink-0">
         <Image
           src={image}
           alt={imageAlt}
           fill
           className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 491px"
+          sizes="(max-width: 1024px) 100vw, 40vw"
         />
       </div>
     </article>
@@ -236,12 +259,27 @@ function ValueCardBlock({
 
 export function ValuesSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [stickyTop, setStickyTop] = useState(STICKY_TOP_MOBILE);
   const [collapseAtEnd, setCollapseAtEnd] = useState(true);
   const [exitOpacity, setExitOpacity] = useState(1);
+  const [sectionHeight, setSectionHeight] = useState<number | null>(null);
 
   useEffect(() => {
+    const updateSectionHeight = () => {
+      const mode = getViewportMode(window.innerWidth);
+      const top = getStickyTop(mode);
+      const isCompact = mode !== "desktop";
+      const vh = window.innerHeight;
+      const cardH =
+        measureRef.current?.offsetHeight ?? (isCompact ? 620 : 413);
+
+      setSectionHeight(
+        computeSectionHeight(cardH, vh, top, isCompact, values.length)
+      );
+    };
+
     const update = () => {
       const section = sectionRef.current;
       const mode = getViewportMode(window.innerWidth);
@@ -250,6 +288,7 @@ export function ValuesSection() {
 
       setStickyTop(top);
       setCollapseAtEnd(isCompact);
+      updateSectionHeight();
 
       if (!section) {
         setProgress(0);
@@ -290,22 +329,22 @@ export function ValuesSection() {
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
 
+    const observer = new ResizeObserver(updateSectionHeight);
+    if (measureRef.current) observer.observe(measureRef.current);
+
     return () => {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
+      observer.disconnect();
     };
   }, []);
-
-  const scrollHeightVh = collapseAtEnd
-    ? (values.length - 1) * 110 + 90
-    : (values.length - 1) * 100 + 60;
 
   return (
     <section
       ref={sectionRef}
       id="valeurs"
       className="relative z-10 isolate w-full bg-white"
-      style={{ height: `${scrollHeightVh}vh` }}
+      style={sectionHeight ? { height: `${sectionHeight}px` } : undefined}
     >
       <div className="section-container pt-12 md:pt-16">
         <h2 className="font-kumbh text-2xl font-semibold text-black md:text-[32px]">
@@ -327,9 +366,13 @@ export function ValuesSection() {
           pointerEvents: exitOpacity < 0.05 ? "none" : "auto",
         }}
       >
-        <div className="section-container relative isolate mt-8 w-full pb-8 sm:pb-12">
-          <div className="relative mx-auto w-full max-w-[1240px]">
-            <div className="invisible pointer-events-none" aria-hidden>
+        <div className="section-container relative isolate mt-8 w-full pb-2 sm:pb-4">
+          <div className="relative w-full">
+            <div
+              ref={measureRef}
+              className="invisible pointer-events-none"
+              aria-hidden
+            >
               <ValueCardBlock {...values[tallestCardIndex]} />
             </div>
 
@@ -350,7 +393,6 @@ export function ValuesSection() {
         </div>
       </div>
 
-      {collapseAtEnd && <div className="h-[15vh]" aria-hidden />}
     </section>
   );
 }
