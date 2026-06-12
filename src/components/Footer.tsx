@@ -12,9 +12,9 @@ export function Footer() {
   return (
     <footer className="relative w-full min-h-[140px] bg-[#0738DC] overflow-hidden flex flex-col justify-center">
 
-      {/* Logo pleine hauteur, collé à gauche, semi-transparent */}
-      <div className="absolute left-0 top-0 h-full flex items-center pointer-events-none select-none">
-        <Logo className="h-full w-auto opacity-20 object-contain object-left" />
+      {/* Logo pleine hauteur — centré mobile, collé à gauche desktop */}
+      <div className="absolute left-1/2 -translate-x-1/2 lg:left-0 lg:translate-x-0 top-0 h-full flex items-center pointer-events-none select-none">
+        <Logo className="h-full w-auto lg:pl-8 object-contain" />
       </div>
 
       {/* Contenu */}

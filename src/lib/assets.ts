@@ -1,6 +1,7 @@
 /** Images locales du projet ARKHE */
 export const assets = {
   logo: "/images/logo-nav.png",
+  logoFooter: "/images/logo.png",
 
   // Section 2 — Mission
   bike: "/images/photo-bike.png",

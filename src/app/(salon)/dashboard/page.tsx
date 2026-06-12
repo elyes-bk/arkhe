@@ -72,19 +72,19 @@ export default async function DashboardSalon() {
         </div>
 
         {/* Zone principale : 2 colonnes sur desktop */}
-        <div className="lg:grid lg:grid-cols-[1fr_1fr] lg:gap-8 lg:px-24 lg:pt-8 lg:pb-10">
+        <div className="lg:grid lg:grid-cols-[1fr_1fr] lg:gap-[100px] lg:px-28 lg:pt-8 lg:pb-10">
 
           {/* Colonne gauche : counter + en attente */}
           <div className="flex flex-col gap-4 mx-6 mt-5 lg:mx-0 lg:mt-0">
 
             {/* Carte : Nombre de sacs remplis */}
-            <div className="flex-1 flex bg-white rounded-xl p-6 border border-[#BDC5DF]">
+            <div className="flex-1 flex bg-white rounded-md p-6 border border-[#BDC5DF]">
               <SacCounter salonId={salon?.id ?? ''} />
             </div>
 
             {/* Carte : En attente de collecte */}
-            <div className="bg-white rounded-xl px-5 py-4 border border-[#BDC5DF] flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#E2E9FF] flex items-center justify-center flex-shrink-0">
+            <div className="bg-white rounded-md px-5 py-4 border border-[#BDC5DF] flex items-center gap-3">
+              <div className="w-10 h-10 rounded-md bg-[#E2E9FF] flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-[#0738DC]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -120,8 +120,8 @@ export default async function DashboardSalon() {
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
 
             {/* Sacs collectés : pleine largeur mobile, 1/3 desktop */}
-            <div className="col-span-2 lg:col-span-1 border border-white/20 rounded-xl p-5 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-lg bg-[#E2E9FF]/10 flex items-center justify-center flex-shrink-0">
+            <div className="col-span-2 lg:col-span-1 border border-white/20 rounded-md p-5 flex items-center gap-4">
+              <div className="w-11 h-11 rounded-md bg-[#E2E9FF]/10 flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-[#E2E9FF]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
@@ -133,8 +133,8 @@ export default async function DashboardSalon() {
             </div>
 
             {/* CO2 */}
-            <div className="bg-white rounded-xl p-4 lg:p-6 flex flex-col gap-3">
-              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg bg-[#E2E9FF] flex items-center justify-center text-[#0738DC] font-black text-xs">
+            <div className="bg-white rounded-md p-4 lg:p-6 flex flex-col gap-3">
+              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-md bg-[#E2E9FF] flex items-center justify-center text-[#0738DC] font-black text-xs">
                 CO₂
               </div>
               <div>
@@ -144,8 +144,8 @@ export default async function DashboardSalon() {
             </div>
 
             {/* Eau */}
-            <div className="bg-white rounded-xl p-4 lg:p-6 flex flex-col gap-3">
-              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg bg-[#E2E9FF] flex items-center justify-center flex-shrink-0">
+            <div className="bg-white rounded-md p-4 lg:p-6 flex flex-col gap-3">
+              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-md bg-[#E2E9FF] flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-[#0738DC]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 2C12 2 5 10 5 14a7 7 0 0014 0c0-4-7-12-7-12z" />
                 </svg>
