@@ -23,7 +23,7 @@ export function Hero() {
               Rejoindre ARKHE
             </Link>
             <Link
-              href="mailto:contact@arkhe.fr"
+              href="/contact"
               className="inline-flex rounded border border-white bg-transparent px-6 py-2 font-kumbh text-base font-medium text-white transition-opacity hover:opacity-90 sm:px-8 sm:py-2.5 sm:text-lg"
             >
               Contactez-nous
