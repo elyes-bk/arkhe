@@ -19,14 +19,14 @@ export default function Header({ isLoggedIn = false }: HeaderProps) {
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 bg-arkhe-navy">
-      <div className="mx-auto flex w-full max-w-content items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
+      <div className="flex w-full items-center justify-between px-6 py-2">
         <Link href="/" className="shrink-0" aria-label="ARKHE — Accueil">
           <Image
             src="/images/logo-nav.png"
             alt="Arkhe"
             width={120}
             height={36}
-            className="h-9 w-auto object-contain"
+            className="h-12 w-auto object-contain"
           />
         </Link>
 

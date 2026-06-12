@@ -250,9 +250,9 @@ export default function AdminMapClient({
         console.error("Maplibre error event:", e);
         setMapError(`Erreur Maplibre: ${e.error?.message || "Erreur de style ou de chargement"}`);
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to initialize map:", err);
-      setMapError(`Exception initialisation carte: ${err?.message || err}`);
+      setMapError(`Exception initialisation carte: ${err instanceof Error ? err.message : String(err)}`);
     }
 
     return () => {
@@ -269,6 +269,7 @@ export default function AdminMapClient({
     const map = mapRef.current;
     if (!map || !map.isStyleLoaded()) return;
     syncMarkers(map, visibleSalons);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleSalons]);
 
   function syncMarkers(map: maplibregl.Map, points: ReturnType<typeof salonsWithCoords>) {
