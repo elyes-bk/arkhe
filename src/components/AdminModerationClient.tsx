@@ -2,11 +2,9 @@
 
 import { useState, useTransition } from 'react'
 import { approveSalon, rejectSalon, regeocodeSalon, reconsiderSalon } from '@/actions/admin'
-import { logout } from '@/actions/auth'
 import { formatSalonLocation } from '@/lib/geo'
 import Image from 'next/image'
 import { ActionModal } from './modals/ActionModal'
-import Link from 'next/link'
 
 interface Salon {
   id: string
@@ -32,7 +30,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [isPending, startTransition] = useTransition()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
   const [pendingAction, setPendingAction] = useState<{ type: 'approve' | 'reconsider'; salonId: string } | null>(null)
   const [isRefuseModalOpen, setIsRefuseModalOpen] = useState(false)
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
@@ -163,173 +161,8 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
   }
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-white text-slate-800 font-sans">
+    <div className="flex flex-col md:flex-row min-h-screen bg-white text-slate-800 font-sans w-full">
       
-      {/* ────────────────── Mobile Header (Visible only on mobile) ────────────────── */}
-      <header className="md:hidden w-full bg-[#04082e] h-16 flex items-center justify-between px-4 sticky top-0 z-30 select-none flex-shrink-0">
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="text-white hover:text-slate-300 focus:outline-none"
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
-        
-        <div className="w-[50px] h-[30px] relative flex items-center justify-center">
-          <Image 
-            src="/logo.svg" 
-            alt="ARKHE Logo" 
-            width={50} 
-            height={30} 
-            className="w-[50px] h-[30px] object-contain"
-            priority
-          />
-        </div>
-      </header>
-
-      {/* ────────────────── Mobile Drawer Navigation Menu ────────────────── */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 flex">
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-          <nav className="relative w-64 max-w-xs bg-[#04082e] h-full flex flex-col justify-between py-6 px-4 z-50 animate-slide-in-left">
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-                <Image src="/logo.svg" alt="ARKHE Logo" width={60} height={37} className="object-contain" />
-                <button onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-slate-300">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex flex-col gap-4">
-                <Link
-                  href="/admin/map"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/40 font-medium transition"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                  </svg>
-                  <span>Carte logistique</span>
-                </Link>
-                <Link
-                  href="/admin/moderation"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-white bg-[#0738dc] font-semibold transition"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 2L2 12l10 10 10-10L12 2z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8M8 12h8" />
-                  </svg>
-                  <span>Modération salons</span>
-                </Link>
-              </div>
-            </div>
-            
-            <div className="flex flex-col gap-4 pt-4 border-t border-slate-800">
-              <form action={logout} className="w-full">
-                <button 
-                  type="submit" 
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-950/20 font-medium transition"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                  </svg>
-                  <span>Se déconnecter</span>
-                </button>
-              </form>
-            </div>
-          </nav>
-        </div>
-      )}
-      
-      {/* ────────────────── Narrow Left Sidebar (Figma: W:80) ────────────────── */}
-      <aside className="hidden md:flex w-[80px] bg-[#04082e] text-white flex-col justify-between items-center py-6 flex-shrink-0 z-20 sticky top-0 h-screen overflow-hidden select-none">
-        
-        {/* Faded outline watermark symbol in background matching Figma screenshot */}
-        <div className="absolute left-[-60px] bottom-[-20px] w-[260px] h-[260px] opacity-[0.05] text-white pointer-events-none select-none z-0">
-          <svg className="w-full h-full" viewBox="0 0 68 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M54.812 35.5221L54.6513 8.39138L54.6385 6.1909L54.6128 1.88616C54.6064 0.840453 53.7517 -0.00637919 52.6979 3.6212e-05L48.444 0.0256972L21.0702 0.186082H20.8517C20.6718 0.186082 20.4919 0.192498 20.312 0.192498C14.7408 0.352883 9.72227 2.68167 6.05957 6.36412V6.47959H5.9439C2.24908 10.2647 -0.0127971 15.4291 5.44748e-05 21.126C0.0193318 26.8613 2.35189 32.0578 6.1174 35.8172H6.23949V35.9391C10.0243 39.6665 15.2356 41.9632 20.9738 41.9439C22.2333 41.9439 23.467 41.8285 24.6686 41.6103C29.0317 40.8212 32.9258 38.6785 35.8881 35.6376C36.6527 34.8613 37.3467 34.0273 37.9764 33.142C38.1756 32.8661 38.362 32.5839 38.5419 32.3016L48.5469 17.4499L48.6561 35.5606L48.6946 41.8734L54.8505 41.8734L54.8505 41.8349L54.812 35.5221ZM41.3885 16.7891L33.594 28.3625C32.7266 29.7034 33.0864 29.158 32.4374 30.0819C29.9442 33.6488 25.5875 35.7146 20.8967 35.7274H20.8581C12.7617 35.7274 6.18166 29.1901 6.15596 21.0939C6.13025 13.2543 12.2733 6.83244 20.0228 6.39619H20.0549C20.2991 6.38336 20.5561 6.37695 20.8067 6.37695C20.9995 6.37695 21.1923 6.37695 21.3851 6.38978L35.7081 6.30638L48.4826 6.22939H48.5019L48.4826 6.26147L41.3885 16.7891Z" fill="currentColor"/>
-          </svg>
-        </div>
-
-        <div className="flex flex-col items-center w-full gap-6 z-10">
-          {/* Vertical Logo Block */}
-          <div className="w-[68px] h-[42px] relative flex items-center justify-center">
-            <Image 
-              src="/logo.svg" 
-              alt="ARKHE Logo" 
-              width={68} 
-              height={42} 
-              className="w-[68px] h-[42px] object-contain"
-              priority
-            />
-          </div>
-
-          <div className="w-12 h-px bg-slate-800 opacity-40 my-2" />
-
-          {/* Navigation Icons (Icon only as per Figma maquette) */}
-          <nav className="flex flex-col items-center gap-4 w-full">
-            {/* Carte logistique */}
-            <Link
-              href="/admin/map"
-              title="Carte logistique"
-              className="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800/20 rounded-lg transition duration-150"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-            </Link>
-
-            {/* Modération (page active) */}
-            <Link
-              href="/admin/moderation"
-              title="Modération salons"
-              className="w-12 h-12 flex items-center justify-center text-white bg-[#0738dc] rounded-lg shadow-md transition duration-150"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 2L2 12l10 10 10-10L12 2z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8M8 12h8" />
-              </svg>
-            </Link>
-          </nav>
-        </div>
-
-        {/* Bottom block: Logout + Profile Photo */}
-        <div className="flex flex-col items-center gap-5 w-full px-2 z-10">
-          {/* Logout Button (Requested by USER) */}
-          <form action={logout} className="w-full flex justify-center">
-            <button 
-              type="submit" 
-              title="Se déconnecter (Logout)"
-              className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-400 hover:bg-red-950/20 rounded-lg transition duration-150"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-              </svg>
-            </button>
-          </form>
-
-          {/* Profile Picture (Figma Quentin checked shirt avatar) */}
-          <div className="w-10 h-10 rounded-lg overflow-hidden border border-slate-700 shadow-sm relative">
-            <Image 
-              src="/quentin.png" 
-              alt="Profile Quentin"
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
-      </aside>
-
       {/* ────────────────── Main Area ────────────────── */}
       <div className="flex-1 flex flex-col min-w-0">
         

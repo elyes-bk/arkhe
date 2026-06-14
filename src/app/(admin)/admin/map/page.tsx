@@ -108,7 +108,7 @@ export default async function AdminMapPage() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-white">
-      <SidebarAdmin activeTab="map" />
+      <SidebarAdmin activeTab="map" collapsed={true} />
       <div className="flex flex-1 flex-col min-w-0">
         <AdminMapClient salons={salons} loadError={loadError} />
       </div>

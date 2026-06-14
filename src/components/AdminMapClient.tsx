@@ -315,7 +315,7 @@ export default function AdminMapClient({
   }
 
   return (
-    <div className="flex flex-col h-[100dvh] md:h-auto md:min-h-screen">
+    <div className="flex flex-col h-[100dvh] md:h-screen md:flex-row bg-white">
       {selectedSalon && (
         <CollectPopup
           salon={selectedSalon}
@@ -324,68 +324,156 @@ export default function AdminMapClient({
         />
       )}
 
-      <header className="hidden md:block border-b border-slate-200 bg-white px-6 py-5 md:pl-[61px]">
-        <h1 className="font-heading text-[32px] font-bold leading-tight text-[#04082E]">
-          Carte logistique
-        </h1>
-        <p className="mt-1 font-sans text-[15px] text-[#6E6E6E]">
-          {visibleSalons.length} salon{visibleSalons.length !== 1 ? "s" : ""}{" "}
-          affiché{visibleSalons.length !== 1 ? "s" : ""} sur la carte
-        </p>
-        {loadError && (
-          <p className="mt-2 font-sans text-sm text-red-600">Erreur chargement : {loadError}</p>
-        )}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {FILTERS.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              onClick={() => setFilter(f.id)}
-              className={`rounded px-3 py-1.5 font-heading text-sm transition-colors ${
-                filter === f.id ? "bg-[#0738DC] text-white" : "bg-slate-100 text-[#04082E] hover:bg-slate-200"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </header>
+      {/* Left Panel: Desktop Only (Figma exact match) */}
+      <aside className="hidden md:flex flex-col w-[360px] border-r border-slate-200 bg-white flex-shrink-0 select-none h-screen justify-between">
+        
+        {/* Header Block */}
+        <div className="px-6 pt-8 pb-4 flex flex-col gap-5">
+          <div className="flex flex-col gap-1">
+            <h1 className="font-heading text-2xl font-bold text-[#04082E]">
+              Carte Logistique
+            </h1>
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-[#6E6E6E]">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#E14D5F] animate-pulse" />
+              <span>En direct - WebSocket</span>
+            </div>
+          </div>
 
-      <div className="admin-map-wrap relative flex-1 md:h-auto md:min-h-[calc(100vh-180px)]">
-        {mapError && (
-          <div className="absolute top-16 left-4 right-4 z-30 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-xs">
-            <strong>Erreur de carte :</strong> {mapError}
+          {/* Filters List */}
+          <div className="flex flex-col gap-2 mt-2">
+            <span className="font-heading text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Filtres
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {FILTERS.map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setFilter(f.id)}
+                  className={`rounded-[4px] px-2.5 py-1.5 font-heading text-xs font-bold transition-all ${
+                    filter === f.id ? "bg-[#0738DC] text-white" : "bg-slate-100 text-[#04082E] hover:bg-slate-200"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Priority Salons Scrollable Area */}
+        <div className="flex-1 overflow-y-auto px-6 py-2 border-t border-slate-100 flex flex-col gap-3">
+          <div className="pt-2">
+            <p className="font-heading text-sm font-bold text-[#04082E]">
+              Salons prioritaires
+            </p>
+            <p className="font-sans text-[11px] text-slate-400">
+              Triés par urgence - Cliquer pour localiser
+            </p>
+          </div>
+
+          <ul className="flex flex-col gap-3 pb-6">
+            {collectPoints.length === 0 ? (
+              <li className="py-8 text-center">
+                <p className="font-sans text-xs text-slate-400">Aucun sac en attente</p>
+              </li>
+            ) : (
+              collectPoints.map((salon) => {
+                const sacs = salon.bag_waiting ?? 0;
+                const urgency =
+                  sacs >= 3
+                    ? { label: "Urgent", color: "text-[#E14D5F] border-[#FFD2D7] bg-[#FFF0F2]" }
+                    : sacs === 2
+                    ? { label: "Moyen", color: "text-amber-600 border-amber-200 bg-amber-50" }
+                    : { label: "OK", color: "text-emerald-600 border-emerald-200 bg-emerald-50" };
+
+                const city = salon.adresse
+                  ? salon.adresse.split(",").slice(-2).join(",").trim()
+                  : "";
+
+                return (
+                  <li key={salon.id} className="border border-slate-150 rounded-[4px] bg-white hover:border-[#0738DC] transition-all">
+                    <button
+                      type="button"
+                      onClick={() => flyToSalon(salon)}
+                      className="w-full p-4 flex items-center justify-between text-left focus:outline-none"
+                    >
+                      <div className="flex-1 min-w-0 flex flex-col gap-1">
+                        <p className="font-heading text-[13px] font-bold text-[#04082E] truncate">
+                          {salon.nom_commerce}
+                        </p>
+                        {city && (
+                          <p className="font-sans text-[11px] text-slate-500 truncate">{city}</p>
+                        )}
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+                          </svg>
+                          <span className="font-sans text-[11px] text-slate-500">
+                            {sacs} sac{sacs > 1 ? "s" : ""}
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        className={`ml-3 shrink-0 text-[10px] font-bold font-heading px-2 py-0.5 rounded-[4px] border ${urgency.color}`}
+                      >
+                        {urgency.label}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })
+            )}
+          </ul>
+        </div>
+
+        {/* Footer info: Total bags in queue */}
+        <div className="px-6 py-5 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+          <span className="font-sans text-xs font-semibold text-[#6E6E6E]">Total en attente :</span>
+          <span className="font-heading text-lg font-black text-[#04082E] tabular-nums">
+            {totalBagsAvailable} sacs
+          </span>
+        </div>
+      </aside>
+
+      {/* Main Map Right Content */}
+      <div className="flex-1 relative h-full flex flex-col">
+        {(mapError || loadError) && (
+          <div className="absolute top-16 left-4 right-4 z-30 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-xs flex flex-col gap-1">
+            {mapError && <div><strong>Erreur de carte :</strong> {mapError}</div>}
+            {loadError && <div><strong>Erreur de chargement des salons :</strong> {loadError}</div>}
           </div>
         )}
-        <div className="absolute left-4 top-4 z-10 rounded-md bg-white px-3 py-1.5 font-sans text-sm font-medium text-[#04082E] shadow-md">
+        <div className="absolute left-4 top-4 z-10 rounded-[4px] bg-white px-3 py-1.5 font-sans text-xs font-semibold text-[#04082E] shadow-sm border border-slate-200">
           Zone : {zoneLabel}
         </div>
 
         <div ref={mapContainer} className="absolute inset-0 h-full w-full" />
 
-        {/* Desktop Route Suggested panel */}
-        <div className="absolute bottom-6 left-4 right-4 z-10 mx-auto hidden md:flex max-w-4xl flex-col gap-3 sm:left-6 sm:right-6">
-          <div className="flex flex-col items-stretch gap-4 rounded-xl bg-white p-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+        {/* Desktop Route Suggested panel - Floating at bottom of map */}
+        <div className="absolute bottom-6 left-6 right-6 z-10 hidden md:flex flex-col gap-3">
+          <div className="flex flex-row items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-lg border border-slate-150">
             <div className="flex flex-col gap-0.5">
-              <span className="font-heading text-base font-semibold text-[#04082E]">Itinéraire suggéré</span>
-              <span className="font-sans text-sm text-[#6E6E6E]">
+              <span className="font-heading text-sm font-bold text-[#04082E]">Itinéraire suggéré</span>
+              <span className="font-sans text-xs text-[#6E6E6E]">
                 {routeStops.length >= 2
                   ? `${routeStats.km} km • ${routeStats.min} min`
                   : "Ajoutez des sacs à collecter pour calculer"}
               </span>
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="font-heading text-sm font-semibold text-[#04082E]">
+            <div className="flex flex-col gap-1">
+              <span className="font-heading text-xs font-bold text-[#04082E]">
                 {routeStops.length} point{routeStops.length !== 1 ? "s" : ""} d&apos;arrêt
               </span>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {routeStops.map((stop) => {
                   const sacs = stop.bag_waiting ?? 0;
                   const color = getBagMarkerColor(sacs);
                   return (
                     <div
                       key={stop.id}
-                      className="flex size-9 items-center justify-center rounded text-sm font-bold text-white"
+                      className="flex size-7 items-center justify-center rounded-[4px] text-xs font-bold text-white"
                       style={{ backgroundColor: color }}
                       title={stop.nom_commerce}
                     >
@@ -405,7 +493,7 @@ export default function AdminMapClient({
                 const coords = routeStops.map((s) => `${s.lat},${s.lng}`).join("/");
                 window.open(`https://www.google.com/maps/dir/${coords}`, "_blank");
               }}
-              className="shrink-0 rounded bg-[#0738DC] px-5 py-3 font-heading text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="shrink-0 rounded-[4px] bg-[#0738DC] px-5 py-3 font-heading text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Générer itinéraire optimal
             </button>

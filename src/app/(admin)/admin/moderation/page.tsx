@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import AdminModerationClient from "@/components/AdminModerationClient";
+import { SidebarAdmin } from "@/components/layout/SidebarAdmin";
 
 export default async function AdminModerationPage() {
   const supabase = createSupabaseServerClient();
@@ -39,5 +40,12 @@ export default async function AdminModerationPage() {
     })
   );
 
-  return <AdminModerationClient initialSalons={formattedSalons} />;
+  return (
+    <div className="flex flex-col md:flex-row min-h-screen bg-white">
+      <SidebarAdmin activeTab="moderation" collapsed={true} />
+      <div className="flex flex-1 flex-col min-w-0">
+        <AdminModerationClient initialSalons={formattedSalons} />
+      </div>
+    </div>
+  );
 }
