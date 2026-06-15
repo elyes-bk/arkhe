@@ -11,10 +11,11 @@ interface SidebarAdminProps {
 }
 
 const HamburgerIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M3 12H21" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-    <path d="M3 6H21" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-    <path d="M3 18H21" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+  /* Figma: groupe 29.4×21 — 3 traits de largeurs décroissantes (29.4 / 21 / 12.6 px) */
+  <svg width="30" height="22" viewBox="0 0 30 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 1H29.4" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M0 11H21" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M0 21H12.6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
   </svg>
 )
 
@@ -52,12 +53,13 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
 
   return (
     <>
-      {/* Mobile Top Header */}
-      <div className="md:hidden flex flex-row items-center justify-between bg-[#04082E] px-[25px] py-[17px] w-full sticky top-0 z-40">
-        <button onClick={() => setMobileMenuOpen(true)}>
+      {/* Mobile Top Header — caché quand le menu burger est ouvert (z-50 le couvre, mais on le masque proprement) */}
+      <div className={`md:hidden flex flex-row items-center justify-between bg-[#04082E] px-[25px] py-[17px] w-full sticky top-0 z-40${mobileMenuOpen ? ' hidden' : ''}`}>
+        <button onClick={() => setMobileMenuOpen(true)} className="flex items-center">
           <HamburgerIcon />
         </button>
-        <Image src="/logo.svg" alt="ARKHE" width={68} height={42} priority />
+        {/* Logo Figma : 62×42px */}
+        <Image src="/logo.svg" alt="ARKHE" width={42} height={42} priority />
       </div>
 
       {/* Mobile Menu Dropdown */}
@@ -75,7 +77,7 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
             {/* Watermark logo — normal orientation, bottom-right, like the maquette */}
             <div
               className="absolute pointer-events-none select-none opacity-[0.06] text-white"
-              style={{ right: '-60px', bottom: '0px', width: '347px', height: '214px' }}
+              style={{ right: '-70px', bottom: '0px', width: '347px', height: '214px' }}
             >
               <svg className="w-full h-full" viewBox="0 0 68 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M54.812 35.5221L54.6513 8.39138L54.6385 6.1909L54.6128 1.88616C54.6064 0.840453 53.7517 -0.00637919 52.6979 3.6212e-05L48.444 0.0256972L21.0702 0.186082H20.8517C20.6718 0.186082 20.4919 0.192498 20.312 0.192498C14.7408 0.352883 9.72227 2.68167 6.05957 6.36412V6.47959H5.9439C2.24908 10.2647 -0.0127971 15.4291 5.44748e-05 21.126C0.0193318 26.8613 2.35189 32.0578 6.1174 35.8172H6.23949V35.9391C10.0243 39.6665 15.2356 41.9632 20.9738 41.9439C22.2333 41.9439 23.467 41.8285 24.6686 41.6103C29.0317 40.8212 32.9258 38.6785 35.8881 35.6376C36.6527 34.8613 37.3467 34.0273 37.9764 33.142C38.1756 32.8661 38.362 32.5839 38.5419 32.3016L48.5469 17.4499L48.6561 35.5606L48.6946 41.8734L54.8505 41.8734L54.8505 41.8349L54.812 35.5221ZM41.3885 16.7891L33.594 28.3625C32.7266 29.7034 33.0864 29.158 32.4374 30.0819C29.9442 33.6488 25.5875 35.7146 20.8967 35.7274H20.8581C12.7617 35.7274 6.18166 29.1901 6.15596 21.0939C6.13025 13.2543 12.2733 6.83244 20.0228 6.39619H20.0549C20.2991 6.38336 20.5561 6.37695 20.8067 6.37695C20.9995 6.37695 21.1923 6.37695 21.3851 6.38978L35.7081 6.30638L48.4826 6.22939H48.5019L48.4826 6.26147L41.3885 16.7891Z" fill="currentColor"/>
@@ -162,26 +164,43 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
       <div 
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="hidden md:flex flex-col justify-between bg-[#04082E] min-h-screen relative transition-all duration-300 ease-in-out py-[32px]"
+        className="hidden md:flex flex-col justify-between bg-[#04082E] min-h-screen relative transition-[width] duration-300 ease-out py-[32px]"
         style={{ width: isExpanded ? '280px' : '100px' }}
       >
         <div className="flex flex-col gap-[64px]">
           {/* Header / Logo Area */}
-          <div className="flex flex-col transition-all duration-300 px-[24px]" style={{ gap: !isExpanded ? '41px' : '16px' }}>
+          <div 
+            className="flex flex-col" 
+            style={{ 
+              gap: '16px', 
+              paddingLeft: '17px', 
+              paddingRight: '24px'
+            }}
+          >
             <div className="flex flex-col gap-[8px]">
-              {/* Logo Image */}
-              <div className="flex transition-all duration-300" style={{ justifyContent: !isExpanded ? 'center' : 'flex-start' }}>
-                <Image src="/logo.svg" alt="ARKHE" width={68} height={42} priority />
+              {/* Logo Image — 17px du bord gauche (spec Figma) */}
+              <div className="flex">
+                <div style={{ width: '68px', height: '42px', flexShrink: 0 }}>
+                  <Image src="/logo.svg" alt="ARKHE" width={68} height={42} priority />
+                </div>
               </div>
               
-              <div className="transition-all duration-300 overflow-hidden" style={{ maxHeight: !isExpanded ? '0' : '48px', opacity: !isExpanded ? 0 : 1 }}>
-                <span className="font-sans font-normal text-[14px] leading-[18px] text-white block whitespace-nowrap opacity-80">
+              {/* Hauteur fixe : le texte est toujours présent dans le layout, seule l'opacité change. */}
+              <div style={{ height: '18px' }}>
+                <span 
+                  className="font-sans font-normal text-[14px] leading-[18px] text-white block whitespace-nowrap"
+                  style={{
+                    opacity: !isExpanded ? 0 : 0.8,
+                    transition: 'opacity 250ms cubic-bezier(0, 0, 0.2, 1)'
+                  }}
+                >
                   Tour de Controle Logistique
                 </span>
               </div>
             </div>
             
-            <div className="w-full h-px bg-white/20 mt-2" />
+            {/* Séparateur pleine largeur, plus visible */}
+            <div className="h-px bg-white/40" style={{ marginLeft: '-17px', marginRight: '-24px' }} />
           </div>
 
           {/* Navigation */}
@@ -192,13 +211,16 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
                 <Link 
                   key={item.id} 
                   href={item.href}
-                  className={`flex flex-row items-center gap-[16px] py-[14px] relative group w-full transition-all duration-150
+                  className={`flex flex-row items-center gap-[16px] py-[14px] relative group w-full transition-colors duration-150
                     ${isActive 
                       ? 'bg-gradient-to-r from-[#0738DC] to-[#0738DC]/10 border-l-[3px] border-[#0738DC]' 
                       : 'hover:bg-white/5 border-l-[3px] border-transparent'
                     }
                   `}
-                  style={{ paddingLeft: !isExpanded ? '33px' : '21px', paddingRight: !isExpanded ? '33px' : '21px' }}
+                  style={{ 
+                    paddingLeft: '21px', 
+                    paddingRight: '21px'
+                  }}
                   title={!isExpanded ? item.label : undefined}
                 >
                   <div className="relative flex items-center justify-center shrink-0">
@@ -210,7 +232,14 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
                     )}
                   </div>
                   
-                  <div className="transition-all duration-300 overflow-hidden" style={{ maxWidth: !isExpanded ? '0' : '200px', opacity: !isExpanded ? 0 : 1 }}>
+                  <div 
+                    className="overflow-hidden" 
+                    style={{ 
+                      maxWidth: !isExpanded ? '0' : '200px', 
+                      opacity: !isExpanded ? 0 : 1,
+                      transition: 'max-width 300ms cubic-bezier(0, 0, 0.2, 1), opacity 300ms cubic-bezier(0, 0, 0.2, 1)'
+                    }}
+                  >
                     <span className={`font-sans text-[15px] font-semibold leading-[18.28px] text-white block whitespace-nowrap ${isActive ? 'font-bold' : 'font-normal opacity-80 group-hover:opacity-100'}`}>
                       {item.label}
                     </span>
@@ -227,13 +256,23 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
             type="submit"
             title={!isExpanded ? 'Se déconnecter' : undefined}
             className="flex flex-row items-center gap-[16px] w-full py-[12px] text-white/60 hover:text-[#E14D5F] transition-colors duration-150 group"
-            style={{ paddingLeft: !isExpanded ? '0' : undefined }}
+            style={{ 
+              paddingLeft: !isExpanded ? '12px' : '0px',
+              transition: 'padding 300ms cubic-bezier(0, 0, 0.2, 1)'
+            }}
           >
             {/* Logout icon */}
             <svg className="w-5 h-5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
             </svg>
-            <div className="transition-all duration-300 overflow-hidden" style={{ maxWidth: !isExpanded ? '0' : '200px', opacity: !isExpanded ? 0 : 1 }}>
+            <div 
+              className="overflow-hidden" 
+              style={{ 
+                maxWidth: !isExpanded ? '0' : '200px', 
+                opacity: !isExpanded ? 0 : 1,
+                transition: 'max-width 300ms cubic-bezier(0, 0, 0.2, 1), opacity 300ms cubic-bezier(0, 0, 0.2, 1)'
+              }}
+            >
               <span className="font-sans text-[13px] font-medium whitespace-nowrap">Se déconnecter</span>
             </div>
           </button>
@@ -249,7 +288,14 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
               className="object-cover"
             />
           </div>
-          <div className="transition-all duration-300 overflow-hidden" style={{ maxWidth: !isExpanded ? '0' : '200px', opacity: !isExpanded ? 0 : 1 }}>
+          <div 
+            className="overflow-hidden" 
+            style={{ 
+              maxWidth: !isExpanded ? '0' : '200px', 
+              opacity: !isExpanded ? 0 : 1,
+              transition: 'max-width 300ms cubic-bezier(0, 0, 0.2, 1), opacity 300ms cubic-bezier(0, 0, 0.2, 1)'
+            }}
+          >
             <div className="flex flex-col whitespace-nowrap">
               <span className="font-sans font-normal text-[14px] text-white/80">Admin</span>
               <span className="font-sans font-semibold text-[15px] text-white">Quentin DANEL</span>
