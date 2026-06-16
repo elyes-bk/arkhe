@@ -97,6 +97,11 @@
     );
   }
 
+  /* Page À propos — hero Figma */
+  .about-hero-gradient {
+    background: linear-gradient(to bottom right, #04082e 0%, #0d1a94 100%);
+  }
+
   .section-container {
     @apply mx-auto w-full min-w-0 max-w-content px-4 sm:px-6 lg:px-8 xl:px-10;
   }
