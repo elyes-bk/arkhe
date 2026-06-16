@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -7,7 +7,7 @@ import HeaderAuthButton from "@/components/HeaderAuthButton";
 
 const navLinks = [
   { label: "Accueil", href: "/" },
-  { label: "À propos", href: "/#aPropos" },
+  { label: "À propos", href: "/a-propos" },
 ];
 
 interface HeaderProps {
