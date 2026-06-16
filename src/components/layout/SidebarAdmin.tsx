@@ -112,7 +112,7 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
                         <div className="absolute -left-[24px] top-1/2 -translate-y-1/2 w-[4px] h-[32px] bg-white rounded-r-full" />
                       )}
                       <div className="shrink-0">{item.icon}</div>
-                      <span className={`font-sans text-[16px] leading-[19.5px] text-white ${isActive ? 'font-bold' : 'font-normal opacity-85'}`}>
+                      <span className="font-sans text-[16px] leading-[19.5px] text-white font-normal">
                         {item.label}
                       </span>
                     </Link>
@@ -141,7 +141,7 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
 
             {/* User Profile */}
             <div className="flex flex-row items-center gap-[14px] pt-[20px] border-t border-white/20">
-              <div className="relative w-[40px] h-[40px] rounded-full overflow-hidden shrink-0">
+              <div className="relative w-[40px] h-[40px] rounded-[4px] overflow-hidden shrink-0 border border-slate-700">
                 <Image
                   src="/quentin.png"
                   alt="Quentin DANEL"
@@ -218,8 +218,9 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
                     }
                   `}
                   style={{ 
-                    paddingLeft: '21px', 
-                    paddingRight: '21px'
+                    paddingLeft: isExpanded ? '21px' : '0px', 
+                    paddingRight: isExpanded ? '21px' : '0px',
+                    justifyContent: isExpanded ? 'flex-start' : 'center'
                   }}
                   title={!isExpanded ? item.label : undefined}
                 >
@@ -251,14 +252,15 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
         </div>
 
         {/* Logout CTA */}
-        <form action={logout} className="w-full px-[24px] z-10">
+        <form action={logout} className="w-full z-10">
           <button
             type="submit"
             title={!isExpanded ? 'Se déconnecter' : undefined}
             className="flex flex-row items-center gap-[16px] w-full py-[12px] text-white/60 hover:text-[#E14D5F] transition-colors duration-150 group"
             style={{ 
-              paddingLeft: !isExpanded ? '12px' : '0px',
-              transition: 'padding 300ms cubic-bezier(0, 0, 0.2, 1)'
+              paddingLeft: isExpanded ? '24px' : '0px',
+              paddingRight: isExpanded ? '24px' : '0px',
+              justifyContent: isExpanded ? 'flex-start' : 'center'
             }}
           >
             {/* Logout icon */}
@@ -279,8 +281,15 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
         </form>
 
         {/* User Profile */}
-        <div className="flex flex-row items-center gap-[14px] overflow-hidden px-[24px] z-10">
-          <div className="w-[40px] h-[40px] rounded-full overflow-hidden shrink-0 relative border border-slate-700">
+        <div 
+          className="flex flex-row items-center gap-[14px] overflow-hidden z-10"
+          style={{ 
+            paddingLeft: isExpanded ? '24px' : '0px',
+            paddingRight: isExpanded ? '24px' : '0px',
+            justifyContent: isExpanded ? 'flex-start' : 'center'
+          }}
+        >
+          <div className="w-[40px] h-[40px] rounded-[4px] overflow-hidden shrink-0 relative border border-slate-700">
             <Image 
               src="/quentin.png" 
               alt="Profile Quentin"
