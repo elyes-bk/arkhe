@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { submitContactForm } from "@/actions/contact";
 import { Button } from "@/components/ui/Button";
 
 type ProfileType = "coiffeur" | "laboratoire" | "entreprise" | "";
@@ -73,6 +74,8 @@ export function ContactSection() {
     comment: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   const update = (field: keyof FormData) => (value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -80,7 +83,24 @@ export function ContactSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.profile) return;
-    setSubmitted(true);
+    setError("");
+
+    startTransition(async () => {
+      const result = await submitContactForm({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        company: form.company,
+        profile: form.profile as "coiffeur" | "laboratoire" | "entreprise",
+        comment: form.comment,
+      });
+
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        setError(result.error);
+      }
+    });
   };
 
   return (
@@ -158,6 +178,11 @@ export function ContactSection() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                {error && (
+                  <div className="rounded-[5px] bg-red-50 px-4 py-3 font-sans text-sm text-red-600">
+                    {error}
+                  </div>
+                )}
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <TextField
                     id="firstName"
@@ -231,8 +256,8 @@ export function ContactSection() {
                 </div>
 
                 <div className="pt-2">
-                  <Button type="submit" className="px-10">
-                    Envoyer
+                  <Button type="submit" className="px-10" disabled={isPending}>
+                    {isPending ? "Envoi..." : "Envoyer"}
                   </Button>
                 </div>
               </form>
