@@ -27,18 +27,19 @@ const PARIS_CENTER: [number, number] = [2.3522, 48.8566];
 function createMarkerElement(salon: SalonMapPoint): HTMLDivElement {
   const sacs = salon.bag_waiting ?? 0;
   const color = getBagMarkerColor(sacs);
+  const name = toProperCase(salon.nom_commerce);
   const label =
     sacs > 0
-      ? `${salon.nom_commerce} - ${sacs} sac${sacs > 1 ? "s" : ""}`
-      : salon.nom_commerce;
+      ? `${name} - ${sacs} sac${sacs > 1 ? "s" : ""}`
+      : name;
 
   const root = document.createElement("div");
   root.className = "arkhe-map-marker";
   if (sacs > 0) root.style.cursor = "pointer";
   root.innerHTML = `
     <div class="arkhe-marker-label">${escapeHtml(label)}</div>
-    <div class="arkhe-marker-dot" style="background-color:${color}">
-      ${sacs > 0 ? sacs : ""}
+    <div class="arkhe-marker-pin" style="background-color:${color}">
+      <span class="arkhe-marker-pin-inner">${sacs > 0 ? sacs : ""}</span>
     </div>
   `;
   return root;
@@ -50,6 +51,13 @@ function escapeHtml(text: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+/* Met la chaîne en casse normale : "SALON PRESTIGE" → "Salon Prestige" */
+function toProperCase(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/(^|[\s-])([a-z\u00e0-\u00ff])/g, (_, sep, ch) => sep + ch.toUpperCase());
 }
 
 function fitMapToSalons(
@@ -350,7 +358,7 @@ export default function AdminMapClient({
                   key={f.id}
                   type="button"
                   onClick={() => setFilter(f.id)}
-                  className={`rounded-[4px] px-2.5 py-1.5 font-heading text-xs font-bold transition-all ${
+                  className={`rounded-[4px] px-2.5 py-1.5 font-heading text-xs font-normal transition-all ${
                     filter === f.id ? "bg-[#0738DC] text-white" : "bg-slate-100 text-[#04082E] hover:bg-slate-200"
                   }`}
                 >
@@ -361,8 +369,8 @@ export default function AdminMapClient({
           </div>
         </div>
 
-        {/* Priority Salons Scrollable Area */}
-        <div className="flex-1 overflow-y-auto px-6 py-2 border-t border-slate-100 flex flex-col gap-3">
+        {/* Priority Salons Scrollable Area — px-4 container, ul -mx-4 pour séparateurs pleine largeur */}
+        <div className="flex-1 overflow-y-auto px-4 py-2 border-t border-slate-100 flex flex-col gap-3">
           <div className="pt-2">
             <p className="font-heading text-sm font-bold text-[#04082E]">
               Salons prioritaires
@@ -372,7 +380,7 @@ export default function AdminMapClient({
             </p>
           </div>
 
-          <ul className="flex flex-col gap-3 pb-6">
+          <ul className="divide-y divide-slate-100 pb-6 -mx-4">
             {collectPoints.length === 0 ? (
               <li className="py-8 text-center">
                 <p className="font-sans text-xs text-slate-400">Aucun sac en attente</p>
@@ -382,21 +390,21 @@ export default function AdminMapClient({
                 const sacs = salon.bag_waiting ?? 0;
                 const urgency =
                   sacs >= 3
-                    ? { label: "Urgent", color: "text-[#E14D5F] border-[#FFD2D7] bg-[#FFF0F2]" }
+                    ? { label: "Urgent", color: "text-[#E14D5F] border-[#E14D5F]" }
                     : sacs === 2
-                    ? { label: "Moyen", color: "text-amber-600 border-amber-200 bg-amber-50" }
-                    : { label: "OK", color: "text-emerald-600 border-emerald-200 bg-emerald-50" };
+                    ? { label: "Moyen", color: "text-[#F2994A] border-[#F2994A]" }
+                    : { label: "OK", color: "text-[#27AE60] border-[#27AE60]" };
 
                 const city = salon.adresse
                   ? salon.adresse.split(",").slice(-2).join(",").trim()
                   : "";
 
                 return (
-                  <li key={salon.id} className="border border-slate-150 rounded-[4px] bg-white hover:border-[#0738DC] transition-all">
+                  <li key={salon.id}>
                     <button
                       type="button"
                       onClick={() => flyToSalon(salon)}
-                      className="w-full p-4 flex items-center justify-between text-left focus:outline-none"
+                      className="w-full px-4 py-4 flex items-center justify-between text-left focus:outline-none hover:bg-slate-50 transition-colors"
                     >
                       <div className="flex-1 min-w-0 flex flex-col gap-1">
                         <p className="font-heading text-[13px] font-bold text-[#04082E] truncate">
@@ -406,9 +414,9 @@ export default function AdminMapClient({
                           <p className="font-sans text-[11px] text-slate-500 truncate">{city}</p>
                         )}
                         <div className="flex items-center gap-1.5 mt-1">
-                          <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+                          {/* Icône sac Figma 14×14 */}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 text-slate-400">
+                            <path d="M11.0104 1.75C11.3392 1.75 11.6545 1.8806 11.8869 2.11307C12.1194 2.34553 12.25 2.66083 12.25 2.98958V4.01042C12.25 4.45375 12.0167 4.84254 11.6667 5.06187V10.4271C11.6667 10.9106 11.4746 11.3742 11.1327 11.7161C10.7909 12.0579 10.3272 12.25 9.84375 12.25H4.15625C3.67278 12.25 3.20912 12.0579 2.86725 11.7161C2.52539 11.3742 2.33333 10.9106 2.33333 10.4271V5.06187C1.98333 4.84254 1.75 4.45404 1.75 4.01042V2.98958C1.75 2.66083 1.8806 2.34553 2.11307 2.11307C2.34553 1.8806 2.66083 1.75 2.98958 1.75H11.0104ZM3.0625 10.4271C3.0625 10.7172 3.17773 10.9954 3.38285 11.2005C3.58797 11.4056 3.86617 11.5208 4.15625 11.5208H9.84375C10.1338 11.5208 10.412 11.4056 10.6171 11.2005C10.8223 10.9954 10.9375 10.7172 10.9375 10.4271V5.25H3.0625V10.4271ZM8.09375 6.41667C8.19044 6.41667 8.28318 6.45508 8.35155 6.52345C8.41992 6.59182 8.45833 6.68456 8.45833 6.78125C8.45833 6.87794 8.41992 6.97068 8.35155 7.03905C8.28318 7.10742 8.19044 7.14583 8.09375 7.14583H5.90625C5.80956 7.14583 5.71682 7.10742 5.64845 7.03905C5.58008 6.97068 5.54167 6.87794 5.54167 6.78125C5.54167 6.68456 5.58008 6.59182 5.64845 6.52345C5.71682 6.45508 5.80956 6.41667 5.90625 6.41667H8.09375ZM2.98958 2.47917C2.85421 2.47917 2.72439 2.53294 2.62866 2.62866C2.53294 2.72439 2.47917 2.85421 2.47917 2.98958V4.01042C2.47917 4.29217 2.70783 4.52083 2.98958 4.52083H11.0104C11.1458 4.52083 11.2756 4.46706 11.3713 4.37134C11.4671 4.27561 11.5208 4.14579 11.5208 4.01042V2.98958C11.5208 2.85421 11.4671 2.72439 11.3713 2.62866C11.2756 2.53294 11.1458 2.47917 11.0104 2.47917H2.98958Z" fill="currentColor"/>
                           </svg>
                           <span className="font-sans text-[11px] text-slate-500">
                             {sacs} sac{sacs > 1 ? "s" : ""}
@@ -416,7 +424,7 @@ export default function AdminMapClient({
                         </div>
                       </div>
                       <span
-                        className={`ml-3 shrink-0 text-[10px] font-bold font-heading px-2 py-0.5 rounded-[4px] border ${urgency.color}`}
+                        className={`ml-3 shrink-0 text-[10px] font-normal font-sans px-2 py-0.5 rounded-[4px] border ${urgency.color}`}
                       >
                         {urgency.label}
                       </span>
@@ -429,9 +437,9 @@ export default function AdminMapClient({
         </div>
 
         {/* Footer info: Total bags in queue */}
-        <div className="px-6 py-5 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-          <span className="font-sans text-xs font-semibold text-[#6E6E6E]">Total en attente :</span>
-          <span className="font-heading text-lg font-black text-[#04082E] tabular-nums">
+        <div className="px-6 py-5 border-t border-slate-200 bg-white flex items-center justify-between">
+          <span className="font-sans text-[14px] font-medium text-[#04082E]">Total en attente :</span>
+          <span className="font-heading text-[18px] font-bold text-[#04082E] tabular-nums">
             {totalBagsAvailable} sacs
           </span>
         </div>
@@ -452,40 +460,47 @@ export default function AdminMapClient({
         <div ref={mapContainer} className="absolute inset-0 h-full w-full" />
 
         {/* Desktop Route Suggested panel - Floating at bottom of map */}
-        <div className="absolute bottom-6 left-6 right-6 z-10 hidden md:flex flex-col gap-3">
-          <div className="flex flex-row items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-lg border border-slate-150">
-            <div className="flex flex-col gap-0.5">
-              <span className="font-heading text-sm font-bold text-[#04082E]">Itinéraire suggéré</span>
-              <span className="font-sans text-xs text-[#6E6E6E]">
-                {routeStops.length >= 2
-                  ? `${routeStats.km} km • ${routeStats.min} min`
-                  : "Ajoutez des sacs à collecter pour calculer"}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="font-heading text-xs font-bold text-[#04082E]">
-                {routeStops.length} point{routeStops.length !== 1 ? "s" : ""} d&apos;arrêt
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {routeStops.map((stop) => {
-                  const sacs = stop.bag_waiting ?? 0;
-                  const color = getBagMarkerColor(sacs);
-                  return (
-                    <div
-                      key={stop.id}
-                      className="flex size-7 items-center justify-center rounded-[4px] text-xs font-bold text-white"
-                      style={{ backgroundColor: color }}
-                      title={stop.nom_commerce}
-                    >
-                      {sacs}
-                    </div>
-                  );
-                })}
-                {routeStops.length === 0 && (
-                  <span className="font-sans text-xs text-[#6E6E6E]">Aucun sac en attente</span>
-                )}
+        <div className="absolute bottom-6 left-6 right-6 z-10 hidden md:flex flex-col gap-3 items-center">
+          <div className="flex flex-row items-center justify-between gap-6 rounded bg-white pt-[12px] pb-[13px] pl-[36px] pr-[19px] shadow-lg border border-slate-150 w-full max-w-[752px]">
+            
+            <div className="flex items-center gap-6">
+              <div className="flex flex-col gap-0.5">
+                <span className="font-heading text-[15px] font-bold text-[#04082E]">Itinéraire suggéré</span>
+                <span className="font-sans text-[13px] text-[#04082E]">
+                  {routeStops.length >= 2
+                    ? `${routeStats.km} km • ${routeStats.min} min`
+                    : "Ajoutez des sacs à collecter"}
+                </span>
+              </div>
+              
+              <div className="w-[1px] h-10 bg-[#04082E]/20"></div>
+
+              <div className="flex flex-col gap-1">
+                <span className="font-heading text-[13px] font-bold text-[#04082E]">
+                  {routeStops.length} point{routeStops.length !== 1 ? "s" : ""} d'arrêt
+                </span>
+                <div className="flex flex-wrap gap-[2px]">
+                  {routeStops.map((stop) => {
+                    const sacs = stop.bag_waiting ?? 0;
+                    const color = getBagMarkerColor(sacs);
+                    return (
+                      <div
+                        key={stop.id}
+                        className="flex w-5 h-5 items-center justify-center rounded-[2px] text-[10px] font-bold text-white"
+                        style={{ backgroundColor: color }}
+                        title={stop.nom_commerce}
+                      >
+                        {sacs}
+                      </div>
+                    );
+                  })}
+                  {routeStops.length === 0 && (
+                    <span className="font-sans text-[11px] text-[#6E6E6E]">Aucun sac</span>
+                  )}
+                </div>
               </div>
             </div>
+
             <button
               type="button"
               disabled={routeStops.length < 2}
@@ -493,7 +508,7 @@ export default function AdminMapClient({
                 const coords = routeStops.map((s) => `${s.lat},${s.lng}`).join("/");
                 window.open(`https://www.google.com/maps/dir/${coords}`, "_blank");
               }}
-              className="shrink-0 rounded-[4px] bg-[#0738DC] px-5 py-3 font-heading text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="shrink-0 rounded bg-[#0738DC] px-6 py-[10px] font-sans text-[13px] font-normal text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Générer itinéraire optimal
             </button>
@@ -588,10 +603,10 @@ export default function AdminMapClient({
                     const sacs = salon.bag_waiting ?? 0;
                     const urgency =
                       sacs >= 3
-                        ? { label: "Urgent", color: "text-red-600 border-red-200 bg-red-50" }
+                        ? { label: "Urgent", color: "text-[#E14D5F] border-[#E14D5F]" }
                         : sacs === 2
-                        ? { label: "Urgent", color: "text-orange-500 border-orange-200 bg-orange-50" }
-                        : { label: "Moyen", color: "text-emerald-600 border-emerald-200 bg-emerald-50" };
+                        ? { label: "Moyen", color: "text-[#F2994A] border-[#F2994A]" }
+                        : { label: "OK", color: "text-[#27AE60] border-[#27AE60]" };
 
                     const city = salon.adresse
                       ? salon.adresse.split(",").slice(-2).join(",").trim()
@@ -605,16 +620,16 @@ export default function AdminMapClient({
                           className="w-full px-6 py-4 flex items-center justify-between text-left active:bg-slate-50 transition-colors"
                         >
                           <div className="flex-1 min-w-0">
-                            <p className="font-heading text-sm font-semibold text-[#04082E] truncate">
+                            <p className="font-heading text-sm font-bold text-[#04082E] truncate">
                               {salon.nom_commerce}
                             </p>
                             {city && (
                               <p className="font-sans text-xs text-slate-500 mt-0.5 truncate">{city}</p>
                             )}
                             <div className="flex items-center gap-1.5 mt-1.5">
-                              <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+                              {/* Icône sac Figma 14×14 */}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 text-slate-400">
+                                <path d="M11.0104 1.75C11.3392 1.75 11.6545 1.8806 11.8869 2.11307C12.1194 2.34553 12.25 2.66083 12.25 2.98958V4.01042C12.25 4.45375 12.0167 4.84254 11.6667 5.06187V10.4271C11.6667 10.9106 11.4746 11.3742 11.1327 11.7161C10.7909 12.0579 10.3272 12.25 9.84375 12.25H4.15625C3.67278 12.25 3.20912 12.0579 2.86725 11.7161C2.52539 11.3742 2.33333 10.9106 2.33333 10.4271V5.06187C1.98333 4.84254 1.75 4.45404 1.75 4.01042V2.98958C1.75 2.66083 1.8806 2.34553 2.11307 2.11307C2.34553 1.8806 2.66083 1.75 2.98958 1.75H11.0104ZM3.0625 10.4271C3.0625 10.7172 3.17773 10.9954 3.38285 11.2005C3.58797 11.4056 3.86617 11.5208 4.15625 11.5208H9.84375C10.1338 11.5208 10.412 11.4056 10.6171 11.2005C10.8223 10.9954 10.9375 10.7172 10.9375 10.4271V5.25H3.0625V10.4271ZM8.09375 6.41667C8.19044 6.41667 8.28318 6.45508 8.35155 6.52345C8.41992 6.59182 8.45833 6.68456 8.45833 6.78125C8.45833 6.87794 8.41992 6.97068 8.35155 7.03905C8.28318 7.10742 8.19044 7.14583 8.09375 7.14583H5.90625C5.80956 7.14583 5.71682 7.10742 5.64845 7.03905C5.58008 6.97068 5.54167 6.87794 5.54167 6.78125C5.54167 6.68456 5.58008 6.59182 5.64845 6.52345C5.71682 6.45508 5.80956 6.41667 5.90625 6.41667H8.09375ZM2.98958 2.47917C2.85421 2.47917 2.72439 2.53294 2.62866 2.62866C2.53294 2.72439 2.47917 2.85421 2.47917 2.98958V4.01042C2.47917 4.29217 2.70783 4.52083 2.98958 4.52083H11.0104C11.1458 4.52083 11.2756 4.46706 11.3713 4.37134C11.4671 4.27561 11.5208 4.14579 11.5208 4.01042V2.98958C11.5208 2.85421 11.4671 2.72439 11.3713 2.62866C11.2756 2.53294 11.1458 2.47917 11.0104 2.47917H2.98958Z" fill="currentColor"/>
                               </svg>
                               <span className="font-sans text-xs text-slate-500">
                                 {sacs} sac{sacs > 1 ? "s" : ""}
@@ -622,7 +637,7 @@ export default function AdminMapClient({
                             </div>
                           </div>
                           <span
-                            className={`ml-3 shrink-0 text-[11px] font-bold font-heading px-2.5 py-1 rounded-full border ${urgency.color}`}
+                            className={`ml-3 shrink-0 text-[10px] font-normal font-sans px-2 py-0.5 rounded-[4px] border ${urgency.color}`}
                           >
                             {urgency.label}
                           </span>
