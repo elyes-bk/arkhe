@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { SalonMapPoint, SalonWithCoords } from "@/lib/geo";
+import type { SalonWithCoords } from "@/lib/geo";
 import { createMarkerElement, fitMapToSalons, PARIS_CENTER } from "./mapUtils";
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
@@ -97,6 +97,7 @@ export function useMapLibre(
     map.flyTo({ center: [salon.lng, salon.lat], zoom: 15, duration: 800 });
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const drawRoute = useCallback((routeGeojson: any) => {
     const map = mapRef.current;
     if (!map) return;
@@ -168,6 +169,7 @@ export function useMapLibre(
       // On enlève les doublons et on trie strictement (requis par MapLibre)
       const uniqueKeys = Array.from(new Set(keys)).sort((a, b) => a - b);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const stops: any[] = [
         "interpolate",
         ["linear"],

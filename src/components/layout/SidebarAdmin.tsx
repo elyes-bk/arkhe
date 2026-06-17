@@ -57,9 +57,9 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
   const isExpanded = !collapsed || isHovered
 
   const navItems = [
-    { id: 'dashboard', label: 'Tableau de bord', icon: <DashboardIcon />, href: '/admin/dashboard' },
-    { id: 'map', label: 'Carte logistique', icon: <MapIcon />, href: '/admin/map' },
-    { id: 'moderation', label: 'Modération salons', icon: <ModerationIcon />, href: '/admin/moderation', hasNotification: true }
+    { id: 'dashboard', label: 'Tableau de bord', icon: <DashboardIcon />, href: '/admin' },
+    { id: 'moderation', label: 'Modération salons', icon: <ModerationIcon />, href: '/admin/moderation', hasNotification: true },
+    { id: 'map', label: 'Carte logistique', icon: <MapIcon />, href: '/admin/map' }
   ]
 
   return (

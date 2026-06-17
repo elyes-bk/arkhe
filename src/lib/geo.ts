@@ -226,6 +226,7 @@ export async function geocodeAddress(address: string): Promise<{ lng: number; la
 }
 
 export type OptimizedRoute = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   geometry: any; // GeoJSON LineString
   distanceKm: number;
   durationMin: number;
@@ -357,6 +358,7 @@ export async function fetchOptimizedRoute(
         geometry: geojsonLineString,
         distanceKm: Math.round((route.distance / 1000) * 10) / 10,
         durationMin: Math.max(1, Math.round(route.duration / 60)),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         waypoints: route.steps.map((s: any) => ({
           location: s.location,
           waypoint_index: s.type === "job" ? s.id : 0,

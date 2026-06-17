@@ -162,9 +162,9 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-white text-slate-800 font-sans w-full">
-      
+
       {/* ────────────────── Main Area ────────────────── */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 ">
         
         {/* Main Content Body (Responsive spacings: px-4 py-6 md:pl-[61px] md:pr-[54px] md:py-10) */}
         <main className="flex-1 px-4 py-6 md:pl-[61px] md:pr-[54px] md:py-10 flex flex-col gap-6 md:gap-8 w-full">

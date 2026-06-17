@@ -23,7 +23,7 @@ export default function AdminMapClient({
   const [isSheetExpanded, setIsSheetExpanded] = useState(false);
 
   const [tourState, setTourState] = useState<"idle" | "generated" | "navigating">("idle");
-  const [actualRouteStats, setActualRouteStats] = useState<{ distanceKm: number; durationMin: number; waypoints: any[] } | null>(null);
+  const [actualRouteStats, setActualRouteStats] = useState<{ distanceKm: number; durationMin: number; waypoints: { location: [number, number]; waypoint_index: number; trips_index: number }[] } | null>(null);
   const [orderedSalons, setOrderedSalons] = useState<SalonWithCoords[]>([]);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
 
@@ -32,7 +32,6 @@ export default function AdminMapClient({
 
   // 1. Data hooks
   const {
-    salons,
     setSalons,
     filter,
     setFilter,
@@ -110,7 +109,7 @@ export default function AdminMapClient({
       } else {
         alert("Impossible de calculer l'itinéraire via OpenRouteService.");
       }
-    } catch (e) {
+    } catch {
       alert("Erreur réseau lors du calcul de l'itinéraire.");
     } finally {
       setIsOptimizing(false);
@@ -209,7 +208,7 @@ export default function AdminMapClient({
                     });
                     setAddressInput("Ma position");
                   },
-                  (err) => alert("Impossible de récupérer la position GPS")
+                  () => alert("Impossible de récupérer la position GPS")
                 );
               } else {
                 alert("La géolocalisation n'est pas supportée par votre navigateur.");
@@ -262,7 +261,7 @@ export default function AdminMapClient({
                   <div className="w-[1px] h-10 bg-[#04082E]/20"></div>
                   <div className="flex flex-col gap-1">
                     <span className="font-heading text-[13px] font-bold text-[#04082E]">
-                      {tourState === "generated" ? orderedSalons.length : routeStops.length} point{((tourState === "generated" ? orderedSalons.length : routeStops.length) !== 1) ? "s" : ""} d'arrêt
+                      {tourState === "generated" ? orderedSalons.length : routeStops.length} point{((tourState === "generated" ? orderedSalons.length : routeStops.length) !== 1) ? "s" : ""} d&apos;arrêt
                     </span>
                     <div className="flex items-center gap-1">
                       {(tourState === "generated" ? orderedSalons : routeStops).map((stop) => {
