@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
 const footerLinks = [
-  { label: "Mentions légales", href: "#" },
-  { label: "CGU", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "Mentions légales", href: "/mentions-legales" },
+  { label: "Confidentialité", href: "/politique-de-confidentialite" },
+  { label: "Contact", href: "/contact" },
   { label: "Politique RSE", href: "#" },
 ];
 

@@ -1,44 +1,190 @@
-```markdown
-# ARKHE : Écosystème de Valorisation Capillaire
+# ARKHE - Plateforme B2B d'Économie Circulaire
 
-ARKHE transforme les déchets capillaires des salons de coiffure en carbone activé de haute performance pour les industries de pointe (stockage d'énergie, prototypage), remplaçant ainsi les ressources fossiles par une alternative biosourcée et circulaire.
+ARKHE est une plateforme B2B innovante spécialisée dans la valorisation des déchets, connectant spécifiquement les salons de coiffure avec des laboratoires et entreprises pour le recyclage des cheveux.
 
-## 🚀 Présentation du Projet
+---
 
-Le projet repose sur une économie circulaire B2B2B articulée autour d'une plateforme logistique de précision :
-* **Sourcing (B1) :** Collecte de cheveux naturels (riches en azote et soufre) auprès des salons partenaires.
-* **Transformation :** Pyrolyse et activation pour atteindre une surface spécifique > 2000 m²/g.
-* **Valorisation (B2) :** Vente de carbone circulaire certifié aux laboratoires et industriels de la tech.
+## 🚀 Fonctionnalités Principales
 
-## 🛠️ Architecture Technique
+- **Authentification & Onboarding (B2B)** : Système d'inscription complet pour les salons avec validation SIRET via l'API Recherche Entreprises, et upload de justificatifs (Kbis / Bail).
+- **Dashboard Administrateur** : 
+  - Modération des inscriptions des salons (Validation / Rejet).
+  - Gestion des profils utilisateurs.
+- **Cartographie & Tournées de Collecte** : 
+  - Interface interactive PWA (Mobile & Desktop) basée sur **MapLibre GL**.
+  - Visualisation des salons partenaires sur une carte.
+  - Planification d'itinéraires et de tournées de collecte (Routing).
+- **Formulaire de Contact** : Système de contact intégré avec notifications email (via Resend).
+- **Conformité RGPD** : Pages légales, gestion du consentement et politique de confidentialité intégrées.
 
-La stack a été choisie pour maximiser le Time-to-Market et la précision logistique (Score : 81/85 dans notre matrice décisionnelle).
-* **Frontend :** Next.js 14 (App Router) pour l'unification de la Landing Page (SSR) et du Dashboard (SPA).
-* **Backend :** Supabase (PostgreSQL + PostGIS) pour la gestion des données géospatiales et la sécurité RLS.
-* **Cartographie :** MapLibre GL JS pour un rendu vectoriel haute performance (gestion de milliers de marqueurs).
-* **UI/UX :** Tailwind CSS + Shadcn/ui pour une interface standardisée et accessible.
+---
 
-## 🎯 Périmètre Fonctionnel
+## 🛠️ Stack Technique
 
-### MVP (Phase 1)
-* **Portail Client :** Onboarding SIRET, stockage de documents (S3) et bouton de déclaration "+1 Sac".
-* **Dashboard Admin :** Modération des comptes et carte interactive de visualisation des gisements en temps réel.
+- **Framework** : [Next.js 14](https://nextjs.org/) (App Router)
+- **Langage** : TypeScript
+- **Styling** : [Tailwind CSS](https://tailwindcss.com/)
+- **Backend & Base de données** : [Supabase](https://supabase.com/) (PostgreSQL, Auth, Storage)
+- **Cartographie** : [MapLibre GL JS](https://maplibre.org/)
+- **Emails** : [Resend](https://resend.com/)
+- **PWA** : Serwist
 
-### V2 (Évolutions)
-* **Routing Engine :** Optimisation automatique des tournées via PostGIS et VROOM (Voyageur de commerce).
+---
 
-## 💾 Installation
+## 📊 Architecture & Modélisation
 
-```bash
-# 1. Cloner le projet
-git clone [https://github.com/MelindaMob/arkhe.git](https://github.com/MelindaMob/arkhe.git)
-cd arkhe
+### 1. Diagramme de Cas d'Utilisation (Use Case)
 
-# 2. Installer les dépendances
-npm install
+```mermaid
+flowchart LR
+    %% Actors
+    Salon([Salon de Coiffure])
+    Admin([Administrateur ARKHE])
+    Collecteur([Logistique / Collecteur])
 
-# 3. Configurer l'environnement local
-cp .env.example .env.local
+    %% Use cases
+    Salon --> UC1[S'inscrire sur la plateforme]
+    Salon --> UC2[Déposer un justificatif & SIRET]
+    Salon --> UC3[Suivre l'état de son compte]
 
-# 4. Lancer le serveur de développement
-npm run dev
+    Admin --> UC4[Valider/Rejeter les salons (Modération)]
+    Admin --> UC5[Visualiser les salons sur la carte géospatiale]
+    Admin --> UC6[Générer des itinéraires de collecte optimisés]
+    
+    Collecteur --> UC6
+```
+
+### 2. Diagramme de Séquence : Flux d'Inscription & Modération
+
+```mermaid
+sequenceDiagram
+    participant S as Salon
+    participant F as Frontend (Next.js)
+    participant Auth as Supabase Auth
+    participant DB as Base de données
+    participant A as Admin
+
+    S->>F: Renseigne Email & Mot de passe
+    F->>Auth: Création du compte utilisateur
+    Auth-->>F: Retour (Session OK)
+    
+    S->>F: Fournit SIRET, Adresse et dépose le Kbis (Upload)
+    F->>DB: Sauvegarde du profil + Fichier Storage
+    Note over DB: Statut initial du profil = "En attente"
+    F-->>S: Affichage "Compte en attente de validation"
+    
+    A->>F: Connexion au Dashboard Admin
+    F->>DB: Récupération des profils "En attente"
+    DB-->>F: Liste des inscriptions à modérer
+    A->>F: Clique sur "Valider"
+    F->>DB: Mise à jour du statut à "Validé"
+    Note over DB: Le salon devient éligible à la collecte
+```
+
+---
+
+## 🗄️ Schéma de la Base de Données
+
+Le backend s'appuie sur la base **PostgreSQL** hébergée via **Supabase**. L'authentification est gérée nativement par `auth.users`. Les informations métier sont stockées dans une table personnalisée (ex: `salons` ou `profiles`).
+
+### Table Principale : `salons` (ou `profiles`)
+
+| Nom de la Colonne        | Type de Donnée     | Description |
+|--------------------------|--------------------|-------------|
+| `id`                     | `UUID` (PK, FK)    | Identifiant unique (lié à `auth.users.id`). |
+| `email`                  | `TEXT`             | Adresse email du contact principal. |
+| `role`                   | `VARCHAR`          | Rôle de l'utilisateur (`admin`, `user`). |
+| `nom_commerce`           | `TEXT`             | Nom du salon ou de la structure. |
+| `siret`                  | `TEXT`             | Numéro de SIRET à 14 chiffres. |
+| `adresse`                | `TEXT`             | Adresse postale complète. |
+| `latitude`               | `FLOAT8`           | Coordonnée X pour le placement sur la carte. |
+| `longitude`              | `FLOAT8`           | Coordonnée Y pour le placement sur la carte. |
+| `url_justificatif_local` | `TEXT`             | Chemin d'accès au document justificatif dans le Storage. |
+| `status`                 | `VARCHAR`          | État de l'inscription (`pending`, `approved`, `rejected`). |
+| `created_at`             | `TIMESTAMPTZ`      | Date et heure de création de l'enregistrement. |
+
+### Supabase Storage (Buckets)
+
+- **Bucket `justificatifs`** : Stocke les documents administratifs uploadés par les salons (Kbis, Bail). L'accès à ce bucket est soumis à des règles RLS pour garantir la confidentialité des documents.
+
+---
+
+## 📂 Structure du Projet
+
+```text
+src/
+├── actions/             # Server Actions (Auth, Contact, etc.)
+├── app/                 # Routes Next.js (App Router)
+│   ├── (admin)/         # Espace administrateur protégé (Dashboard, Map, Modération)
+│   ├── (auth)/          # Routes d'authentification (login, register/onboarding)
+│   ├── contact/         # Page de contact
+│   ├── mentions-legales/ # Mentions Légales
+│   └── politique-de-confidentialite/ # Politique de confidentialité
+├── components/          # Composants UI réutilisables
+│   ├── icons/           # SVGs
+│   ├── inputs/          # Composants de formulaires (EmailInput, SiretInput, DocumentUpload, etc.)
+│   ├── layout/          # Headers, Footers, Sidebars Administrateur
+│   ├── map/             # Composants liés à la cartographie MapLibre (DesktopSidebar, CollectPopup)
+│   └── ui/              # Composants génériques (Button, Modal, etc.)
+├── middleware.ts        # Middleware Supabase pour la protection des routes (SSR Auth)
+```
+
+---
+
+## ⚙️ Prérequis
+
+- **Node.js** (v18.x ou supérieur)
+- **NPM**, **Yarn** ou **pnpm**
+- Un projet **Supabase** configuré (Database, Auth, Storage)
+- Une clé API **Resend** (pour l'envoi d'emails)
+
+---
+
+## 📦 Installation & Déploiement Local
+
+1. **Cloner le dépôt**
+   ```bash
+   git clone <url-du-repo>
+   cd arkhe
+   ```
+
+2. **Installer les dépendances**
+   ```bash
+   npm install
+   ```
+
+3. **Variables d'Environnement**
+   Créez un fichier `.env.local` à la racine du projet et ajoutez vos clés :
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   RESEND_API_KEY=your_resend_api_key
+   ```
+
+4. **Lancer le serveur de développement**
+   ```bash
+   npm run dev
+   ```
+   L'application sera accessible sur `http://localhost:3000`.
+
+---
+
+## 🔒 Sécurité & RGPD
+
+- **Row Level Security (RLS)** : Activé sur Supabase pour garantir que les utilisateurs finaux ne peuvent lire/modifier que leurs propres données. Les administrateurs disposent de privilèges étendus gérés par politique.
+- **Aucun Cookie Tiers** : L'application n'utilise pas de traceurs publicitaires. Seuls les cookies de session nécessaires (Supabase Auth) sont déployés, exemptés de bannière de consentement.
+- **Droit à l'oubli** : Mise à disposition d'une page de confidentialité détaillant la procédure de suppression de compte et des fichiers déposés.
+
+---
+
+## 📱 Progressive Web App (PWA)
+
+Ce projet est configuré comme une **PWA** via `Serwist`. Il peut être installé sur les appareils mobiles (iOS/Android) pour une expérience quasi-native. Le mode hors-ligne et le cache statique facilitent l'utilisation de l'interface cartographique par les collecteurs sur le terrain.
+
+---
+
+## 🤝 Contribution
+
+1. Créez une nouvelle branche pour votre fonctionnalité (`git checkout -b feature/ma-super-feature`).
+2. Les messages de commit doivent respecter les conventions *Conventional Commits* (`feat:`, `fix:`, `style:`, `refactor:`).
+3. Vérifiez le typage et le linting avant de soumettre une Pull Request (`npm run lint`).

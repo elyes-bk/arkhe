@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState } from 'react'
 import Header from '@/components/Header'
@@ -208,7 +208,7 @@ export default function RegisterPage() {
                   required 
                 />
                 <label htmlFor="terms" className="text-[14px] md:text-[16px] leading-[22.4px] md:leading-[25.6px] font-sans font-normal text-[#000000]">
-                  J’accepte les conditions générales et autorise ARKHE à procéder à la collecte des cheveux. *
+                  J’accepte les conditions générales et la politique de confidentialité, et j'autorise ARKHE à procéder à la collecte des cheveux. *
                 </label>
               </div>
 

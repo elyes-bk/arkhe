@@ -25,7 +25,6 @@ export default function CollectPopup({
       setDone(true);
       setTimeout(() => {
         onValidated(count);
-        onClose();
       }, 1200);
     });
   }

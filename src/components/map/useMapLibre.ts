@@ -25,7 +25,7 @@ export function useMapLibre(
     markersRef.current = [];
   }, []);
 
-  const syncMarkers = useCallback((map: maplibregl.Map, points: SalonWithCoords[]) => {
+  const syncMarkers = useCallback((map: maplibregl.Map, points: SalonWithCoords[], autoFit = false) => {
     clearMarkers();
     points.forEach((salon) => {
       if (!isFinite(salon.lng) || !isFinite(salon.lat)) return;
@@ -41,7 +41,9 @@ export function useMapLibre(
         .addTo(map);
       markersRef.current.push(marker);
     });
-    fitMapToSalons(map, points);
+    if (autoFit) {
+      fitMapToSalons(map, points);
+    }
   }, [clearMarkers, onSalonSelect]);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export function useMapLibre(
       mapRef.current = map;
 
       map.on("load", () => {
-        if (map) syncMarkers(map, visibleSalons);
+        if (map) syncMarkers(map, visibleSalons, true);
       });
 
       map.on("error", (e) => {
@@ -87,14 +89,14 @@ export function useMapLibre(
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !map.isStyleLoaded()) return;
-    syncMarkers(map, visibleSalons);
+    syncMarkers(map, visibleSalons, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleSalons]);
 
   const flyToSalon = useCallback((salon: { lng: number; lat: number }) => {
     const map = mapRef.current;
     if (!map) return;
-    map.flyTo({ center: [salon.lng, salon.lat], zoom: 15, duration: 800 });
+    map.flyTo({ center: [salon.lng, salon.lat], zoom: 16, duration: 1200 });
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

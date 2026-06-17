@@ -1,8 +1,9 @@
-﻿import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useState } from 'react'
 
 interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
   infoText?: string
+  hasError?: boolean
 }
 
 const VisibilityOffIcon = () => (
@@ -28,7 +29,7 @@ const InfoIcon = () => (
 )
 
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ label = 'Mot de passe', infoText, className = '', ...props }, ref) => {
+  ({ label = 'Mot de passe', infoText, hasError, className = '', ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false)
 
     return (
@@ -41,12 +42,13 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
               className="font-heading font-semibold md:font-medium text-[16px] md:text-[24px] leading-[19.84px] md:leading-[29.77px] tracking-[-0.96px] text-[#121A2C]"
             >
               {label}
+              {props.required && <span className="text-[#E14D5F] ml-1">*</span>}
             </label>
           </div>
         )}
 
         {/* Input Text */}
-        <div className="flex flex-row items-center gap-[4px] px-[12px] h-[48px] bg-white border border-[#9EA1A8] rounded-[5px] focus-within:border-[#0738dc] transition-colors">
+        <div className={`flex flex-row items-center gap-[4px] px-[12px] h-[48px] bg-white border ${hasError ? 'border-[#E14D5F]' : 'border-[#9EA1A8] focus-within:border-[#0738dc]'} rounded-[5px] transition-colors`}>
           {/* Input field */}
           <div className="flex flex-row gap-[10px] py-[4px] px-[8px] flex-1">
             <input

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState } from 'react'
 import Link from 'next/link'
@@ -7,6 +7,13 @@ import { EmailInput } from '@/components/inputs/EmailInput'
 import { PasswordInput } from '@/components/inputs/PasswordInput'
 import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
+
+const ErrorIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="8" cy="8" r="8" fill="#E14D5F"/>
+    <path d="M10.6667 5.33334L5.33334 10.6667M5.33334 5.33334L10.6667 10.6667" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+)
 
 export default function SimpleRegisterPage() {
   const router = useRouter()
@@ -63,21 +70,20 @@ export default function SimpleRegisterPage() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-[32px] md:gap-[56px] w-full">
             
             <div className="flex flex-col gap-[20px] w-full">
-              {error && (
-                <div className="bg-red-50 text-red-500 p-[12px] rounded-[4px] text-[14px]">
-                  {error}
-                </div>
-              )}
+              <span className="text-[#E14D5F] text-[12px] md:text-[14px] font-sans font-normal mt-[-10px]">* Champs obligatoires</span>
+              
               <EmailInput 
                 required 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                hasError={!!error}
               />
               <PasswordInput 
                 label="Mot de passe" 
                 required 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                hasError={!!error}
               />
               <PasswordInput 
                 label="Confirmez votre mot de passe" 
@@ -85,7 +91,17 @@ export default function SimpleRegisterPage() {
                 required 
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                hasError={!!error}
               />
+
+              {error && (
+                <div className="flex flex-row items-center gap-[8px]">
+                  <ErrorIcon />
+                  <span className="text-[#E14D5F] font-sans font-normal text-[14px]">
+                    {error}
+                  </span>
+                </div>
+              )}
             </div>
 
             <Button type="submit" className="w-full justify-center py-[15px] text-[18px] md:text-[20px]">

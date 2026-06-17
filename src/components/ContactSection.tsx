@@ -138,13 +138,13 @@ export function ContactSection() {
               </li>
               <li className="flex items-center gap-3">
                 <EmailIcon />
-                <a href="mailto:Contact@arkhe.com" className="hover:underline">
-                  Contact@arkhe.com
+                <a href="mailto:arkhe.b3@gmail.com" className="hover:underline">
+                  arkhe.b3@gmail.com
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <LocationIcon className="mt-0.5 shrink-0" />
-                <span>8 rue du général audran, Paris - 75010</span>
+                <span>8 Rue de la Fontaine au Roi, 75011 Paris</span>
               </li>
             </ul>
 
@@ -253,6 +253,18 @@ export function ContactSection() {
                     placeholder="Écrivez un commentaire..."
                     className="w-full resize-y rounded-[5px] border border-[#9EA1A8] px-4 py-3 font-sans text-sm text-arkhe-navy placeholder:text-[#9EA1A8] outline-none transition-colors focus:border-arkhe-blue md:text-base"
                   />
+                </div>
+
+                <div className="flex items-start gap-3 pt-2">
+                  <input
+                    type="checkbox"
+                    id="rgpd_consent"
+                    required
+                    className="mt-1 size-4 shrink-0 accent-arkhe-blue"
+                  />
+                  <label htmlFor="rgpd_consent" className="font-sans text-sm text-arkhe-navy">
+                    J'accepte que mes données soient traitées pour répondre à ma demande, conformément à la <a href="/politique-de-confidentialite" className="text-arkhe-blue hover:underline" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.<span className="text-red-500"> *</span>
+                  </label>
                 </div>
 
                 <div className="pt-2">

@@ -29,10 +29,6 @@ export default function DesktopSidebar({
           <h1 className="font-heading text-2xl font-bold text-[#04082E]">
             Carte Logistique
           </h1>
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#6E6E6E]">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#E14D5F] animate-pulse" />
-            <span>En direct - WebSocket</span>
-          </div>
         </div>
 
         {/* Filters List */}

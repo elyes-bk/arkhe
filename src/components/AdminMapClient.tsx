@@ -132,11 +132,14 @@ export default function AdminMapClient({
       if (nextIndex < orderedSalons.length) {
         setCurrentStopIndex(nextIndex);
         flyToSalon(orderedSalons[nextIndex]);
+        setSelectedSalon(null);
       } else {
         // Fin de la tournée
-        alert("Tournée terminée ! Tous les salons ont été visités.");
+        setSelectedSalon(null);
         handleCancelRoute();
       }
+    } else {
+      setSelectedSalon(null);
     }
   }
 
@@ -163,6 +166,7 @@ export default function AdminMapClient({
     <div className="flex flex-col h-[100dvh] md:h-screen md:flex-row bg-white">
       {selectedSalon && (
         <CollectPopup
+          key={selectedSalon.id}
           salon={selectedSalon}
           onClose={() => setSelectedSalon(null)}
           onValidated={handleValidated}

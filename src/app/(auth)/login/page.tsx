@@ -8,6 +8,13 @@ import { EmailInput } from '@/components/inputs/EmailInput'
 import { PasswordInput } from '@/components/inputs/PasswordInput'
 import { Button } from '@/components/ui/Button'
 
+const ErrorIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="8" cy="8" r="8" fill="#E14D5F"/>
+    <path d="M10.6667 5.33334L5.33334 10.6667M5.33334 5.33334L10.6667 10.6667" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+)
+
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
@@ -47,16 +54,13 @@ export default function LoginPage() {
           <form action={action} className="flex flex-col gap-[32px] md:gap-[56px] w-full">
             
             <div className="flex flex-col gap-[20px] w-full">
-              {state?.error && (
-                <div className="bg-red-50 text-red-600 border border-red-100 p-[12px] rounded-[4px] text-[14px]">
-                  {state.error}
-                </div>
-              )}
+              <span className="text-[#E14D5F] text-[12px] md:text-[14px] font-sans font-normal mt-[-10px]">* Champs obligatoires</span>
               
               <EmailInput 
                 id="email"
                 name="email"
                 required 
+                hasError={!!state?.error}
               />
               
               <PasswordInput 
@@ -64,7 +68,17 @@ export default function LoginPage() {
                 name="password"
                 label="Mot de passe" 
                 required 
+                hasError={!!state?.error}
               />
+
+              {state?.error && (
+                <div className="flex flex-row items-center gap-[8px]">
+                  <ErrorIcon />
+                  <span className="text-[#E14D5F] font-sans font-normal text-[14px]">
+                    {state.error}
+                  </span>
+                </div>
+              )}
             </div>
 
             <SubmitButton />
