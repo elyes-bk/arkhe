@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 interface Props {
   actif: number;
   passif: number;
@@ -10,28 +14,54 @@ const SEGMENTS = [
   { key: "inactif" as const, label: "Inactif", color: "#E2E9FF" },
 ];
 
+const r = 110;
+const cx = 110;
+const cy = 110;
+const circ = 2 * Math.PI * r;
+const strokeWidth = 26;
+const GAP = 4;
+const DURATION = 900;
+
+function easeOutCubic(t: number) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
 export default function SalonActivityDonut({ actif, passif, inactif }: Props) {
+  const [progress, setProgress] = useState(0);
   const total = actif + passif + inactif;
   const values = { actif, passif, inactif };
 
-  const r = 60;
-  const cx = 80;
-  const cy = 80;
-  const circ = 2 * Math.PI * r;
-  const strokeWidth = 20;
-  const gap = total > 0 ? 3 : 0;
+  useEffect(() => {
+    let startTime: number | null = null;
+    let rafId: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const p = Math.min(elapsed / DURATION, 1);
+      setProgress(easeOutCubic(p));
+      if (p < 1) rafId = requestAnimationFrame(animate);
+    };
+
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
+  }, [actif, passif, inactif]);
 
   let accumulated = 0;
 
   return (
-    <div className="rounded-[5px] bg-[#FDFDFD] px-6 py-5 shadow-sm flex flex-col">
-      <h2 className="mb-5 font-kumbh text-base font-semibold text-[#04082E]">
+    <div className="rounded-[5px] bg-[#FDFDFD] px-6 py-5 shadow-sm flex flex-col h-full min-h-0">
+      <h2 className="mb-4 font-kumbh text-base font-semibold text-[#04082E]">
         Activité des salons
       </h2>
 
-      <div className="flex flex-1 flex-col items-center justify-center gap-6">
-        {/* Donut */}
-        <svg width="160" height="160" viewBox="0 0 160 160">
+      {/* Donut centré dans l'espace restant */}
+      <div className="flex flex-1 items-center justify-center min-h-0 py-4">
+        <svg
+          viewBox="0 0 220 220"
+          className="w-full max-w-[240px]"
+          style={{ overflow: "visible" }}
+        >
           {total === 0 ? (
             <circle
               cx={cx} cy={cy} r={r}
@@ -42,8 +72,8 @@ export default function SalonActivityDonut({ actif, passif, inactif }: Props) {
           ) : (
             SEGMENTS.map((seg) => {
               const pct = values[seg.key] / total;
-              const dash = Math.max(pct * circ - gap, 0);
-              const offset = accumulated;
+              const dash = Math.max(pct * circ * progress - GAP, 0);
+              const offset = -(accumulated * progress);
               accumulated += pct * circ;
 
               return (
@@ -56,7 +86,7 @@ export default function SalonActivityDonut({ actif, passif, inactif }: Props) {
                   stroke={seg.color}
                   strokeWidth={strokeWidth}
                   strokeDasharray={`${dash} ${circ}`}
-                  strokeDashoffset={-offset}
+                  strokeDashoffset={offset}
                   strokeLinecap="butt"
                   transform={`rotate(-90 ${cx} ${cy})`}
                 />
@@ -64,26 +94,26 @@ export default function SalonActivityDonut({ actif, passif, inactif }: Props) {
             })
           )}
         </svg>
+      </div>
 
-        {/* Légende */}
-        <div className="flex w-full justify-around">
-          {SEGMENTS.map((seg) => {
-            const count = values[seg.key];
-            const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-            return (
-              <div key={seg.key} className="flex flex-col items-center gap-1">
-                <div className="flex items-center gap-1.5">
-                  <span
-                    className="inline-block h-2 w-2 rounded-full border border-gray-200"
-                    style={{ backgroundColor: seg.color }}
-                  />
-                  <span className="font-montserrat text-xs text-gray-500">{seg.label}</span>
-                </div>
-                <span className="font-kumbh text-xl font-bold text-[#04082E]">{pct}%</span>
+      {/* Légende fixée en bas */}
+      <div className="flex w-full justify-around border-t border-gray-100 pt-4">
+        {SEGMENTS.map((seg) => {
+          const count = values[seg.key];
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          return (
+            <div key={seg.key} className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-1.5">
+                <span
+                  className="inline-block h-2 w-2 rounded-full border border-gray-200"
+                  style={{ backgroundColor: seg.color }}
+                />
+                <span className="font-montserrat text-xs text-gray-500">{seg.label}</span>
               </div>
-            );
-          })}
-        </div>
+              <span className="font-kumbh text-xl font-bold text-[#04082E]">{pct}%</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

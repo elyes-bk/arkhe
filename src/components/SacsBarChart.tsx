@@ -33,7 +33,7 @@ export default function SacsBarChart({ collected, maxVal, yLabels }: Props) {
   const barColors = getBarColors(collected);
 
   return (
-    <div className="flex h-[300px] gap-2">
+    <div className="flex flex-1 min-h-0 gap-2">
       {/* Y-axis */}
       <div className="flex flex-col justify-between pb-6 pr-1 text-right">
         {yLabels.map((label) => (

@@ -41,9 +41,9 @@ export default async function AdminModerationPage() {
   );
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-white">
+    <div className="flex h-screen flex-col overflow-hidden bg-white md:flex-row">
       <SidebarAdmin activeTab="moderation" collapsed={true} />
-      <div className="flex flex-1 flex-col min-w-0">
+      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
         <AdminModerationClient initialSalons={formattedSalons} />
       </div>
     </div>

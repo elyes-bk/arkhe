@@ -70,11 +70,11 @@ export default async function AdminPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#F0F2F9]">
+    <div className="flex h-screen overflow-hidden flex-col bg-[#F0F2F9] md:flex-row">
 
       <SidebarAdmin activeTab="dashboard" collapsed={true} />
 
-      <main className="ml-[76px] flex-1 px-10 py-8">
+      <main className="flex-1 flex flex-col overflow-y-auto px-6 py-6 md:px-10 md:py-8">
 
         {/* En-tête */}
         <div className="mb-8">
@@ -85,7 +85,7 @@ export default async function AdminPage() {
         </div>
 
         {/* 4 Cartes stats */}
-        <div className="mb-6 grid grid-cols-4 gap-6">
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -98,14 +98,14 @@ export default async function AdminPage() {
               {stat.highlight && (
                 <div className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-[#0738DC]/30 blur-2xl" />
               )}
-              <p className="relative font-montserrat text-xs text-white/60">{stat.label}</p>
+              <p className="relative font-montserrat text-base text-white/60">{stat.label}</p>
               <p className="relative font-kumbh text-5xl font-bold text-white">{stat.value}</p>
             </div>
           ))}
         </div>
 
         {/* Panneaux bas */}
-        <div className="grid gap-6" style={{ gridTemplateColumns: "62.4% 1fr" }}>
+        <div className="grid flex-1 min-h-0 grid-cols-1 gap-6 md:[grid-template-columns:62.4%_1fr]">
           <SacsRecoltesPanel collected={collected} maxVal={maxVal} yLabels={yLabels} />
           <SalonActivityDonut actif={nbActif} passif={nbPassif} inactif={nbInactif} />
         </div>

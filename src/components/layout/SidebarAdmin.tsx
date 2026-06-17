@@ -44,14 +44,8 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
   const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-    }
-    return () => {
-      document.body.style.overflow = 'auto'
-    }
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
   }, [mobileMenuOpen])
 
   const isExpanded = !collapsed || isHovered
@@ -175,7 +169,7 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
       <div 
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="hidden md:flex flex-col justify-between bg-[#04082E] min-h-screen relative transition-[width] duration-300 ease-out py-[32px]"
+        className="hidden md:flex flex-col justify-between bg-[#04082E] h-screen sticky top-0 relative transition-[width] duration-300 ease-out py-[32px] overflow-hidden"
         style={{ width: isExpanded ? '280px' : '100px' }}
       >
         <div className="flex flex-col gap-[64px]">
@@ -261,23 +255,53 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
             })}
           </div>
         </div>
+        <div>
+          {/* Logout CTA */}
+          <form action={logout} className="w-full z-10">
+            <button
+              type="submit"
+              title={!isExpanded ? 'Se déconnecter' : undefined}
+              className="flex flex-row items-center justify-center gap-[16px] w-full py-[12px] text-white/60 hover:text-[#E14D5F] transition-colors duration-150 group"
+              style={{ 
+                paddingLeft: isExpanded ? '24px' : '0px',
+                paddingRight: isExpanded ? '24px' : '0px',
+                justifyContent: isExpanded ? 'flex-start' : 'center'
+              }}
+            >
+              {/* Logout icon */}
+              <svg className="w-5 h-5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity justify-center" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+              </svg>
+              <div 
+                className="overflow-hidden" 
+                style={{ 
+                  maxWidth: !isExpanded ? '0' : '200px', 
+                  opacity: !isExpanded ? 0 : 1,
+                  transition: 'max-width 300ms cubic-bezier(0, 0, 0.2, 1), opacity 300ms cubic-bezier(0, 0, 0.2, 1)'
+                }}
+              >
+                <span className="font-sans text-[13px] font-medium whitespace-nowrap">Se déconnecter</span>
+              </div>
+            </button>
+          </form>
 
-        {/* Logout CTA */}
-        <form action={logout} className="w-full z-10">
-          <button
-            type="submit"
-            title={!isExpanded ? 'Se déconnecter' : undefined}
-            className="flex flex-row items-center gap-[16px] w-full py-[12px] text-white/60 hover:text-[#E14D5F] transition-colors duration-150 group"
+          {/* User Profile */}
+          <div 
+            className="flex flex-row items-center gap-[14px] overflow-hidden z-10"
             style={{ 
               paddingLeft: isExpanded ? '24px' : '0px',
               paddingRight: isExpanded ? '24px' : '0px',
               justifyContent: isExpanded ? 'flex-start' : 'center'
             }}
           >
-            {/* Logout icon */}
-            <svg className="w-5 h-5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-            </svg>
+            <div className="w-[40px] h-[40px] rounded-[4px] overflow-hidden shrink-0 relative border border-slate-700">
+              <Image 
+                src="/quentin.png" 
+                alt="Profile Quentin"
+                fill
+                className="object-cover"
+              />
+            </div>
             <div 
               className="overflow-hidden" 
               style={{ 
@@ -286,39 +310,10 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
                 transition: 'max-width 300ms cubic-bezier(0, 0, 0.2, 1), opacity 300ms cubic-bezier(0, 0, 0.2, 1)'
               }}
             >
-              <span className="font-sans text-[13px] font-medium whitespace-nowrap">Se déconnecter</span>
-            </div>
-          </button>
-        </form>
-
-        {/* User Profile */}
-        <div 
-          className="flex flex-row items-center gap-[14px] overflow-hidden z-10"
-          style={{ 
-            paddingLeft: isExpanded ? '24px' : '0px',
-            paddingRight: isExpanded ? '24px' : '0px',
-            justifyContent: isExpanded ? 'flex-start' : 'center'
-          }}
-        >
-          <div className="w-[40px] h-[40px] rounded-[4px] overflow-hidden shrink-0 relative border border-slate-700">
-            <Image 
-              src="/quentin.png" 
-              alt="Profile Quentin"
-              fill
-              className="object-cover"
-            />
-          </div>
-          <div 
-            className="overflow-hidden" 
-            style={{ 
-              maxWidth: !isExpanded ? '0' : '200px', 
-              opacity: !isExpanded ? 0 : 1,
-              transition: 'max-width 300ms cubic-bezier(0, 0, 0.2, 1), opacity 300ms cubic-bezier(0, 0, 0.2, 1)'
-            }}
-          >
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="font-sans font-normal text-[14px] text-white/80">Admin</span>
-              <span className="font-sans font-semibold text-[15px] text-white">Quentin DANEL</span>
+              <div className="flex flex-col whitespace-nowrap">
+                <span className="font-sans font-normal text-[14px] text-white/80">Admin</span>
+                <span className="font-sans font-semibold text-[15px] text-white">Quentin DANEL</span>
+              </div>
             </div>
           </div>
         </div>
