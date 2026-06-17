@@ -13,5 +13,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (data?.role !== 'admin') redirect('/dashboard')
 
-  return <>{children}</>
+  return (
+    <div className="h-screen overflow-hidden">
+      {children}
+    </div>
+  )
 }
