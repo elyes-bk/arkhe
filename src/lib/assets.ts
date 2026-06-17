@@ -47,4 +47,15 @@ export const assets = {
 
   // Section FAQ
   faqSalon: "/images/photo-faq-salon.png",
+
+  // Page À propos — remplacer les fichiers dans public/images/about/
+  about: {
+    heroMap: "/images/about/hero-map.png",
+    charcoal: "/images/about/charcoal.png",
+    hair: "/images/about/hair.png",
+    sem: "/images/about/sem.png",
+    molecule: "/images/about/molecule.png",
+    worldMap: "/images/about/world-map-full.png",
+    ctaBg: "/images/about/cta-bg.png",
+  },
 } as const;
