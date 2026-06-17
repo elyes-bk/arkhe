@@ -123,6 +123,12 @@ export function filterSalonsForMap(
 
 export type SalonWithCoords = SalonMapPoint & { lng: number; lat: number };
 
+export type StartPoint = {
+  lng: number;
+  lat: number;
+  label: string;
+};
+
 export function salonsWithCoords(
   salons: SalonMapPoint[],
   filter: MapFilterId
@@ -193,3 +199,174 @@ export function salonsToGeoJSON(
     features,
   };
 }
+
+/** 
+ * Recherche des coordonnées GPS via Nominatim (OSM)
+ */
+export async function geocodeAddress(address: string): Promise<{ lng: number; lat: number } | null> {
+  try {
+    const url = new URL("https://nominatim.openstreetmap.org/search");
+    url.searchParams.set("q", address);
+    url.searchParams.set("format", "json");
+    url.searchParams.set("limit", "1");
+    url.searchParams.set("countrycodes", "fr");
+
+    const res = await fetch(url.toString(), {
+      headers: { "User-Agent": "ArkheAdminMap/1.0" },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && data.length > 0) {
+      return { lng: parseFloat(data[0].lon), lat: parseFloat(data[0].lat) };
+    }
+  } catch (e) {
+    console.error("Geocoding failed:", e);
+  }
+  return null;
+}
+
+export type OptimizedRoute = {
+  geometry: any; // GeoJSON LineString
+  distanceKm: number;
+  durationMin: number;
+  waypoints: { location: [number, number]; waypoint_index: number; trips_index: number }[];
+};
+
+export type RouteProfile = "driving" | "bike" | "foot";
+
+export type RoutingJob = {
+  id: number;
+  lng: number;
+  lat: number;
+  bags: number;
+};
+
+/**
+ * Décode une chaîne Polyline (précision 5) en un tableau de coordonnées [lng, lat]
+ */
+function decodePolyline(str: string, precision: number = 5): [number, number][] {
+  let index = 0;
+  let lat = 0;
+  let lng = 0;
+  const coordinates: [number, number][] = [];
+  const shift = Math.pow(10, precision);
+  let shiftResult = 0;
+  let byte = null;
+
+  while (index < str.length) {
+    byte = null;
+    shiftResult = 0;
+    let shiftAmount = 0;
+
+    do {
+      byte = str.charCodeAt(index++) - 63;
+      shiftResult |= (byte & 0x1f) << shiftAmount;
+      shiftAmount += 5;
+    } while (byte >= 0x20);
+    const deltaLat = shiftResult & 1 ? ~(shiftResult >> 1) : shiftResult >> 1;
+    lat += deltaLat;
+
+    shiftResult = 0;
+    shiftAmount = 0;
+
+    do {
+      byte = str.charCodeAt(index++) - 63;
+      shiftResult |= (byte & 0x1f) << shiftAmount;
+      shiftAmount += 5;
+    } while (byte >= 0x20);
+    const deltaLng = shiftResult & 1 ? ~(shiftResult >> 1) : shiftResult >> 1;
+    lng += deltaLng;
+
+    coordinates.push([lng / shift, lat / shift]);
+  }
+
+  return coordinates;
+}
+
+/**
+ * Calcule l'itinéraire optimal avec gestion de capacité (VROOM via OpenRouteService)
+ */
+export async function fetchOptimizedRoute(
+  startPoint: { lng: number; lat: number },
+  jobs: RoutingJob[],
+  profile: RouteProfile = "driving"
+): Promise<OptimizedRoute | null> {
+  if (jobs.length === 0) return null;
+
+  const apiKey = process.env.NEXT_PUBLIC_ORS_API_KEY;
+  if (!apiKey) {
+    console.error("Missing NEXT_PUBLIC_ORS_API_KEY");
+    return null;
+  }
+
+  // Mappage des profils vers ceux d'OpenRouteService
+  let orsProfile = "driving-car";
+  if (profile === "bike") orsProfile = "cycling-regular";
+  if (profile === "foot") orsProfile = "foot-walking";
+
+  const payload = {
+    vehicles: [
+      {
+        id: 1,
+        profile: orsProfile,
+        start: [startPoint.lng, startPoint.lat],
+        capacity: [20], // Limite fixée à 20 sacs comme demandé
+      }
+    ],
+    jobs: jobs.map(j => ({
+      id: j.id,
+      location: [j.lng, j.lat],
+      amount: [j.bags] // Poids du job en nombre de sacs
+    })),
+    options: {
+      g: true // Return geometry
+    }
+  };
+
+  try {
+    const res = await fetch("https://api.openrouteservice.org/optimization", {
+      method: "POST",
+      headers: {
+        "Authorization": apiKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      console.error("ORS Optimization failed:", await res.text());
+      return null;
+    }
+
+    const data = await res.json();
+    
+    // VROOM renvoie data.routes[0] pour le véhicule 1
+    if (data.code === 0 && data.routes && data.routes.length > 0) {
+      const route = data.routes[0];
+      
+      // ORS VROOM renvoie la géométrie sous forme de Polyline compressée.
+      // On la décode manuellement pour avoir un objet GeoJSON LineString parfait pour MapLibre.
+      const decodedCoordinates = decodePolyline(route.geometry);
+      
+      const geojsonLineString = {
+        type: "LineString",
+        coordinates: decodedCoordinates,
+      };
+
+      return {
+        geometry: geojsonLineString,
+        distanceKm: Math.round((route.distance / 1000) * 10) / 10,
+        durationMin: Math.max(1, Math.round(route.duration / 60)),
+        waypoints: route.steps.map((s: any) => ({
+          location: s.location,
+          waypoint_index: s.type === "job" ? s.id : 0,
+          trips_index: 0
+        }))
+      };
+    }
+  } catch (e) {
+    console.error("ORS Trip routing failed:", e);
+  }
+  return null;
+}
+

@@ -36,11 +36,11 @@ export default function DesktopSidebar({
         </div>
 
         {/* Filters List */}
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="py-6 border-b border-[#04082E]/10 -mx-6 px-6">
           <span className="font-heading text-[10px] font-bold text-slate-400 uppercase tracking-wider">
             Filtres
           </span>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 mt-2">
             {FILTERS.map((f) => (
               <button
                 key={f.id}

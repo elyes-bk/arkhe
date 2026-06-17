@@ -1,9 +1,10 @@
 import { useState, useMemo } from "react";
-import { type SalonMapPoint, type MapFilterId, salonsWithCoords, distanceKm, estimateRouteMinutes } from "@/lib/geo";
+import { type SalonMapPoint, type MapFilterId, type SalonWithCoords, type RouteProfile, type StartPoint, salonsWithCoords, distanceKm, estimateRouteMinutes } from "@/lib/geo";
 
 export function useMapData(initialSalons: SalonMapPoint[]) {
   const [salons, setSalons] = useState<SalonMapPoint[]>(initialSalons);
   const [filter, setFilter] = useState<MapFilterId>("collect");
+  const [startPoint, setStartPoint] = useState<StartPoint | null>(null);
 
   const visibleSalons = useMemo(
     () => salonsWithCoords(salons, filter),
@@ -42,6 +43,8 @@ export function useMapData(initialSalons: SalonMapPoint[]) {
     setSalons,
     filter,
     setFilter,
+    startPoint,
+    setStartPoint,
     visibleSalons,
     collectPoints,
     routeStops,

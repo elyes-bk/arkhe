@@ -1,20 +1,34 @@
-import type { SalonMapPoint, SalonWithCoords } from "@/lib/geo";
+import type { SalonMapPoint, SalonWithCoords, StartPoint } from "@/lib/geo";
 import type { Dispatch, SetStateAction } from "react";
 
 export default function MobileBottomSheet({
   isSheetExpanded,
   setIsSheetExpanded,
   totalBagsAvailable,
-  routeStops,
   collectPoints,
+  startPoint,
+  isOptimizing,
+  onOptimizeRoute,
   flyToSalon,
+  tourState,
+  orderedSalons,
+  currentStopIndex,
+  onStartTour,
+  onCancelRoute,
 }: {
   isSheetExpanded: boolean;
   setIsSheetExpanded: Dispatch<SetStateAction<boolean>>;
   totalBagsAvailable: number;
-  routeStops: SalonWithCoords[];
   collectPoints: SalonWithCoords[];
+  startPoint: StartPoint | null;
+  isOptimizing: boolean;
+  onOptimizeRoute: () => void;
   flyToSalon: (salon: { lng: number; lat: number }) => void;
+  tourState: "idle" | "generated" | "navigating";
+  orderedSalons: SalonMapPoint[];
+  currentStopIndex: number;
+  onStartTour: () => void;
+  onCancelRoute: () => void;
 }) {
   return (
     <>
@@ -43,41 +57,63 @@ export default function MobileBottomSheet({
         </button>
 
         {/* Header row — always visible */}
-        <button
-          type="button"
-          onClick={() => setIsSheetExpanded((v) => !v)}
-          className="w-full px-6 pb-4 flex items-center justify-between focus:outline-none"
-        >
+        <div className="w-full px-6 pb-4 flex items-center justify-between gap-4">
           <div className="flex flex-col text-left">
             <span className="font-sans text-[13px] font-normal text-[#04082E] uppercase">
-              Disponible
+              {tourState === "navigating" ? "En tournée" : "Disponible"}
             </span>
             <span className="font-heading text-3xl font-bold text-[#04082E] leading-tight">
-              {totalBagsAvailable}
+              {tourState === "navigating" ? `${currentStopIndex + 1}/${orderedSalons.length}` : totalBagsAvailable}
             </span>
           </div>
 
-          <button
-            type="button"
-            disabled={routeStops.length < 2}
-            onClick={(e) => {
-              e.stopPropagation();
-              const coords = routeStops.map((s) => `${s.lat},${s.lng}`).join("/");
-              window.open(`https://www.google.com/maps/dir/${coords}`, "_blank");
-            }}
-            className="bg-[#0738DC] hover:bg-blue-700 text-white font-sans text-[15px] font-normal px-6 py-3 rounded-[4px] transition-all disabled:opacity-50"
-          >
-            Générer itinéraire
-          </button>
-        </button>
+          {tourState === "idle" && (
+            <button
+              type="button"
+              disabled={collectPoints.length === 0 || !startPoint || isOptimizing}
+              onClick={onOptimizeRoute}
+              className="flex-1 rounded bg-[#0738DC] py-2.5 font-sans text-[15px] font-normal text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            >
+              {isOptimizing ? "Optimisation..." : "Générer itinéraire"}
+            </button>
+          )}
+
+          {tourState === "generated" && (
+            <div className="flex flex-1 gap-2">
+              <button
+                type="button"
+                onClick={onStartTour}
+                className="flex-1 rounded bg-[#04082E] py-2.5 font-sans text-[15px] font-bold text-white transition-opacity hover:opacity-90"
+              >
+                Partir en tournée
+              </button>
+              <button
+                onClick={onCancelRoute}
+                className="px-3 rounded bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors"
+                title="Annuler"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {tourState === "navigating" && (
+            <button
+              onClick={onCancelRoute}
+              className="flex-1 rounded-[2px] bg-white border-[1.5px] border-[#E14D5F] py-2.5 font-sans text-[15px] font-normal text-[#E14D5F] hover:bg-[#E14D5F]/5 transition-colors"
+            >
+              Terminer
+            </button>
+          )}
+        </div>
 
         {/* Expandable salon list */}
         <div
-          className={`overflow-hidden transition-all duration-300 ease-out ${
+          className={`overflow-hidden transition-all duration-300 ease-out flex flex-col ${
             isSheetExpanded ? "flex-1 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="overflow-y-auto" style={{ maxHeight: "calc(75dvh - 120px)" }}>
+          <div className="overflow-y-auto" style={{ maxHeight: "calc(75dvh - 280px)" }}>
             {/* Section header */}
             <div className="px-6 pt-1 pb-3">
               <p className="font-heading text-base font-bold text-[#04082E]">
