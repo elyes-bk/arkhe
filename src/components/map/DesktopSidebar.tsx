@@ -1,4 +1,4 @@
-import type { SalonMapPoint, SalonWithCoords, MapFilterId } from "@/lib/geo";
+import type { SalonWithCoords, MapFilterId } from "@/lib/geo";
 
 export const FILTERS: { id: MapFilterId; label: string }[] = [
   { id: "all", label: "Tous" },

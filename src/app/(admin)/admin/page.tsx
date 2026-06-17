@@ -1,5 +1,4 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
-import Image from "next/image";
 import { SidebarAdmin } from "@/components/layout/SidebarAdmin";
 import SacsRecoltesPanel from "@/components/SacsRecoltesPanel";
 import SalonActivityDonut from "@/components/SalonActivityDonut";
@@ -73,7 +72,7 @@ export default async function AdminPage() {
   return (
     <div className="flex min-h-screen bg-[#F0F2F9]">
 
-      <SidebarAdmin />
+      <SidebarAdmin activeTab="dashboard" collapsed={true} />
 
       <main className="ml-[76px] flex-1 px-10 py-8">
 

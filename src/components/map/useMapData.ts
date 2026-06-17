@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { type SalonMapPoint, type MapFilterId, type SalonWithCoords, type RouteProfile, type StartPoint, salonsWithCoords, distanceKm, estimateRouteMinutes } from "@/lib/geo";
+import { type SalonMapPoint, type MapFilterId, type StartPoint, salonsWithCoords, distanceKm, estimateRouteMinutes } from "@/lib/geo";
 
 export function useMapData(initialSalons: SalonMapPoint[]) {
   const [salons, setSalons] = useState<SalonMapPoint[]>(initialSalons);
