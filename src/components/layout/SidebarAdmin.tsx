@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { logout } from '@/actions/auth'
@@ -43,6 +43,17 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [mobileMenuOpen])
+
   const isExpanded = !collapsed || isHovered
 
   const navItems = [
@@ -72,7 +83,7 @@ export function SidebarAdmin({ collapsed = false, activeTab = 'dashboard' }: Sid
           />
 
           {/* Menu container */}
-          <div className="md:hidden fixed inset-x-0 top-0 bg-[#04082E] z-50 px-[24px] pt-[24px] pb-[32px] flex flex-col gap-[28px] shadow-lg relative overflow-hidden">
+          <div className="md:hidden fixed inset-x-0 top-0 bg-[#04082E] z-50 px-[24px] pt-[24px] pb-[32px] flex flex-col gap-[28px] shadow-lg overflow-hidden">
 
             {/* Watermark logo — normal orientation, bottom-right, like the maquette */}
             <div

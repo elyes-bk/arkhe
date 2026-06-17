@@ -179,10 +179,9 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
             </p>
           </div>
 
-          {/* Inline Tabs and Search Bar (100% Figma layout, responsive re-ordering) */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 w-full gap-4 md:gap-0 pb-0.5">
+          <div className="flex flex-col md:flex-row md:items-end justify-between w-full gap-4 md:gap-0 mb-2">
             {/* Tabs (Under search bar on mobile, left on desktop) */}
-            <div className="order-2 md:order-1 flex gap-6 md:gap-8 overflow-x-auto md:overflow-visible scrollbar-none pb-1 md:pb-0 w-full md:w-auto">
+            <div className="order-2 md:order-1 flex gap-6 md:gap-8 overflow-x-auto md:overflow-visible scrollbar-none border-b border-slate-200 w-full md:w-auto">
               {[
                 { id: 'waiting', label: 'En attente', count: countWaiting },
                 { id: 'approved', label: 'Valides', count: countApproved },
@@ -197,10 +196,10 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                       setActiveTab(tab.id as 'waiting' | 'approved' | 'rejected' | 'all')
                       setCurrentPage(1)
                     }}
-                    className={`pb-3 font-heading font-medium text-[16px] leading-[19.84px] transition-all relative flex items-center select-none flex-shrink-0
+                    className={`pb-3 font-heading font-medium text-[16px] leading-[19.84px] transition-all relative flex items-center select-none flex-shrink-0 -mb-[1px]
                       ${isActive 
-                        ? 'text-[#0738dc] border-b-2 border-[#0738dc] font-semibold' 
-                        : 'text-[#6E6E6E] hover:text-[#000000]'
+                        ? 'text-[#0738dc] border-b-2 border-[#0738dc]' 
+                        : 'text-[#6E6E6E] hover:text-[#000000] border-b-2 border-transparent'
                       }
                     `}
                   >
@@ -208,7 +207,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                     <span className={`ml-2 px-1.5 py-0.5 text-[11px] font-bold rounded-[3px] leading-none transition-colors
                       ${isActive 
                         ? 'bg-[#0738dc] text-white' 
-                        : 'bg-[#E2EAFE] text-[#0738dc]'
+                        : 'bg-[#E2EAFE] text-[#8A98CB]'
                       }
                     `}>
                       {tab.count}
@@ -218,21 +217,33 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
               })}
             </div>
             
-            {/* Inline search bar (Figma bottom line style, full-width on mobile) */}
-            <div className="order-1 md:order-2 pb-2.5 flex items-center gap-2 border-b border-slate-300 md:border-black w-full md:w-60">
-              <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            {/* Inline search bar (Figma bordered style with floating label) */}
+            <div className="order-1 md:order-2 relative flex items-center border border-slate-400 hover:border-slate-500 focus-within:border-[#0738dc] focus-within:ring-1 focus-within:ring-[#0738dc] transition-colors rounded-[4px] w-full md:w-60 bg-white mb-1 md:mb-0 h-[42px] px-3">
+              <svg className="w-[18px] h-[18px] text-slate-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value)
-                  setCurrentPage(1)
-                }}
-                placeholder="Rechercher"
-                className="bg-transparent outline-none border-none text-sm placeholder:text-[#6E6E6E] text-slate-800 w-full"
-              />
+              <div className="relative flex-1 h-full ml-2">
+                <input
+                  id="search-input"
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value)
+                    setCurrentPage(1)
+                  }}
+                  className="peer w-full h-full bg-transparent outline-none border-none text-[14px] text-slate-800 placeholder-transparent"
+                  placeholder="Rechercher..."
+                />
+                <label
+                  htmlFor="search-input"
+                  className={`absolute left-0 top-[10px] text-[14px] text-slate-600 font-medium cursor-text transition-all duration-200 pointer-events-none origin-left bg-white px-1
+                    peer-focus:-translate-y-[21px] peer-focus:-translate-x-1 peer-focus:scale-[0.80] peer-focus:text-[#0738dc]
+                    ${searchTerm.trim() !== '' ? '-translate-y-[21px] -translate-x-1 scale-[0.80] text-slate-600' : ''}
+                  `}
+                >
+                  Rechercher...
+                </label>
+              </div>
             </div>
           </div>
 
@@ -285,7 +296,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                               href={salon.url_justificatif_local}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center px-4 py-1.5 bg-[#E2EAFE]/70 hover:bg-[#E2EAFE] text-[#0738dc] rounded-[4px] text-xs font-bold transition duration-150"
+                              className="inline-flex items-center px-4 py-1.5 bg-[#E2EAFE] text-[#4A4A4A] rounded-none text-[13px] font-normal transition duration-150"
                             >
                               <span>{getJustificatifLabel(salon.url_justificatif_local)}</span>
                             </a>
@@ -302,16 +313,16 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                                 <button
                                   onClick={() => handleApprove(salon.id)}
                                   disabled={isPending}
-                                  className="px-5 py-2 bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] text-xs font-bold transition active:scale-95 flex items-center justify-center"
+                                  className="px-5 py-2 bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] text-[13px] font-medium transition active:scale-95 flex items-center justify-center"
                                 >
                                   Valider
                                 </button>
                                 <button
                                   onClick={() => handleReject(salon.id)}
                                   disabled={isPending}
-                                  className="px-5 py-2 border border-[#FF8A8A] text-[#FF5A5A] hover:bg-red-50 rounded-[4px] text-xs font-bold transition active:scale-95 flex items-center justify-center"
+                                  className="px-5 py-2 border border-[#FF8A8A] text-[#FF8A8A] hover:bg-red-50 rounded-[4px] text-[13px] font-medium transition active:scale-95 flex items-center justify-center bg-white"
                                 >
-                                  Rejeter
+                                  Rejetter
                                 </button>
                               </>
                             )}
@@ -319,7 +330,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                               <button
                                 onClick={() => handleReject(salon.id)}
                                 disabled={isPending}
-                                className="px-5 py-2 border border-[#FF8A8A] text-[#FF5A5A] hover:bg-red-50 rounded-[4px] text-xs font-bold transition active:scale-95 flex items-center justify-center"
+                                className="px-5 py-2 border border-[#FF8A8A] text-[#FF8A8A] hover:bg-red-50 rounded-[4px] text-[13px] font-medium transition active:scale-95 flex items-center justify-center bg-white"
                               >
                                 Révoquer
                               </button>
@@ -328,7 +339,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                               <button
                                 onClick={() => handleReconsider(salon.id)}
                                 disabled={isPending}
-                                className="px-5 py-2 bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] text-xs font-bold transition active:scale-95 flex items-center justify-center"
+                                className="px-5 py-2 bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] text-[13px] font-medium transition active:scale-95 flex items-center justify-center"
                               >
                                 Reconsidérer
                               </button>
@@ -351,29 +362,29 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
               </table>
             </div>
 
-            {/* Pagination Footer */}
-            <div className="bg-white px-6 py-4 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-slate-500 font-semibold">
-              <span className="font-sans font-normal text-[#6E6E6E]">
-                {countWaiting} salons en attente - Page {currentPage} sur {totalPages}
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="w-8 h-8 flex items-center justify-center border border-[#E2E8F0] bg-white hover:bg-blue-50 text-[#0738dc] rounded-[4px] font-bold text-xs disabled:opacity-40 disabled:cursor-not-allowed transition select-none"
-                >
-                  &lt;
-                </button>
-                <button
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="w-8 h-8 flex items-center justify-center bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] font-bold text-xs disabled:opacity-40 disabled:cursor-not-allowed transition select-none"
-                >
-                  &gt;
-                </button>
-              </div>
-            </div>
+          </div>
 
+          {/* Desktop Pagination Footer (Outside the table block) */}
+          <div className="hidden md:flex items-center justify-end gap-6 text-xs text-slate-500 font-semibold mt-4">
+            <span className="font-sans font-normal text-[#6E6E6E]">
+              {countWaiting} salons en attente - Page {currentPage} sur {totalPages}
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="w-8 h-8 flex items-center justify-center border border-[#0738dc] bg-white hover:bg-blue-50 text-[#0738dc] rounded-[4px] font-bold text-xs disabled:opacity-40 disabled:cursor-not-allowed transition select-none"
+              >
+                &lt;
+              </button>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="w-8 h-8 flex items-center justify-center bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] font-bold text-xs disabled:opacity-40 disabled:cursor-not-allowed transition select-none"
+              >
+                &gt;
+              </button>
+            </div>
           </div>
 
           {/* ────────────────── Mobile View (Cards List Layout) ────────────────── */}
@@ -383,25 +394,25 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                 <div 
                   key={salon.id} 
                   onClick={() => setSelectedSalon(salon)}
-                  className="border border-[#E2E8F0] rounded-[8px] p-4 bg-white flex flex-col gap-4 active:bg-slate-50 transition duration-150 cursor-pointer"
+                  className="border border-[#E2E8F0] rounded-[4px] p-5 bg-white flex flex-col gap-5 active:bg-slate-50 transition duration-150 cursor-pointer"
                 >
                   {/* Card Title */}
-                  <h3 className="font-bold text-base text-[#04082e] leading-snug">
+                  <h3 className="font-bold text-[16px] text-[#04082e] leading-snug">
                     {salon.nom_commerce} - {getSalonLocation(salon)}
                   </h3>
                   
                   {/* Card Metadata info row */}
-                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[#04082e] text-xs font-semibold">
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[#04082e] text-[14px] font-normal">
                     {/* Document Icon & SIRET */}
                     <div className="flex items-center gap-1.5">
-                      <svg className="w-4 h-4 text-[#0738dc]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[#0738dc]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5-3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                       </svg>
                       <span>SIRET : {salon.siret}</span>
                     </div>
                     {/* Clock Icon & Date */}
                     <div className="flex items-center gap-1.5">
-                      <svg className="w-4 h-4 text-[#0738dc]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[#0738dc]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span>{formatDate(salon.users?.created_at)}</span>
@@ -409,18 +420,15 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                   </div>
 
                   {/* Justificatif Outlined Blue Button */}
-                  <div onClick={(e) => e.stopPropagation()} className="w-full">
+                  <div onClick={(e) => e.stopPropagation()} className="w-full mt-1">
                     {salon.url_justificatif_local ? (
                       <a
                         href={salon.url_justificatif_local}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full border border-[#0738dc] hover:bg-blue-50 text-[#0738dc] rounded-[4px] py-2 text-center font-bold text-xs flex items-center justify-center gap-2 transition duration-150"
+                        className="w-full border border-[#0738dc] hover:bg-blue-50 text-[#0738dc] rounded-[4px] py-2.5 text-center font-normal text-[15px] block transition duration-150"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                        </svg>
-                        <span>{getJustificatifLabel(salon.url_justificatif_local)}</span>
+                        {getJustificatifLabel(salon.url_justificatif_local)}
                       </a>
                     ) : (
                       <div className="w-full border border-dashed border-slate-200 text-slate-400 rounded-[4px] py-2.5 text-center font-semibold text-xs">
@@ -436,16 +444,16 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                         <button
                           onClick={() => handleApprove(salon.id)}
                           disabled={isPending}
-                          className="flex-1 py-2.5 bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] text-xs font-bold transition active:scale-95 flex items-center justify-center"
+                          className="flex-1 py-3 bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] text-[15px] font-normal transition active:scale-95 flex items-center justify-center"
                         >
                           Valider
                         </button>
                         <button
                           onClick={() => handleReject(salon.id)}
                           disabled={isPending}
-                          className="flex-1 py-2.5 border border-[#FF8A8A] text-[#FF5A5A] hover:bg-red-50 rounded-[4px] text-xs font-bold transition active:scale-95 flex items-center justify-center"
+                          className="flex-1 py-3 border border-[#E14D5F] text-[#E14D5F] hover:bg-red-50 rounded-[4px] text-[15px] font-normal transition active:scale-95 flex items-center justify-center bg-white"
                         >
-                          Rejeter
+                          Rejetter
                         </button>
                       </>
                     )}
@@ -453,7 +461,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                       <button
                         onClick={() => handleReject(salon.id)}
                         disabled={isPending}
-                        className="w-full py-2.5 bg-[#E14D5F] hover:bg-red-600 text-white rounded-[4px] text-xs font-bold transition active:scale-95 flex items-center justify-center"
+                        className="w-full py-3 bg-[#E14D5F] hover:bg-red-600 text-white rounded-[4px] text-[15px] font-normal transition active:scale-95 flex items-center justify-center"
                       >
                         Révoquer
                       </button>
@@ -462,7 +470,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                       <button
                         onClick={() => handleReconsider(salon.id)}
                         disabled={isPending}
-                        className="w-full py-2.5 bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] text-xs font-bold transition active:scale-95 flex items-center justify-center"
+                        className="w-full py-2.5 bg-[#0738dc] hover:bg-blue-700 text-white rounded-[4px] text-[13px] font-medium transition active:scale-95 flex items-center justify-center"
                       >
                         Reconsidérer
                       </button>
@@ -489,7 +497,7 @@ export default function AdminModerationClient({ initialSalons = [], }: AdminMode
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="w-8 h-8 flex items-center justify-center border border-[#E2E8F0] bg-white hover:bg-blue-50 text-[#0738dc] rounded-[4px] font-bold text-xs disabled:opacity-40 disabled:cursor-not-allowed transition select-none"
+                    className="w-8 h-8 flex items-center justify-center border border-[#0738dc] bg-white hover:bg-blue-50 text-[#0738dc] rounded-[4px] font-bold text-xs disabled:opacity-40 disabled:cursor-not-allowed transition select-none"
                   >
                     &lt;
                   </button>
