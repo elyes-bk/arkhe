@@ -50,7 +50,7 @@ export default function SalonActivityDonut({ actif, passif, inactif }: Props) {
   let accumulated = 0;
 
   return (
-    <div className="rounded-[5px] bg-[#FDFDFD] px-6 py-5 shadow-sm flex flex-col h-full min-h-0">
+    <div className="rounded-[5px] bg-[#FDFDFD] px-6 py-5 shadow-sm flex flex-col h-[360px] lg:h-full min-h-0">
       <h2 className="mb-4 font-kumbh text-base font-semibold text-[#04082E]">
         Activité des salons
       </h2>
@@ -58,9 +58,8 @@ export default function SalonActivityDonut({ actif, passif, inactif }: Props) {
       {/* Donut centré dans l'espace restant */}
       <div className="flex flex-1 items-center justify-center min-h-0 py-4">
         <svg
-          viewBox="0 0 220 220"
-          className="w-full max-w-[240px]"
-          style={{ overflow: "visible" }}
+          viewBox="-13 -13 246 246"
+          className="h-full w-auto max-h-[220px]"
         >
           {total === 0 ? (
             <circle

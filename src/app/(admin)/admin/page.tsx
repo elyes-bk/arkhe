@@ -105,7 +105,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Panneaux bas */}
-        <div className="grid flex-1 min-h-0 grid-cols-1 grid-rows-[1fr] gap-6 md:[grid-template-columns:62.4%_1fr]">
+        <div className="grid grid-cols-1 gap-6 lg:flex-1 lg:min-h-0 lg:grid-rows-[1fr] lg:[grid-template-columns:62.4%_1fr]">
           <SacsRecoltesPanel collected={collected} maxVal={maxVal} yLabels={yLabels} />
           <SalonActivityDonut actif={nbActif} passif={nbPassif} inactif={nbInactif} />
         </div>

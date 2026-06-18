@@ -51,7 +51,7 @@ export async function login(_prevState: FormState, formData: FormData): Promise<
   }
   
 
-  if (userData.role === 'admin') redirect('/admin/moderation')
+  if (userData.role === 'admin') redirect('/admin')
   redirect('/dashboard')
 }
 
