@@ -6,16 +6,25 @@ ARKHE est une plateforme B2B innovante spécialisée dans la valorisation des d�
 
 ## 🚀 Fonctionnalités Principales
 
-- **Authentification & Onboarding (B2B)** : Système d'inscription complet pour les salons avec validation SIRET via l'API Recherche Entreprises, et upload de justificatifs (Kbis / Bail).
-- **Dashboard Administrateur** : 
-  - Modération des inscriptions des salons (Validation / Rejet).
-  - Gestion des profils utilisateurs.
-- **Cartographie & Tournées de Collecte** : 
-  - Interface interactive PWA (Mobile & Desktop) basée sur **MapLibre GL**.
-  - Visualisation des salons partenaires sur une carte.
-  - Planification d'itinéraires et de tournées de collecte (Routing).
-- **Formulaire de Contact** : Système de contact intégré avec notifications email (via Resend).
-- **Conformité RGPD** : Pages légales, gestion du consentement et politique de confidentialité intégrées.
+### 🏢 Espace Salons de Coiffure (B2B)
+- **Authentification & Onboarding** : Système d'inscription complet et sécurisé.
+- **Validation Automatique SIRET** : Vérification instantanée de l'existence légale de l'entreprise via l'API publique "Recherche Entreprises".
+- **Dépôt de Justificatifs** : Upload de documents officiels (Kbis, Bail commercial) de manière sécurisée (Stockage protégé par RLS).
+- **Suivi de Compte** : Visualisation du statut de validation de leur compte (En attente, Validé, Rejeté).
+
+### 🛡️ Dashboard Administrateur
+- **Modération des Inscriptions** : Interface dédiée pour examiner, valider ou rejeter les demandes d'inscription des salons.
+- **Gestion des Profils** : Vue d'ensemble sur tous les utilisateurs inscrits sur la plateforme (Salons, Collecteurs, Administrateurs).
+- **Contrôle d'Accès** : Système de rôles limitant l'accès aux fonctionnalités sensibles.
+
+### 🗺️ Cartographie & Logistique
+- **Interface Interactive PWA** : Application web progressive fonctionnant sur Mobile et Desktop, avec support hors-ligne de base.
+- **Visualisation Géospatiale** : Carte basée sur **MapLibre GL** affichant l'ensemble des salons partenaires (validés) avec des marqueurs interactifs.
+- **Planification des Tournées** : Génération et optimisation des itinéraires de collecte pour les chauffeurs / logisticiens.
+
+### ✉️ Communication & Légal
+- **Formulaire de Contact** : Intégration d'un système d'envoi d'emails transactionnels fiables via **Resend**.
+- **Conformité RGPD** : Pages dédiées pour les Mentions Légales et la Politique de Confidentialité, gestion du consentement, absence de cookies tiers intrusifs.
 
 ---
 
@@ -38,20 +47,31 @@ ARKHE est une plateforme B2B innovante spécialisée dans la valorisation des d�
 ```mermaid
 flowchart LR
     %% Actors
-    Salon([Salon de Coiffure])
-    Admin([Administrateur ARKHE])
-    Collecteur([Logistique / Collecteur])
+    Salon((👤<br>Salon de Coiffure))
+    Admin((🛡️<br>Administrateur ARKHE))
+    Collecteur((🚚<br>Logistique / Collecteur))
 
-    %% Use cases
-    Salon --> UC1[S'inscrire sur la plateforme]
-    Salon --> UC2[Déposer un justificatif & SIRET]
-    Salon --> UC3[Suivre l'état de son compte]
+    %% Cadre de la Plateforme (System Boundary)
+    subgraph Plateforme["Plateforme ARKHE"]
+        direction TB
+        UC1(["S'inscrire sur la plateforme"])
+        UC2(["Déposer un justificatif & SIRET"])
+        UC3(["Suivre l'état de son compte"])
+        UC4(["Valider/Rejeter les salons (Modération)"])
+        UC5(["Visualiser les salons sur la carte géospatiale"])
+        UC6(["Générer des itinéraires de collecte optimisés"])
+    end
 
-    Admin --> UC4[Valider/Rejeter les salons (Modération)]
-    Admin --> UC5[Visualiser les salons sur la carte géospatiale]
-    Admin --> UC6[Générer des itinéraires de collecte optimisés]
+    %% Relations
+    Salon --- UC1
+    Salon --- UC2
+    Salon --- UC3
+
+    Admin --- UC4
+    Admin --- UC5
+    Admin --- UC6
     
-    Collecteur --> UC6
+    Collecteur --- UC6
 ```
 
 ### 2. Diagramme de Séquence : Flux d'Inscription & Modération
@@ -79,6 +99,41 @@ sequenceDiagram
     A->>F: Clique sur "Valider"
     F->>DB: Mise à jour du statut à "Validé"
     Note over DB: Le salon devient éligible à la collecte
+```
+
+### 3. Diagramme de Séquence : Génération d'Itinéraire de Collecte
+
+```mermaid
+sequenceDiagram
+    participant C as Collecteur
+    participant F as Frontend (MapLibre)
+    participant DB as Base de données
+    participant Rout as API Routing (ex: OSRM)
+
+    C->>F: Ouvre la carte et sélectionne "Générer tournée"
+    F->>DB: Récupère les salons "Validés" à collecter
+    DB-->>F: Liste des coordonnées (Lat/Lng)
+    F->>Rout: Envoie les points pour optimisation de route
+    Rout-->>F: Retourne le tracé GeoJSON optimisé
+    F->>C: Affiche le tracé sur la carte interactive
+```
+
+### 4. Diagramme de Séquence : Formulaire de Contact
+
+```mermaid
+sequenceDiagram
+    participant V as Visiteur
+    participant F as Frontend
+    participant API as Server Action (Next.js)
+    participant Res as Resend (Email Provider)
+
+    V->>F: Remplit et valide le formulaire de contact
+    F->>API: POST / Envoi des données du formulaire
+    API->>API: Validation des données (Zod)
+    API->>Res: Requête d'envoi d'email
+    Res-->>API: Confirmation d'envoi
+    API-->>F: Succès de l'opération
+    F->>V: Affiche "Message envoyé avec succès"
 ```
 
 ---

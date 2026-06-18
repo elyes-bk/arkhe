@@ -5,7 +5,7 @@ const footerLinks = [
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "Confidentialité", href: "/politique-de-confidentialite" },
   { label: "Contact", href: "/contact" },
-  { label: "Politique RSE", href: "#" },
+  { label: "Politique RSE", href: "/politique-rse" },
 ];
 
 export function Footer() {
