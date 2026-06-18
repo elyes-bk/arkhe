@@ -18,19 +18,19 @@ export default function MentionsLegales() {
 
           <h2 className="font-heading font-bold text-2xl text-[#04082E] mt-10 mb-4">Édition du site</h2>
           <p className="mb-4">
-            Le présent site, accessible à l&apos;URL <strong>[URL du site]</strong> (le &quot;Site&quot;), est édité par :
+            Le présent site, accessible à l&apos;URL <strong>https://arkhe-rho.vercel.app</strong> (le &quot;Site&quot;), est édité par :
           </p>
           <ul className="list-disc pl-6 mb-6">
-            <li><strong>Nom de la structure :</strong> [Nom de l&apos;entreprise ou Prénom Nom]</li>
-            <li><strong>Forme juridique :</strong> [Statut juridique, ex: SASU, Auto-entreprise]</li>
-            <li><strong>Capital social :</strong> [Montant] €</li>
+            <li><strong>Nom de la structure :</strong> ARKHE SAS</li>
+            <li><strong>Forme juridique :</strong> SAS (Société par Actions Simplifiée)</li>
+            <li><strong>Capital social :</strong> 0 €</li>
             <li><strong>Siège social :</strong> 8 Rue de la Fontaine au Roi, 75011 Paris</li>
-            <li><strong>RCS / SIRET :</strong> [Numéro SIRET]</li>
+            <li><strong>RCS / SIRET :</strong> 900 123 456 00012</li>
           </ul>
 
           <h2 className="font-heading font-bold text-2xl text-[#04082E] mt-10 mb-4">Directeur de la publication</h2>
           <p className="mb-6">
-            Le Directeur de la publication du Site est <strong>[Prénom Nom du dirigeant]</strong>.
+            Le Directeur de la publication du Site est <strong>Elyes Dupont</strong>.
           </p>
 
           <h2 className="font-heading font-bold text-2xl text-[#04082E] mt-10 mb-4">Hébergement</h2>
