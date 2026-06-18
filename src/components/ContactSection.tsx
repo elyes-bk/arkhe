@@ -263,7 +263,7 @@ export function ContactSection() {
                     className="mt-1 size-4 shrink-0 accent-arkhe-blue"
                   />
                   <label htmlFor="rgpd_consent" className="font-sans text-sm text-arkhe-navy">
-                    J'accepte que mes données soient traitées pour répondre à ma demande, conformément à la <a href="/politique-de-confidentialite" className="text-arkhe-blue hover:underline" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.<span className="text-red-500"> *</span>
+                    J&apos;accepte que mes données soient traitées pour répondre à ma demande, conformément à la <a href="/politique-de-confidentialite" className="text-arkhe-blue hover:underline" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.<span className="text-red-500"> *</span>
                   </label>
                 </div>
 
